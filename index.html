@@ -377,7 +377,7 @@
 
         let idsToFetch = currentRecipe.map(r => r.id).join(',');
         let citiesToFetch = cities.join(',');
-        let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${idsToFetch}?locations=${citiesToFetch}`;
+        let apiUrl = `https://prices.albion-online-data.com/api/v2/stats/prices/${idsToFetch}?locations=${citiesToFetch}`;
 
         let priceData = [];
         try {
@@ -393,16 +393,16 @@
 
         currentRecipe.forEach((mat) => {
             let reqQty = mat.ratio * totalQty;
-            let itemOffers = priceData.filter(p => p.item_id === mat.id && (p.buy_price_min > 0 || p.sell_price_min > 0));
+            
+            // FILTRE STRICT : On ne garde QUE les prix de vente direct (sell_price_min > 0)
+            let itemOffers = priceData.filter(p => p.item_id === mat.id && p.sell_price_min > 0);
             
             let topMarkets = [];
 
             if (itemOffers.length > 0) {
-                itemOffers.forEach(o => {
-                    o.effective_price = o.buy_price_min > 0 ? o.buy_price_min : o.sell_price_min;
-                });
-                itemOffers.sort((a, b) => a.effective_price - b.effective_price);
-                topMarkets = itemOffers.slice(0, 3).map(o => ({ city: o.city, price: o.effective_price }));
+                // Tri par prix de vente direct croissant pour afficher les moins chers en premier
+                itemOffers.sort((a, b) => a.sell_price_min - b.sell_price_min);
+                topMarkets = itemOffers.slice(0, 3).map(o => ({ city: o.city, price: o.sell_price_min }));
             }
 
             let bestPrice = 0;
@@ -416,7 +416,7 @@
                 hasAnyValidPrice = true;
                 marketHtml = topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>`).join('');
             } else {
-                marketHtml = `<div style="color: #94a3b8; font-style: italic;">Aucune offre récente sur l'API</div>`;
+                marketHtml = `<div style="color: #94a3b8; font-style: italic;">Aucune offre de vente directe</div>`;
             }
 
             let row = `<tr>
