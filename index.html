@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crundel Craft & Market Hub</title>
+    <style>
+        :root {
+            --bg-main: #0d1322;
+            --card-bg: #151d30;
+            --border-color: #2a3650;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --input-bg: #0f172a;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .title-area h1 {
+            color: #fff;
+            font-size: 22px;
+            margin: 0 0 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .title-area p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin: 0;
+        }
+        .badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+        .panel {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        select, input {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: #fff;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        button {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            grid-column: 1 / -1;
+            transition: transform 0.1s, filter 0.2s;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        button:hover {
+            filter: brightness(1.1);
+        }
+        button:active {
+            transform: scale(0.99);
+        }
+        .recommendation-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px dashed var(--accent);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 15px;
+            color: var(--accent);
+            text-align: center;
+            font-weight: bold;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: var(--input-bg);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background-color: #1e293b;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+        tr:hover {
+            background-color: rgba(255,255,255,0.02);
+        }
+        .market-rank {
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: left;
+            padding-left: 15px;
+        }
+        .total-box {
+            margin-top: 25px;
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent);
+            background: var(--input-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .loading {
+            text-align: center;
+            font-style: italic;
+            color: var(--accent);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="title-area">
+            <h1>📦 Crundel Craft & Market Hub</h1>
+            <p>Americas Server • Live API & Crafting Calculator</p>
+        </div>
+        <div class="badge">🟢 Server : Americas (Global)</div>
+    </div>
+
+    <div class="panel">
+        <div class="form-group">
+            <label for="categorySelect">Category:</label>
+            <select id="categorySelect" onchange="updateItemList()">
+                <option value="cloth">Cloth / Fibers (Refining)</option>
+                <option value="metal">Metal / Ores (Refining)</option>
+                <option value="leather">Leather / Hides (Refining)</option>
+                <option value="wood">Wood / Planks (Refining)</option>
+                <option value="stone">Stone / Blocks (Refining)</option>
+                <option value="fishing">Fishing Rods (Crafting)</option>
+                <option value="kingmaker">Kingmaker Swords (Crafting)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="itemSelect">Item / Tier:</label>
+            <select id="itemSelect" onchange="updateRecommendation()"></select>
+        </div>
+        <div class="form-group">
+            <label for="enchantSelect">Enchantment:</label>
+            <select id="enchantSelect">
+                <option value="0" selected>.0 (Normal)</option>
+                <option value="1">.1 (Uncommon)</option>
+                <option value="2">.2 (Rare)</option>
+                <option value="3">.3 (Exceptional)</option>
+                <option value="4">.4 (Pristine)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="qtyInput">Quantity:</label>
+            <input type="number" id="qtyInput" value="100" min="1">
+        </div>
+        <button onclick="fetchPrices()">⚡ Calculate Optimal Crafting Location & Top 3 Markets</button>
+    </div>
+
+    <div id="recommendationBox" class="recommendation-box">
+        💡 Best Crafting Location: Select an item to see the recommended city.
+    </div>
+
+    <div id="loadingStatus" class="loading" style="display:none;">Querying live Albion Online API across all royal cities...</div>
+
+    <table id="resultTable">
+        <thead>
+            <tr>
+                <th>Required Material</th>
+                <th>API ID</th>
+                <th>Unit Qty</th>
+                <th>Total Qty</th>
+                <th>Top 3 Cheapest Cities to Buy 🛒</th>
+                <th>Min Price (1st Choice)</th>
+                <th>Total Cost (1st Choice)</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <tr>
+                <td colspan="7" style="color: var(--text-muted);">Select an item, enchant, and click calculate to fetch live markets.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="total-box" id="totalBox">Total Material Cost: 0 Silver</div>
+</div>
+
+<script>
+    const baseRecipes = {
+        "T4_CLOTH": { name: "Fine Cloth T4", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "Fine Cloth", baseId: "T3_CLOTH", ratio: 1 }, { name: "Cotton Fiber", baseId: "T4_FIBER", ratio: 2 } ] },
+        "T5_CLOTH": { name: "Opulent Cloth T5", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "Opulent Cloth", baseId: "T4_CLOTH", ratio: 1 }, { name: "Hemp Fiber", baseId: "T5_FIBER", ratio: 3 } ] },
+        "T6_CLOTH": { name: "Dusky Cloth T6", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "Dusky Cloth", baseId: "T5_CLOTH", ratio: 1 }, { name: "Clearwater Fiber", baseId: "T6_FIBER", ratio: 4 } ] },
+        "T7_CLOTH": { name: "Ornate Cloth T7", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "Ornate Cloth", baseId: "T6_CLOTH", ratio: 1 }, { name: "Redleaf Cotton", baseId: "T7_FIBER", ratio: 5 } ] },
+        "T8_CLOTH": { name: "Timeless Cloth T8", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "Timeless Cloth", baseId: "T7_CLOTH", ratio: 1 }, { name: "Sunflax", baseId: "T8_FIBER", ratio: 6 } ] },
+
+        "T4_METALBAR": { name: "Steel Bar T4", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "Bronze Bar", baseId: "T3_METALBAR", ratio: 1 }, { name: "Steel Ore", baseId: "T4_ORE", ratio: 2 } ] },
+        "T5_METALBAR": { name: "Titanium Bar T5", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "Steel Bar", baseId: "T4_METALBAR", ratio: 1 }, { name: "Titanium Ore", baseId: "T5_ORE", ratio: 3 } ] },
+        "T6_METALBAR": { name: "Runite Bar T6", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "Titanium Bar", baseId: "T5_METALBAR", ratio: 1 }, { name: "Runite Ore", baseId: "T6_ORE", ratio: 4 } ] },
+        "T7_METALBAR": { name: "Meteorite Bar T7", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "Runite Bar", baseId: "T6_METALBAR", ratio: 1 }, { name: "Meteorite Ore", baseId: "T7_ORE", ratio: 5 } ] },
+        "T8_METALBAR": { name: "Adamantium Bar T8", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "Meteorite Bar", baseId: "T7_METALBAR", ratio: 1 }, { name: "Adamantium Ore", baseId: "T8_ORE", ratio: 6 } ] },
+
+        "T4_LEATHER": { name: "Stiff Leather T4", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "Stiff Leather", baseId: "T3_LEATHER", ratio: 1 }, { name: "Medium Hide", baseId: "T4_HIDE", ratio: 2 } ] },
+        "T5_LEATHER": { name: "Thick Leather T5", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "Thick Leather", baseId: "T4_LEATHER", ratio: 1 }, { name: "Worked Hide", baseId: "T5_HIDE", ratio: 3 } ] },
+        "T6_LEATHER": { name: "Worked Leather T6", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "Worked Leather", baseId: "T5_LEATHER", ratio: 1 }, { name: "Cured Hide", baseId: "T6_HIDE", ratio: 4 } ] },
+        "T7_LEATHER": { name: "Cured Leather T7", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "Cured Leather", baseId: "T6_LEATHER", ratio: 1 }, { name: "Califor Hide", baseId: "T7_HIDE", ratio: 5 } ] },
+        "T8_LEATHER": { name: "Califor Leather T8", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "Califor Leather", baseId: "T7_LEATHER", ratio: 1 }, { name: "Manticore Hide", baseId: "T8_HIDE", ratio: 6 } ] },
+
+        "T4_PLANK": { name: "Medium Plank T4", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "Medium Plank", baseId: "T3_PLANK", ratio: 1 }, { name: "Birch Bark", baseId: "T4_WOOD", ratio: 2 } ] },
+        "T5_PLANK": { name: "Long Plank T5", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "Long Plank", baseId: "T4_PLANK", ratio: 1 }, { name: "Chestnut Log", baseId: "T5_WOOD", ratio: 3 } ] },
+        "T6_PLANK": { name: "Strong Plank T6", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "Strong Plank", baseId: "T5_PLANK", ratio: 1 }, { name: "Cedar Log", baseId: "T6_WOOD", ratio: 4 } ] },
+        "T7_PLANK": { name: "Glazed Plank T7", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "Glazed Plank", baseId: "T6_PLANK", ratio: 1 }, { name: "Bloodleaf Log", baseId: "T7_WOOD", ratio: 5 } ] },
+        "T8_PLANK": { name: "Resinous Plank T8", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "Resinous Plank", baseId: "T7_PLANK", ratio: 1 }, { name: "Ashenbark Log", baseId: "T8_WOOD", ratio: 6 } ] },
+
+        "T4_STONEBLOCK": { name: "Cut Stone T4", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "Cut Stone", baseId: "T3_STONEBLOCK", ratio: 1 }, { name: "Limestone", baseId: "T4_ROCK", ratio: 2 } ] },
+        "T5_STONEBLOCK": { name: "Heavy Block T5", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "Heavy Block", baseId: "T4_STONEBLOCK", ratio: 1 }, { name: "Sandstone", baseId: "T5_ROCK", ratio: 3 } ] },
+        "T6_STONEBLOCK": { name: "Solid Block T6", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "Solid Block", baseId: "T5_STONEBLOCK", ratio: 1 }, { name: "Basalt", baseId: "T6_ROCK", ratio: 4 } ] },
+        "T7_STONEBLOCK": { name: "Dense Block T7", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "Dense Block", baseId: "T6_STONEBLOCK", ratio: 1 }, { name: "Granite", baseId: "T7_ROCK", ratio: 5 } ] },
+        "T8_STONEBLOCK": { name: "Glowing Block T8", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "Glowing Block", baseId: "T7_STONEBLOCK", ratio: 1 }, { name: "Moonstone", baseId: "T8_ROCK", ratio: 6 } ] },
+
+        "T4_FISHINGROD": { name: "Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Plank", baseId: "T4_PLANK", ratio: 16 }, { name: "Cloth", baseId: "T4_CLOTH", ratio: 8 } ] },
+        "T5_FISHINGROD": { name: "Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Plank", baseId: "T5_PLANK", ratio: 16 }, { name: "Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
+        "T6_FISHINGROD": { name: "Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Plank", baseId: "T6_PLANK", ratio: 16 }, { name: "Cloth", baseId: "T6_CLOTH", ratio: 8 } ] },
+        "T7_FISHINGROD": { name: "Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Plank", baseId: "T7_PLANK", ratio: 16 }, { name: "Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
+        "T8_FISHINGROD": { name: "Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Plank", baseId: "T8_PLANK", ratio: 16 }, { name: "Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
+
+        "T4_2H_SWORD_AVALON": { name: "Kingmaker Sword T4", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "Leather", baseId: "T4_LEATHER", ratio: 12 } ] },
+        "T5_2H_SWORD_AVALON": { name: "Kingmaker Sword T5", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "Leather", baseId: "T5_LEATHER", ratio: 12 } ] },
+        "T6_2H_SWORD_AVALON": { name: "Kingmaker Sword T6", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "Leather", baseId: "T6_LEATHER", ratio: 12 } ] },
+        "T7_2H_SWORD_AVALON": { name: "Kingmaker Sword T7", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Metal Bar", baseId: "T7_METALBAR", ratio: 20 }, { name: "Leather", baseId: "T7_LEATHER", ratio: 12 } ] },
+        "T8_2H_SWORD_AVALON": { name: "Kingmaker Sword T8", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Metal Bar", baseId: "T8_METALBAR", ratio: 20 }, { name: "Leather", baseId: "T8_LEATHER", ratio: 12 } ] }
+    };
+
+    const categories = {
+        "cloth": [ { id: "T4_CLOTH", name: "Fine Cloth T4" }, { id: "T5_CLOTH", name: "Opulent Cloth T5" }, { id: "T6_CLOTH", name: "Dusky Cloth T6" }, { id: "T7_CLOTH", name: "Ornate Cloth T7" }, { id: "T8_CLOTH", name: "Timeless Cloth T8" } ],
+        "metal": [ { id: "T4_METALBAR", name: "Steel Bar T4" }, { id: "T5_METALBAR", name: "Titanium Bar T5" }, { id: "T6_METALBAR", name: "Runite Bar T6" }, { id: "T7_METALBAR", name: "Meteorite Bar T7" }, { id: "T8_METALBAR", name: "Adamantium Bar T8" } ],
+        "leather": [ { id: "T4_LEATHER", name: "Stiff Leather T4" }, { id: "T5_LEATHER", name: "Thick Leather T5" }, { id: "T6_LEATHER", name: "Worked Leather T6" }, { id: "T7_LEATHER", name: "Cured Leather T7" }, { id: "T8_LEATHER", name: "Califor Leather T8" } ],
+        "wood": [ { id: "T4_PLANK", name: "Medium Plank T4" }, { id: "T5_PLANK", name: "Long Plank T5" }, { id: "T6_PLANK", name: "Strong Plank T6" }, { id: "T7_PLANK", name: "Glazed Plank T7" }, { id: "T8_PLANK", name: "Resinous Plank T8" } ],
+        "stone": [ { id: "T4_STONEBLOCK", name: "Cut Stone T4" }, { id: "T5_STONEBLOCK", name: "Heavy Block T5" }, { id: "T6_STONEBLOCK", name: "Solid Block T6" }, { id: "T7_STONEBLOCK", name: "Dense Block T7" }, { id: "T8_STONEBLOCK", name: "Glowing Block T8" } ],
+        "fishing": [ { id: "T4_FISHINGROD", name: "Fishing Rod T4" }, { id: "T5_FISHINGROD", name: "Fishing Rod T5" }, { id: "T6_FISHINGROD", name: "Fishing Rod T6" }, { id: "T7_FISHINGROD", name: "Fishing Rod T7" }, { id: "T8_FISHINGROD", name: "Fishing Rod T8" } ],
+        "kingmaker": [ { id: "T4_2H_SWORD_AVALON", name: "Kingmaker Sword T4" }, { id: "T5_2H_SWORD_AVALON", name: "Kingmaker Sword T5" }, { id: "T6_2H_SWORD_AVALON", name: "Kingmaker Sword T6" }, { id: "T7_2H_SWORD_AVALON", name: "Kingmaker Sword T7" }, { id: "T8_2H_SWORD_AVALON", name: "Kingmaker Sword T8" } ]
+    };
+
+    const cities = ["Thetford", "Fort Sterling", "Martlock", "Lymhurst", "Bridgewatch", "Caerleon"];
+
+    function updateItemList() {
+        const cat = document.getElementById('categorySelect').value;
+        const itemSelect = document.getElementById('itemSelect');
+        itemSelect.innerHTML = '';
+        if (categories[cat]) {
+        categories[cat].forEach(item => {
+                let opt = document.createElement('option');
+                opt.value = item.id;
+                opt.innerText = item.name;
+                itemSelect.appendChild(opt);
+            });
+        }
+        updateRecommendation();
+    }
+
+    function updateRecommendation() {
+        const itemKey = document.getElementById('itemSelect').value;
+        const recipeObj = baseRecipes[itemKey];
+        const recBox = document.getElementById('recommendationBox');
+        if (recipeObj) {
+            recBox.innerHTML = `💡 Best Crafting Location: <b>${recipeObj.bonusCity}</b>`;
+        }
+    }
+
+    updateItemList();
+
+    async function fetchPrices() {
+        const itemKey = document.getElementById('itemSelect').value;
+        const enchant = parseInt(document.getElementById('enchantSelect').value) || 0;
+        const totalQty = parseInt(document.getElementById('qtyInput').value) || 1;
+        const recipeObj = baseRecipes[itemKey];
+
+        if (!recipeObj) return;
+        updateRecommendation();
+
+        let currentRecipe = recipeObj.mats.map((mat, index) => {
+            let finalId = mat.baseId;
+            if (enchant > 0 && !mat.baseId.includes('3')) {
+                finalId = `${mat.baseId}@${enchant}`;
+            }
+            return {
+                name: `${mat.name} (Tier ${mat.baseId.replace(/[^0-9]/g, '')}${enchant > 0 ? '.'+enchant : ''})`,
+                id: finalId,
+                baseId: mat.baseId,
+                ratio: mat.ratio,
+                index: index
+            };
+        });
+
+        const loading = document.getElementById('loadingStatus');
+        const tbody = document.getElementById('tableBody');
+        const totalBox = document.getElementById('totalBox');
+
+        loading.style.display = 'block';
+        tbody.innerHTML = '';
+
+        let idsToFetch = currentRecipe.map(r => r.id).join(',');
+        let citiesToFetch = cities.join(',');
+        let apiUrl = `https://prices.albion-online-data.com/api/v2/stats/prices/${idsToFetch}?locations=${citiesToFetch}`;
+
+        let priceData = [];
+        try {
+            let response = await fetch(apiUrl);
+            priceData = await response.json();
+        } catch (error) {
+            console.warn("API request failed.");
+        }
+
+        loading.style.display = 'none';
+        let grandTotal = 0;
+
+        currentRecipe.forEach((mat) => {
+            let reqQty = mat.ratio * totalQty;
+            // Filtrer uniquement les offres valides renvoyées par la vraie API
+            let itemOffers = priceData.filter(p => p.item_id === mat.id && p.buy_price_min > 0);
+            
+            let topMarkets = [];
+
+            if (itemOffers.length > 0) {
+                // Tri par prix croissant direct de l'API
+                itemOffers.sort((a, b) => a.buy_price_min - b.buy_price_min);
+                topMarkets = itemOffers.slice(0, 3).map(o => ({ city: o.city, price: o.buy_price_min }));
+            } else {
+                topMarkets = [{ city: "No Live Data Found in API", price: 0 }];
+            }
+
+            let bestPrice = topMarkets[0].price;
+            let lineCost = reqQty * bestPrice;
+            grandTotal += lineCost;
+
+            let marketHtml = topMarkets.map((m, i) => m.price > 0 ? `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>` : `<div style="color:#94a3b8;">Aucune offre récente</div>`).join('');
+
+            let row = `<tr>
+                <td><b>${mat.name}</b></td>
+                <td><code>${mat.id}</code></td>
+                <td>${mat.ratio}</td>
+                <td><b>${reqQty.toLocaleString()}</b></td>
+                <td class="market-rank">${marketHtml}</td>
+                <td><b>${bestPrice > 0 ? bestPrice.toLocaleString() : 'N/A'}</b></td>
+                <td><b>${bestPrice > 0 ? lineCost.toLocaleString() : 'N/A'}</b></td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+
+        totalBox.innerText = `Total Material Cost (1st Choice): ${grandTotal > 0 ? grandTotal.toLocaleString() : 'N/A'} Silver`;
+    }
+</script>
+
+</body>
+</html>
