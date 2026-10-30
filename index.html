@@ -216,7 +216,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v2.1</div>
+            <div class="badge-version">🚀 Update v2.2</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -230,6 +230,7 @@
                 <option value="leather">Leather / Hides (Refining)</option>
                 <option value="wood">Wood / Planks (Refining)</option>
                 <option value="stone">Stone / Blocks (Refining)</option>
+                <option value="potions">Potions / Alchemy (Crafting)</option>
                 <option value="fishing">Fishing Rods (Crafting)</option>
                 <option value="kingmaker">Kingmaker Swords (Crafting)</option>
             </select>
@@ -318,6 +319,13 @@
         "T7_STONEBLOCK": { name: "Dense Block T7", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "T6 Stone Block", baseId: "T6_STONEBLOCK", ratio: 1 }, { name: "T7 Rock", baseId: "T7_ROCK", ratio: 5 } ] },
         "T8_STONEBLOCK": { name: "Glowing Block T8", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "T7 Stone Block", baseId: "T7_STONEBLOCK", ratio: 1 }, { name: "T8 Rock", baseId: "T8_ROCK", ratio: 6 } ] },
 
+        // Recettes de Potions (Alchimie - Bonus à Lymhurst ou Caerleon)
+        "T4_POTION_HEAL": { name: "Minor Healing Potion T4 (Major/Standard base)", bonusCity: "Lymhurst (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T3 Fireweed", baseId: "T3_HERB_FIREWEED", ratio: 4 }, { name: "T4 Muggelwort", baseId: "T4_HERB_MUGGELWORT", ratio: 2 } ] },
+        "T5_POTION_ENERGY": { name: "Energy Potion T5", bonusCity: "Lymhurst (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Muggelwort", baseId: "T4_HERB_MUGGELWORT", ratio: 8 }, { name: "T5 Dragontears", baseId: "T5_HERB_DRAGONTEARS", ratio: 4 } ] },
+        "T6_POTION_HEAL": { name: "Healing Potion T6", bonusCity: "Lymhurst (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Dragontears", baseId: "T5_HERB_DRAGONTEARS", ratio: 16 }, { name: "T6 Clearwater Potent", baseId: "T6_HERB_CLEARWATER", ratio: 8 } ] },
+        "T7_POTION_RESISTANCE": { name: "Resistance Potion T7", bonusCity: "Lymhurst (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Clearwater Potent", baseId: "T6_HERB_CLEARWATER", ratio: 32 }, { name: "T7 Elixir", baseId: "T7_HERB_ELIXIR", ratio: 16 } ] },
+        "T8_POTION_GIANT": { name: "Giant Potion T8", bonusCity: "Lymhurst (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Elixir", baseId: "T7_HERB_ELIXIR", ratio: 64 }, { name: "T8 Fireroot", baseId: "T8_HERB_FIREROOT", ratio: 32 } ] },
+
         "T4_FISHINGROD": { name: "Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Plank", baseId: "T4_PLANK", ratio: 16 }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8 } ] },
         "T5_FISHINGROD": { name: "Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Plank", baseId: "T5_PLANK", ratio: 16 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
         "T6_FISHINGROD": { name: "Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Plank", baseId: "T6_PLANK", ratio: 16 }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8 } ] },
@@ -337,6 +345,7 @@
         "leather": [ { id: "T4_LEATHER", name: "Stiff Leather T4" }, { id: "T5_LEATHER", name: "Thick Leather T5" }, { id: "T6_LEATHER", name: "Worked Leather T6" }, { id: "T7_LEATHER", name: "Cured Leather T7" }, { id: "T8_LEATHER", name: "Califor Leather T8" } ],
         "wood": [ { id: "T4_PLANK", name: "Medium Plank T4" }, { id: "T5_PLANK", name: "Long Plank T5" }, { id: "T6_PLANK", name: "Strong Plank T6" }, { id: "T7_PLANK", name: "Glazed Plank T7" }, { id: "T8_PLANK", name: "Resinous Plank T8" } ],
         "stone": [ { id: "T4_STONEBLOCK", name: "Cut Stone T4" }, { id: "T5_STONEBLOCK", name: "Heavy Block T5" }, { id: "T6_STONEBLOCK", name: "Solid Block T6" }, { id: "T7_STONEBLOCK", name: "Dense Block T7" }, { id: "T8_STONEBLOCK", name: "Glowing Block T8" } ],
+        "potions": [ { id: "T4_POTION_HEAL", name: "Minor Healing Potion T4" }, { id: "T5_POTION_ENERGY", name: "Energy Potion T5" }, { id: "T6_POTION_HEAL", name: "Healing Potion T6" }, { id: "T7_POTION_RESISTANCE", name: "Resistance Potion T7" }, { id: "T8_POTION_GIANT", name: "Giant Potion T8" } ],
         "fishing": [ { id: "T4_FISHINGROD", name: "Fishing Rod T4" }, { id: "T5_FISHINGROD", name: "Fishing Rod T5" }, { id: "T6_FISHINGROD", name: "Fishing Rod T6" }, { id: "T7_FISHINGROD", name: "Fishing Rod T7" }, { id: "T8_FISHINGROD", name: "Fishing Rod T8" } ],
         "kingmaker": [ { id: "T4_2H_SWORD_AVALON", name: "Kingmaker Sword T4" }, { id: "T5_2H_SWORD_AVALON", name: "Kingmaker Sword T5" }, { id: "T6_2H_SWORD_AVALON", name: "Kingmaker Sword T6" }, { id: "T7_2H_SWORD_AVALON", name: "Kingmaker Sword T7" }, { id: "T8_2H_SWORD_AVALON", name: "Kingmaker Sword T8" } ]
     };
@@ -436,7 +445,6 @@
             
             let cityMap = {};
 
-            // Correction majeure : on filtre et on privilégie l'offre qui a la date la plus récente (le prix le plus frais du marché)
             itemOffers.forEach(o => {
                 let price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
                 let date = o.sell_price_min > 0 ? o.sell_price_min_date : o.buy_price_max_date;
@@ -449,17 +457,13 @@
             });
 
             let topMarkets = Object.values(cityMap);
-            // On trie en donnant la priorité aux prix les plus récents (fraîcheur < 2h) s'il y a un écart, puis par prix
             topMarkets.sort((a, b) => {
                 let timeA = new Date(a.date).getTime();
                 let timeB = new Date(b.date).getTime();
-                // Si l'écart de date est significatif (> 1h), on favorise le plus récent pour coller à Free Albion Market
                 return timeB - timeA; 
             });
 
-            // On garde le top 3 trié par date/prix le plus frais
             topMarkets = topMarkets.slice(0, 3);
-            // Puis on ré-ordonne les 3 par prix croissant pour l'affichage de la ville la moins chère
             topMarkets.sort((a, b) => a.price - b.price);
 
             let bestPrice = 0;
