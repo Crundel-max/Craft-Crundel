@@ -346,4 +346,74 @@
                 finalId = `${mat.baseId}@${enchant}`;
             }
             return {
-                name: `${mat.name}${enchant > 0 && !mat.baseId.includes('3
+                name: `${mat.name}${enchant > 0 && !mat.baseId.includes('3') ? ' .' + enchant : ''}`,
+                id: finalId,
+                baseId: mat.baseId,
+                ratio: mat.ratio,
+                index: index
+            };
+        });
+
+        const loading = document.getElementById('loadingStatus');
+        const tbody = document.getElementById('tableBody');
+        const totalBox = document.getElementById('totalBox');
+
+        loading.style.display = 'block';
+        tbody.innerHTML = '';
+
+        let idsToFetch = currentRecipe.map(r => r.id).join(',');
+        let citiesToFetch = cities.join(',');
+        let apiUrl = `https://prices.albion-online-data.com/api/v2/stats/prices/${idsToFetch}?locations=${citiesToFetch}`;
+
+        let priceData = [];
+        try {
+            let response = await fetch(apiUrl);
+            priceData = await response.json();
+        } catch (error) {
+            console.warn("API request failed.");
+        }
+
+        loading.style.display = 'none';
+        let grandTotal = 0;
+
+        currentRecipe.forEach((mat) => {
+            let reqQty = mat.ratio * totalQty;
+            // On récupère toutes les offres valides renvoyées par l'API (prix d'achat ou de vente min)
+            let itemOffers = priceData.filter(p => p.item_id === mat.id && (p.buy_price_min > 0 || p.sell_price_min > 0));
+            
+            let topMarkets = [];
+
+            if (itemOffers.length > 0) {
+                itemOffers.forEach(o => {
+                    o.effective_price = o.buy_price_min > 0 ? o.buy_price_min : o.sell_price_min;
+                });
+                itemOffers.sort((a, b) => a.effective_price - b.effective_price);
+                topMarkets = itemOffers.slice(0, 3).map(o => ({ city: o.city, price: o.effective_price }));
+            } else {
+                topMarkets = [{ city: "Aucune offre récente (Marché vide)", price: 0 }];
+            }
+
+            let bestPrice = topMarkets.length > 0 && topMarkets[0].price > 0 ? topMarkets[0].price : 0;
+            let lineCost = bestPrice > 0 ? reqQty * bestPrice : 0;
+            grandTotal += lineCost;
+
+            let marketHtml = topMarkets.map((m, i) => m.price > 0 ? `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>` : `<div style="color:#94a3b8;">Aucune offre récente</div>`).join('');
+
+            let row = `<tr>
+                <td><b>${mat.name}</b></td>
+                <td><code>${mat.id}</code></td>
+                <td>${mat.ratio}</td>
+                <td><b>${reqQty.toLocaleString()}</b></td>
+                <td class="market-rank">${marketHtml}</td>
+                <td><b>${bestPrice > 0 ? bestPrice.toLocaleString() : 'N/A'}</b></td>
+                <td><b>${bestPrice > 0 ? lineCost.toLocaleString() : 'N/A'}</b></td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
+
+        totalBox.innerText = `Total Material Cost (1st Choice): ${grandTotal > 0 ? grandTotal.toLocaleString() : 'N/A'} Silver`;
+    }
+</script>
+
+</body>
+</html>
