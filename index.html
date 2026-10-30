@@ -151,9 +151,13 @@
         }
         .market-rank {
             font-size: 12px;
-            line-height: 1.5;
+            line-height: 1.6;
             text-align: left;
             padding-left: 15px;
+        }
+        .age-info {
+            color: var(--text-muted);
+            font-size: 11px;
         }
         .total-box {
             margin-top: 25px;
@@ -247,7 +251,7 @@
                 <th>API ID</th>
                 <th>Unit Qty</th>
                 <th>Total Qty</th>
-                <th>Top 3 Cheapest Cities to Buy 🛒</th>
+                <th>Top 3 Cheapest Cities to Buy (Direct Sell) 🛒</th>
                 <th>Min Price (1st Choice)</th>
                 <th>Total Cost (1st Choice)</th>
             </tr>
@@ -345,6 +349,21 @@
 
     updateItemList();
 
+    function formatAge(dateString) {
+        if (!dateString) return "Âge inconnu";
+        let diffMs = new Date() - new Date(dateString);
+        let diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+        let diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        if (diffHrs < 1) {
+            return `Il y a ${diffMins}m`;
+        } else if (diffHrs < 24) {
+            return `Il y a ${diffHrs}h ${diffMins}m`;
+        } else {
+            let diffDays = Math.floor(diffHrs / 24);
+            return `Il y a ${diffDays}j`;
+        }
+    }
+
     async function fetchPrices() {
         const itemKey = document.getElementById('itemSelect').value;
         const enchant = parseInt(document.getElementById('enchantSelect').value) || 0;
@@ -377,8 +396,6 @@
 
         let idsToFetch = currentRecipe.map(r => r.id).join(',');
         let citiesToFetch = cities.join(',');
-        
-        // Utilisation de l'API de statistiques globales pour s'assurer d'avoir les prix de vente moyens et directs sans blocage de cache vide
         let apiUrl = `https://prices.albion-online-data.com/api/v2/stats/prices/${idsToFetch}?locations=${citiesToFetch}`;
 
         let priceData = [];
@@ -396,17 +413,18 @@
         currentRecipe.forEach((mat) => {
             let reqQty = mat.ratio * totalQty;
             
-            // On récupère en priorité le prix de vente direct (sell_price_min). S'il est absent, on bascule sur la moyenne d'achat récente pour éviter le N/A.
-            let itemOffers = priceData.filter(p => p.item_id === mat.id && (p.sell_price_min > 0 || p.buy_price_max > 0));
+            // On filtre strictement sur les offres de vente directe valides
+            let itemOffers = priceData.filter(p => p.item_id === mat.id && p.sell_price_min > 0);
             
             let topMarkets = [];
 
             if (itemOffers.length > 0) {
-                itemOffers.forEach(o => {
-                    o.effective_price = o.sell_price_min > 0 ? o.sell_price_min : o.buy_price_max;
-                });
-                itemOffers.sort((a, b) => a.effective_price - b.effective_price);
-                topMarkets = itemOffers.slice(0, 3).map(o => ({ city: o.city, price: o.effective_price }));
+                itemOffers.sort((a, b) => a.sell_price_min - b.sell_price_min);
+                topMarkets = itemOffers.slice(0, 3).map(o => ({ 
+                    city: o.city, 
+                    price: o.sell_price_min, 
+                    date: o.sell_price_min_date 
+                }));
             }
 
             let bestPrice = 0;
@@ -418,7 +436,7 @@
                 lineCost = reqQty * bestPrice;
                 grandTotal += lineCost;
                 hasAnyValidPrice = true;
-                marketHtml = topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>`).join('');
+                marketHtml = topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             } else {
                 marketHtml = `<div style="color: #94a3b8; font-style: italic;">Aucune offre récente</div>`;
             }
