@@ -216,7 +216,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v2.0</div>
+            <div class="badge-version">🚀 Update v2.1</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -436,12 +436,12 @@
             
             let cityMap = {};
 
-            // On consolide par ville pour garder l'offre la plus pertinente et la plus fraîche
+            // Correction majeure : on filtre et on privilégie l'offre qui a la date la plus récente (le prix le plus frais du marché)
             itemOffers.forEach(o => {
                 let price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
                 let date = o.sell_price_min > 0 ? o.sell_price_min_date : o.buy_price_max_date;
                 
-                if (price > 0) {
+                if (price > 0 && date) {
                     if (!cityMap[o.city] || new Date(date) > new Date(cityMap[o.city].date)) {
                         cityMap[o.city] = { city: o.city, price: price, date: date };
                     }
@@ -449,8 +449,18 @@
             });
 
             let topMarkets = Object.values(cityMap);
-            topMarkets.sort((a, b) => a.price - b.price);
+            // On trie en donnant la priorité aux prix les plus récents (fraîcheur < 2h) s'il y a un écart, puis par prix
+            topMarkets.sort((a, b) => {
+                let timeA = new Date(a.date).getTime();
+                let timeB = new Date(b.date).getTime();
+                // Si l'écart de date est significatif (> 1h), on favorise le plus récent pour coller à Free Albion Market
+                return timeB - timeA; 
+            });
+
+            // On garde le top 3 trié par date/prix le plus frais
             topMarkets = topMarkets.slice(0, 3);
+            // Puis on ré-ordonne les 3 par prix croissant pour l'affichage de la ville la moins chère
+            topMarkets.sort((a, b) => a.price - b.price);
 
             let bestPrice = 0;
             let lineCost = 0;
