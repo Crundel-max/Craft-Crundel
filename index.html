@@ -216,7 +216,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v1.9</div>
+            <div class="badge-version">🚀 Update v2.0</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -287,6 +287,7 @@
 
 <script>
     const baseRecipes = {
+        "T3_CLOTH": { name: "Neat Cloth T3", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T2 Cloth", baseId: "T2_CLOTH", ratio: 1 }, { name: "T3 Fiber", baseId: "T3_FIBER", ratio: 2 } ] },
         "T4_CLOTH": { name: "Fine Cloth T4", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 1 }, { name: "T4 Fiber", baseId: "T4_FIBER", ratio: 2 } ] },
         "T5_CLOTH": { name: "Opulent Cloth T5", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 1 }, { name: "T5 Fiber", baseId: "T5_FIBER", ratio: 3 } ] },
         "T6_CLOTH": { name: "Dusky Cloth T6", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 1 }, { name: "T6 Fiber", baseId: "T6_FIBER", ratio: 4 } ] },
@@ -331,7 +332,7 @@
     };
 
     const categories = {
-        "cloth": [ { id: "T4_CLOTH", name: "Fine Cloth T4" }, { id: "T5_CLOTH", name: "Opulent Cloth T5" }, { id: "T6_CLOTH", name: "Dusky Cloth T6" }, { id: "T7_CLOTH", name: "Ornate Cloth T7" }, { id: "T8_CLOTH", name: "Timeless Cloth T8" } ],
+        "cloth": [ { id: "T3_CLOTH", name: "Neat Cloth T3" }, { id: "T4_CLOTH", name: "Fine Cloth T4" }, { id: "T5_CLOTH", name: "Opulent Cloth T5" }, { id: "T6_CLOTH", name: "Dusky Cloth T6" }, { id: "T7_CLOTH", name: "Ornate Cloth T7" }, { id: "T8_CLOTH", name: "Timeless Cloth T8" } ],
         "metal": [ { id: "T4_METALBAR", name: "Steel Bar T4" }, { id: "T5_METALBAR", name: "Titanium Bar T5" }, { id: "T6_METALBAR", name: "Runite Bar T6" }, { id: "T7_METALBAR", name: "Meteorite Bar T7" }, { id: "T8_METALBAR", name: "Adamantium Bar T8" } ],
         "leather": [ { id: "T4_LEATHER", name: "Stiff Leather T4" }, { id: "T5_LEATHER", name: "Thick Leather T5" }, { id: "T6_LEATHER", name: "Worked Leather T6" }, { id: "T7_LEATHER", name: "Cured Leather T7" }, { id: "T8_LEATHER", name: "Califor Leather T8" } ],
         "wood": [ { id: "T4_PLANK", name: "Medium Plank T4" }, { id: "T5_PLANK", name: "Long Plank T5" }, { id: "T6_PLANK", name: "Strong Plank T6" }, { id: "T7_PLANK", name: "Glazed Plank T7" }, { id: "T8_PLANK", name: "Resinous Plank T8" } ],
@@ -415,8 +416,6 @@
 
         let idsToFetch = currentRecipe.map(r => r.id).join(',');
         let citiesToFetch = cities.join(',');
-        
-        // Utilisation de l'API standard globale pour les prix actuels
         let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${idsToFetch}?locations=${citiesToFetch}`;
 
         let priceData = [];
@@ -433,29 +432,25 @@
 
         currentRecipe.forEach((mat) => {
             let reqQty = mat.ratio * totalQty;
-            
-            // On élargit la recherche pour attraper toutes les données disponibles (prix de vente ou d'achat)
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
             
-            let topMarkets = [];
+            let cityMap = {};
 
-            if (itemOffers.length > 0) {
-                itemOffers.forEach(o => {
-                    // Priorité au prix direct de vente, sinon prix d'achat max, sinon 0
-                    o.effective_price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
-                    o.effective_date = o.sell_price_min > 0 ? o.sell_price_min_date : o.buy_price_max_date;
-                });
+            // On consolide par ville pour garder l'offre la plus pertinente et la plus fraîche
+            itemOffers.forEach(o => {
+                let price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
+                let date = o.sell_price_min > 0 ? o.sell_price_min_date : o.buy_price_max_date;
+                
+                if (price > 0) {
+                    if (!cityMap[o.city] || new Date(date) > new Date(cityMap[o.city].date)) {
+                        cityMap[o.city] = { city: o.city, price: price, date: date };
+                    }
+                }
+            });
 
-                // On filtre pour ne garder que les entrées qui ont un prix valide (> 0)
-                let validOffers = itemOffers.filter(o => o.effective_price > 0);
-                validOffers.sort((a, b) => a.effective_price - b.effective_price);
-
-                topMarkets = validOffers.slice(0, 3).map(o => ({ 
-                    city: o.city, 
-                    price: o.effective_price, 
-                    date: o.effective_date 
-                }));
-            }
+            let topMarkets = Object.values(cityMap);
+            topMarkets.sort((a, b) => a.price - b.price);
+            topMarkets = topMarkets.slice(0, 3);
 
             let bestPrice = 0;
             let lineCost = 0;
