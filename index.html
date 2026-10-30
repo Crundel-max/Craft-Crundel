@@ -216,7 +216,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v1.6</div>
+            <div class="badge-version">🚀 Update v1.9</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -369,7 +369,7 @@
     updateItemList();
 
     function formatAge(dateString) {
-        if (!dateString) return "Âge inconnu";
+        if (!dateString) return "Mise à jour récente";
         let diffMs = new Date() - new Date(dateString);
         let diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
         let diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -415,7 +415,9 @@
 
         let idsToFetch = currentRecipe.map(r => r.id).join(',');
         let citiesToFetch = cities.join(',');
-        let apiUrl = `https://prices.albion-online-data.com/api/v2/stats/prices/${idsToFetch}?locations=${citiesToFetch}`;
+        
+        // Utilisation de l'API standard globale pour les prix actuels
+        let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${idsToFetch}?locations=${citiesToFetch}`;
 
         let priceData = [];
         try {
@@ -431,16 +433,27 @@
 
         currentRecipe.forEach((mat) => {
             let reqQty = mat.ratio * totalQty;
-            let itemOffers = priceData.filter(p => p.item_id === mat.id && p.sell_price_min > 0);
+            
+            // On élargit la recherche pour attraper toutes les données disponibles (prix de vente ou d'achat)
+            let itemOffers = priceData.filter(p => p.item_id === mat.id);
             
             let topMarkets = [];
 
             if (itemOffers.length > 0) {
-                itemOffers.sort((a, b) => a.sell_price_min - b.sell_price_min);
-                topMarkets = itemOffers.slice(0, 3).map(o => ({ 
+                itemOffers.forEach(o => {
+                    // Priorité au prix direct de vente, sinon prix d'achat max, sinon 0
+                    o.effective_price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
+                    o.effective_date = o.sell_price_min > 0 ? o.sell_price_min_date : o.buy_price_max_date;
+                });
+
+                // On filtre pour ne garder que les entrées qui ont un prix valide (> 0)
+                let validOffers = itemOffers.filter(o => o.effective_price > 0);
+                validOffers.sort((a, b) => a.effective_price - b.effective_price);
+
+                topMarkets = validOffers.slice(0, 3).map(o => ({ 
                     city: o.city, 
-                    price: o.sell_price_min, 
-                    date: o.sell_price_min_date 
+                    price: o.effective_price, 
+                    date: o.effective_date 
                 }));
             }
 
