@@ -283,7 +283,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.31</div>
+            <div class="badge-version">🚀 Update v3.32</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -384,7 +384,7 @@
 </div>
 
 <script>
-    function formatAlbionItemID(baseId, tier, enchantment) {
+    function formatAlbionItemID(baseId, tier, enchantment, isMaterialOrResource = true) {
         let cleanBase = baseId ? baseId.trim().toUpperCase() : "";
         
         if (!cleanBase.startsWith("T")) {
@@ -394,13 +394,7 @@
         }
 
         if (enchantment && enchantment > 0 && enchantment <= 4) {
-            const isMaterial = cleanBase.includes("_CLOTH") || cleanBase.includes("_FIBER") || 
-                               cleanBase.includes("_METALBAR") || cleanBase.includes("_ORE") || 
-                               cleanBase.includes("_LEATHER") || cleanBase.includes("_HIDE") || 
-                               cleanBase.includes("_PLANKS") || cleanBase.includes("_WOOD") || 
-                               cleanBase.includes("_STONEBLOCK") || cleanBase.includes("_ROCK");
-            
-            if (isMaterial) {
+            if (isMaterialOrResource) {
                 return `${cleanBase}_LEVEL${enchantment}@${enchantment}`;
             }
             return `${cleanBase}@${enchantment}`;
@@ -470,12 +464,12 @@
         "T7_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
         "T8_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
-        // --- ÉPÉES KINGMAKER (Correction ID Artefact Claymore) ---
-        "T4_2H_SWORD_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T5_2H_SWORD_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T6_2H_SWORD_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T7_2H_SWORD_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20 }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T8_2H_SWORD_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20 }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] }
+        // --- ÉPÉES KINGMAKER ---
+        "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T5_2H_CLAYMORE_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T6_2H_CLAYMORE_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T7_2H_CLAYMORE_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20 }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T8_2H_CLAYMORE_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20 }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] }
     };
 
     const categories = {
@@ -510,11 +504,11 @@
             { id: "T8_TOOL_FISHINGROD", name: "Elder's Fishing Rod T8" } 
         ],
         "kingmaker": [ 
-            { id: "T4_2H_SWORD_AVALON", name: "Adept's Kingmaker T4" }, 
-            { id: "T5_2H_SWORD_AVALON", name: "Expert's Kingmaker T5" }, 
-            { id: "T6_2H_SWORD_AVALON", name: "Master's Kingmaker T6" }, 
-            { id: "T7_2H_SWORD_AVALON", name: "Grandmaster's Kingmaker T7" }, 
-            { id: "T8_2H_SWORD_AVALON", name: "Elder's Kingmaker T8" } 
+            { id: "T4_2H_CLAYMORE_AVALON", name: "Adept's Kingmaker T4" }, 
+            { id: "T5_2H_CLAYMORE_AVALON", name: "Expert's Kingmaker T5" }, 
+            { id: "T6_2H_CLAYMORE_AVALON", name: "Master's Kingmaker T6" }, 
+            { id: "T7_2H_CLAYMORE_AVALON", name: "Grandmaster's Kingmaker T7" }, 
+            { id: "T8_2H_CLAYMORE_AVALON", name: "Elder's Kingmaker T8" } 
         ]
     };
 
@@ -587,10 +581,12 @@
         const tierMatch = itemKey.match(/^T(\d+)/);
         const currentTier = tierMatch ? parseInt(tierMatch[1]) : 4;
 
+        // Détermination correcte de l'ID de l'item crafté selon tes captures d'écran (les armes utilisent @enchantement direct)
         let craftedItemId = itemKey;
-        const isSpecialBase = itemKey.includes('3') && !itemKey.includes('TOOL');
-        if (enchant > 0 && !isSpecialBase) {
-            craftedItemId = formatAlbionItemID(itemKey, currentTier, enchant);
+        const isMaterialKey = itemKey.includes('_CLOTH') || itemKey.includes('_METALBAR') || itemKey.includes('_LEATHER') || itemKey.includes('_PLANKS') || itemKey.includes('_STONEBLOCK');
+        
+        if (enchant > 0) {
+            craftedItemId = formatAlbionItemID(itemKey, currentTier, enchant, isMaterialKey);
         }
 
         let currentRecipe = recipeObj.mats.map((mat, index) => {
@@ -598,8 +594,10 @@
             const matTier = matTierMatch ? parseInt(matTierMatch[1]) : currentTier;
 
             let finalId = mat.baseId;
+            const isMatResource = mat.baseId.includes('_CLOTH') || mat.baseId.includes('_METALBAR') || mat.baseId.includes('_LEATHER') || mat.baseId.includes('_PLANKS') || mat.baseId.includes('_STONEBLOCK') || mat.baseId.includes('_ORE') || mat.baseId.includes('_FIBER') || mat.baseId.includes('_HIDE') || mat.baseId.includes('_WOOD') || mat.baseId.includes('_ROCK');
+
             if (enchant > 0 && !mat.isArtefact) {
-                finalId = formatAlbionItemID(mat.baseId, matTier, enchant);
+                finalId = formatAlbionItemID(mat.baseId, matTier, enchant, isMatResource);
             }
             
             let rawReqQty = mat.ratio * totalQty;
@@ -695,6 +693,7 @@
             tbody.innerHTML += row;
         });
 
+        // --- SECTION REVENUS / VENTE DE L'ARME CRAFTÉE ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
         let sellCityMap = {};
 
@@ -753,6 +752,25 @@
             profitUnitSummary.className = 'summary-sub';
             profitUnitSummary.innerText = 'Unit: N/A';
         }
+    }
+
+    function formatAlbionItemID(baseId, tier, enchantment, isMaterialOrResource) {
+        let cleanBase = baseId ? baseId.trim().toUpperCase() : "";
+        
+        if (!cleanBase.startsWith("T")) {
+            cleanBase = `T${tier}_${cleanBase}`;
+        } else {
+            cleanBase = cleanBase.replace(/^T\d+/, `T${tier}`);
+        }
+
+        if (enchantment && enchantment > 0 && enchantment <= 4) {
+            if (isMaterialOrResource) {
+                return `${cleanBase}_LEVEL${enchantment}@${enchantment}`;
+            }
+            return `${cleanBase}@${enchantment}`;
+        }
+
+        return cleanBase;
     }
 </script>
 
