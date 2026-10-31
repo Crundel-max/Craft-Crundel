@@ -256,7 +256,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.24</div>
+            <div class="badge-version">🚀 Update v3.25</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -356,13 +356,8 @@
             cleanBase = cleanBase.replace(/^T\d+/, `T${tier}`);
         }
 
+        // L'API Albion Data Project utilise universellement le suffixe @X pour tous les enchantements
         if (enchantment && enchantment > 0 && enchantment <= 4) {
-            // Pour l'API Albion Data Project, les ressources et matériaux enchantés 
-            // utilisent le format _LEVEL{X} ou @{X} selon le type d'item.
-            // Teste avec _LEVEL{enchantment} si le @ ne renvoie rien sur les ressources.
-            if (cleanBase.includes("CLOTH") || cleanBase.includes("FIBER") || cleanBase.includes("METALBAR") || cleanBase.includes("ORE") || cleanBase.includes("LEATHER") || cleanBase.includes("HIDE") || cleanBase.includes("PLANKS") || cleanBase.includes("WOOD") || cleanBase.includes("STONEBLOCK") || cleanBase.includes("ROCK")) {
-                return `${cleanBase}_LEVEL${enchantment}`;
-            }
             return `${cleanBase}@${enchantment}`;
         }
 
