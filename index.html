@@ -283,7 +283,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.32</div>
+            <div class="badge-version">🚀 Update v3.31</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -394,16 +394,14 @@
         }
 
         if (enchantment && enchantment > 0 && enchantment <= 4) {
-            // Si c'est une matière première OU une arme/artefact spécifique qui utilise _LEVEL
             const isMaterial = cleanBase.includes("_CLOTH") || cleanBase.includes("_FIBER") || 
                                cleanBase.includes("_METALBAR") || cleanBase.includes("_ORE") || 
                                cleanBase.includes("_LEATHER") || cleanBase.includes("_HIDE") || 
                                cleanBase.includes("_PLANKS") || cleanBase.includes("_WOOD") || 
-                               cleanBase.includes("_STONEBLOCK") || cleanBase.includes("_ROCK") ||
-                               cleanBase.includes("_AVALON"); // <-- Ajout pour les armes d'Avalon
+                               cleanBase.includes("_STONEBLOCK") || cleanBase.includes("_ROCK");
             
             if (isMaterial) {
-                return `${cleanBase}_LEVEL${enchantment}@${enchantement}`;
+                return `${cleanBase}_LEVEL${enchantment}@${enchantment}`;
             }
             return `${cleanBase}@${enchantment}`;
         }
