@@ -306,7 +306,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.38</div>
+            <div class="badge-version">🚀 Update v3.39</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -341,7 +341,7 @@
         </div>
         <div class="form-group">
             <label for="qtyInput">Quantity (Output):</label>
-            <input type="number" id="qtyInput" value="100" min="1">
+            <input type="number" id="qtyInput" value="10" min="1">
         </div>
         <button onclick="fetchPrices()">⚡ Calculate Optimal Crafting, Costs & Profit</button>
     </div>
@@ -364,7 +364,6 @@
         💡 Best Crafting Location: Select an item to see the recommended city.
     </div>
 
-    <!-- Double Cadre d'analyse stratégique côte à côte -->
     <div id="strategiesContainer" class="strategies-container" style="display:none;">
         <div class="strategy-box">
             <h4>🛒 Stratégie A : Achat Direct Composants</h4>
@@ -373,7 +372,7 @@
         </div>
         <div class="strategy-box" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);">
             <h4 style="color: var(--success);">⚒️ Stratégie B : Raffinage Maison (Villes Bonus)</h4>
-            <p id="stratBCost">Coût total (Minerai/Peaux + Raffinage +40%) : <b>Calcul...</b></p>
+            <p id="stratBCost">Coût total (avec cascade RR) : <b>Calcul...</b></p>
             <p id="stratBMargin">Marge nette : <b>Calcul...</b></p>
         </div>
     </div>
@@ -388,7 +387,7 @@
                 <th>Required Material</th>
                 <th>API ID</th>
                 <th>Base Qty</th>
-                <th>Effective Qty</th>
+                <th>Effective Qty (Cascade)</th>
                 <th>Top 3 Cheapest Cities to Buy 🛒</th>
                 <th>Min Price (1st Choice)</th>
                 <th>Total Cost (1st Choice)</th>
@@ -502,11 +501,11 @@
         "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
         // --- ÉPÉES KINGMAKER ---
-        "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, isWeapon: true, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20, rawMat: "T4_ORE", rawRatio: 40 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12, rawMat: "T4_HIDE", rawRatio: 24 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T5_2H_CLAYMORE_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, isWeapon: true, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20, rawMat: "T5_ORE", rawRatio: 60 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12, rawMat: "T5_HIDE", rawRatio: 36 }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T6_2H_CLAYMORE_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, isWeapon: true, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20, rawMat: "T6_ORE", rawRatio: 80 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12, rawMat: "T6_HIDE", rawRatio: 48 }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T7_2H_CLAYMORE_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, isWeapon: true, mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20, rawMat: "T7_ORE", rawRatio: 100 }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12, rawMat: "T7_HIDE", rawRatio: 60 }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T8_2H_CLAYMORE_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, isWeapon: true, mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20, rawMat: "T8_ORE", rawRatio: 120 }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12, rawMat: "T8_HIDE", rawRatio: 72 }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] }
+        "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20, rawMat: "T4_ORE", rawRatio: 40 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12, rawMat: "T4_HIDE", rawRatio: 24 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T5_2H_CLAYMORE_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20, rawMat: "T5_ORE", rawRatio: 60 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12, rawMat: "T5_HIDE", rawRatio: 36 }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T6_2H_CLAYMORE_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20, rawMat: "T6_ORE", rawRatio: 80 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12, rawMat: "T6_HIDE", rawRatio: 48 }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T7_2H_CLAYMORE_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20, rawMat: "T7_ORE", rawRatio: 100 }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12, rawMat: "T7_HIDE", rawRatio: 60 }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T8_2H_CLAYMORE_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20, rawMat: "T8_ORE", rawRatio: 120 }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12, rawMat: "T8_HIDE", rawRatio: 72 }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] }
     };
 
     const categories = {
@@ -599,7 +598,7 @@
     async function fetchPrices() {
         const itemKey = document.getElementById('itemSelect').value;
         const enchant = parseInt(document.getElementById('enchantSelect').value) || 0;
-        const totalQty = parseInt(document.getElementById('qtyInput').value) || 1;
+        const totalQty = parseInt(document.getElementById('qtyInput').value) || 10;
         const recipeObj = baseRecipes[itemKey];
 
         if (!recipeObj) return;
@@ -615,8 +614,11 @@
             refineReturnRate += 0.10;
         }
 
+        // Formule mathématique exacte du multiplicateur en cascade (1 / (1 - RR))
         let activeReturnRate = recipeObj.isRefining ? refineReturnRate : craftReturnRate;
-        document.getElementById('returnRateDisplay').innerText = `Return Rates: Refine ${(refineReturnRate*100).toFixed(0)}% | Craft ${(craftReturnRate*100).toFixed(0)}%`;
+        let cascadeMultiplier = 1 / (1 - activeReturnRate);
+
+        document.getElementById('returnRateDisplay').innerText = `Return Rates: Refine ${(refineReturnRate*100).toFixed(0)}% | Craft ${(craftReturnRate*100).toFixed(0)}% (Cascade Coeff: ${cascadeMultiplier.toFixed(2)})`;
 
         const tierMatch = itemKey.match(/^T(\d+)/);
         const currentTier = tierMatch ? parseInt(tierMatch[1]) : 4;
@@ -645,6 +647,7 @@
             }
             
             let rawReqQty = mat.ratio * totalQty;
+            // Application du coefficient en cascade au lieu d'une simple soustraction linéaire
             let effectiveQty = mat.isArtefact ? rawReqQty : rawReqQty * (1 - activeReturnRate);
 
             return {
@@ -742,7 +745,6 @@
                 marketHtml = `<div style="color: var(--warning); font-style: italic;">📡 En attente de scan marché</div>`;
             }
 
-            // Calcul Stratégie A (Achat direct composants)
             if (!recipeObj.isRefining && !mat.isArtefact) {
                 let directOffers = priceData.filter(p => p.item_id === mat.directBuyId);
                 let bestDirectPrice = 0;
@@ -756,15 +758,15 @@
                     hasValidDirectBuy = false;
                 }
 
-                // Calcul Stratégie B (Raffinage maison à partir de la ressource brute avec RR de raffinage)
                 let rawOffers = priceData.filter(p => p.item_id === mat.rawMaterialId);
                 let bestRawPrice = 0;
                 rawOffers.forEach(o => {
                     let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
                     if (p > 0 && (bestRawPrice === 0 || p < bestRawPrice)) bestRawPrice = p;
                 });
+                let refineCascadeMultiplier = 1 / (1 - refineReturnRate);
                 if (bestRawPrice > 0 && mat.rawMaterialRatio > 0) {
-                    let rawNeededQty = mat.rawMaterialRatio * totalQty * (1 - refineReturnRate);
+                    let rawNeededQty = mat.rawMaterialRatio * totalQty / refineCascadeMultiplier;
                     refinedMaisonTotalCost += (rawNeededQty * bestRawPrice);
                 } else {
                     hasValidRefinedMaison = false;
@@ -780,7 +782,7 @@
 
             let effectiveQtyDisplay = mat.isArtefact 
                 ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(no RR)</span>`
-                : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(rr ${(activeReturnRate*100).toFixed(0)}%)</span>`;
+                : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(cascade rr ${(activeReturnRate*100).toFixed(0)}%)</span>`;
 
             let row = `<tr>
                 <td><b>${mat.name}</b></td>
@@ -794,7 +796,7 @@
             tbody.innerHTML += row;
         });
 
-        // --- REVENUS DE VENTE ---
+        // --- REVENUS DE VENTE (En tenant compte du volume total réellement produit grâce au cascade multiplier) ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
         let sellCityMap = {};
 
@@ -813,24 +815,29 @@
         topSellMarkets.sort((a, b) => a.price - b.price);
         topSellMarkets = topSellMarkets.slice(0, 3);
 
-        let unitCost = (hasAnyValidPrice && totalQty > 0) ? grandTotalCost / totalQty : 0;
         let bestUnitSellPrice = 0;
         if (topSellMarkets.length > 0) bestUnitSellPrice = topSellMarkets[0].price;
 
+        // Volume réel produit total incluant le recyclage en cascade des matériaux
+        let effectiveOutputQty = totalQty * cascadeMultiplier;
+
         let marketTaxRate = 0.06;
         let unitNetRevenue = bestUnitSellPrice > 0 ? bestUnitSellPrice * (1 - marketTaxRate) : 0;
-        let unitNetProfit = (bestUnitSellPrice > 0 && unitCost > 0) ? unitNetRevenue - unitCost : 0;
-        let profitMargin = (unitCost > 0 && bestUnitSellPrice > 0) ? (unitNetProfit / unitCost) * 100 : 0;
+        
+        let totalNetRevenue = unitNetRevenue * effectiveOutputQty;
+        let grandTotalCostOptimized = grandTotalCost; // Coût basé sur les effectifs optimisés
+        let totalNetProfit = totalNetRevenue - grandTotalCostOptimized;
+        
+        let unitCost = (hasAnyValidPrice && effectiveOutputQty > 0) ? grandTotalCostOptimized / effectiveOutputQty : 0;
+        let profitMargin = (grandTotalCostOptimized > 0) ? (totalNetProfit / grandTotalCostOptimized) * 100 : 0;
 
-        let totalNetProfit = unitNetProfit * totalQty;
-
-        costSummary.innerText = hasAnyValidPrice ? `${Math.round(grandTotalCost).toLocaleString()} Silver` : 'N/A';
-        costUnitSummary.innerText = hasAnyValidPrice ? `Unit: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
+        costSummary.innerText = hasAnyValidPrice ? `${Math.round(grandTotalCostOptimized).toLocaleString()} Silver` : 'N/A';
+        costUnitSummary.innerText = hasAnyValidPrice ? `Unit Cost: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
 
         if (topSellMarkets.length > 0) {
             let revenueHtml = topSellMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#34d399;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             revenueSummary.innerHTML = revenueHtml;
-            revenueUnitSummary.innerText = `Unit Best: ${bestUnitSellPrice.toLocaleString()} S (${topSellMarkets[0].city})`;
+            revenueUnitSummary.innerText = `Unit Best: ${bestUnitSellPrice.toLocaleString()} S (${topSellMarkets[0].city}) • Vol: ~${Math.round(effectiveOutputQty)}`;
         } else {
             revenueSummary.innerHTML = `<div class="tag-unsynced">📡 Données non synchronisées (Scanner requis en jeu)</div>`;
             revenueUnitSummary.innerText = 'Unit: Non disponible';
@@ -842,7 +849,7 @@
             profitSummary.innerText = `${Math.round(totalNetProfit).toLocaleString()} Silver (${profitMargin.toFixed(1)}%)`;
             
             profitUnitSummary.className = `summary-sub ${profitClass}`;
-            profitUnitSummary.innerText = `Unit Profit: ${Math.round(unitNetProfit).toLocaleString()} S`;
+            profitUnitSummary.innerText = `Total Volume Vendu : ~${Math.round(effectiveOutputQty)} unités`;
         } else {
             profitSummary.className = 'summary-value';
             profitSummary.innerHTML = `<span style="font-size:13px; color:var(--warning);">En attente de scan marché</span>`;
@@ -854,28 +861,24 @@
         if (!recipeObj.isRefining && hasAnyValidPrice && bestUnitSellPrice > 0) {
             strategiesContainer.style.display = 'grid';
 
-            // Stratégie A
             if (hasValidDirectBuy && directBuyTotalCost > 0) {
-                let unitA = directBuyTotalCost / totalQty;
-                let profitA = (unitNetRevenue - unitA) * totalQty;
-                let marginA = (unitA > 0) ? (profitA / (unitA * totalQty)) * 100 : 0;
-                stratACost.innerHTML = `Coût total : <b>${Math.round(directBuyTotalCost).toLocaleString()} S</b> (Unit: ${Math.round(unitA).toLocaleString()} S)`;
+                let profitA = (unitNetRevenue * totalQty) - directBuyTotalCost;
+                let marginA = (directBuyTotalCost > 0) ? (profitA / directBuyTotalCost) * 100 : 0;
+                stratACost.innerHTML = `Coût total : <b>${Math.round(directBuyTotalCost).toLocaleString()} S</b>`;
                 stratAMargin.innerHTML = `Marge nette : <b class="${profitA >= 0 ? 'profit-positive' : 'profit-negative'}">${Math.round(profitA).toLocaleString()} S (${marginA.toFixed(1)}%)</b>`;
             } else {
                 stratACost.innerHTML = `Coût total : Données indisponibles`;
                 stratAMargin.innerHTML = `Marge nette : N/A`;
             }
 
-            // Stratégie B (Raffinage maison)
             if (hasValidRefinedMaison && refinedMaisonTotalCost > 0) {
-                let unitB = refinedMaisonTotalCost / totalQty;
-                let profitB = (unitNetRevenue - unitB) * totalQty;
-                let marginB = (unitB > 0) ? (profitB / (unitB * totalQty)) * 100 : 0;
-                stratBCost.innerHTML = `Coût total (Minerai/Peaux + Raffinage +40%) : <b>${Math.round(refinedMaisonTotalCost).toLocaleString()} S</b> (Unit: ${Math.round(unitB).toLocaleString()} S)`;
+                let profitB = (unitNetRevenue * totalQty) - refinedMaisonTotalCost;
+                let marginB = (refinedMaisonTotalCost > 0) ? (profitB / refinedMaisonTotalCost) * 100 : 0;
+                stratBCost.innerHTML = `Coût total (avec cascade RR) : <b>${Math.round(refinedMaisonTotalCost).toLocaleString()} S</b>`;
                 stratBMargin.innerHTML = `Marge nette : <b class="${profitB >= 0 ? 'profit-positive' : 'profit-negative'}">${Math.round(profitB).toLocaleString()} S (${marginB.toFixed(1)}%)</b>`;
             } else {
                 stratBCost.innerHTML = `Coût total : Données brutes manquantes`;
-                stratBMargin.innerHTML = `Marge nette : N/A`;
+                stratBMargin.innerHTML = `N/A`;
             }
         }
     }
