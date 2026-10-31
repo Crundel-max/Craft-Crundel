@@ -304,7 +304,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.36</div>
+            <div class="badge-version">🚀 Update v3.37</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -354,7 +354,7 @@
             <span>⭐ Daily Bonus Active (+10% Extra Return Rate)</span>
         </label>
         <div id="returnRateDisplay" style="font-size: 14px; color: var(--accent); font-weight: bold;">
-            Return Rates: Refine 40.0% | Craft 15.0%
+            Return Rates: Refine 40% | Craft 15%
         </div>
     </div>
 
@@ -362,15 +362,16 @@
         💡 Best Crafting Location: Select an item to see the recommended city.
     </div>
 
+    <!-- Cadre comparatif de stratégie de craft -->
     <div id="strategyBox" class="strategy-box" style="display:none;">
         <div class="strategy-card">
-            <h4>📊 Stratégie Alternative : Achat Direct Composants</h4>
-            <p id="directBuyCostText">Coût total achat direct : <b>Calcul...</b></p>
-            <p id="directBuyDiffText">Écart vs Fabrication complète : <b>Calcul...</b></p>
+            <h4>📊 Analyse de rentabilité</h4>
+            <p id="strategyCostText">Coût avec matériaux achetés directement : <b>Calcul...</b></p>
+            <p id="strategyMarginText">Marge nette estimée : <b>Calcul...</b></p>
         </div>
         <div class="strategy-card">
-            <h4>💡 Recommandation Intelligente</h4>
-            <p id="smartRecommendationText">Analyse en cours...</p>
+            <h4>💡 Conseil Stratégique</h4>
+            <p id="strategyAdviceText">Analyse en cours...</p>
         </div>
     </div>
 
@@ -497,7 +498,7 @@
         "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
         "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
-        // --- ÉPÉES KINGMAKER (Bonus Craft Armes dans les villes royales = +15%) ---
+        // --- ÉPÉES KINGMAKER ---
         "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
         "T5_2H_CLAYMORE_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
         "T6_2H_CLAYMORE_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)[cite: 25]", isRefining: false, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
@@ -604,20 +605,16 @@
         const isBonusCity = document.getElementById('bonusCityCheck').checked;
         const isDailyBonus = document.getElementById('dailyBonusCheck').checked;
         
-        // Calcul distinct des Taux de Retour (Return Rate)
-        let refineReturnRate = 0.15;
-        if (isBonusCity) refineReturnRate = 0.40;
-        
-        let craftReturnRate = 0.15; // Bonus standard de craft dans une ville royale dédiée (+15%)[cite: 25]
+        let craftReturnRate = 0.15; // Bonus standard de craft dans une ville dédiée (+15%)[cite: 25]
         if (!isBonusCity) craftReturnRate = 0.0;
+        if (isDailyBonus) craftReturnRate += 0.10;
 
-        if (isDailyBonus) {
-            refineReturnRate += 0.10;
-            craftReturnRate += 0.10;
-        }
+        let activeReturnRate = recipeObj.isRefining ? (isBonusCity ? 0.40 : 0.15) : craftReturnRate;
+        if (recipeObj.isRefining && isDailyBonus) activeReturnRate += 0.10;
 
-        let activeReturnRate = recipeObj.isRefining ? refineReturnRate : craftReturnRate;
-        document.getElementById('returnRateDisplay').innerText = `Return Rates: Refine ${(refineReturnRate*100).toFixed(0)}% | Craft ${(craftReturnRate*100).toFixed(0)}%`;
+        document.getElementById('returnRateDisplay').innerText = recipeObj.isRefining 
+            ? `Refining Return Rate: ${(activeReturnRate*100).toFixed(0)}%` 
+            : `Craft Return Rate: ${(activeReturnRate*100).toFixed(0)}%`;
 
         const tierMatch = itemKey.match(/^T(\d+)/);
         const currentTier = tierMatch ? parseInt(tierMatch[1]) : 4;
@@ -629,15 +626,18 @@
             craftedItemId = formatAlbionItemID(itemKey, currentTier, enchant, isMaterialKey);
         }
 
+        // --- PRÉPARATION DES MATÉRIAUX ET ID DE REVENTE/ACHAT ---
         let currentRecipe = recipeObj.mats.map((mat, index) => {
             const matTierMatch = mat.baseId.match(/^T(\d+)/);
             const matTier = matTierMatch ? parseInt(matTierMatch[1]) : currentTier;
 
             let finalId = mat.baseId;
+            let directBuyId = mat.baseId; // Pour les composants de craft (ex: barres raffinées), l'ID direct
             const isMatResource = mat.baseId.includes('_CLOTH') || mat.baseId.includes('_METALBAR') || mat.baseId.includes('_LEATHER') || mat.baseId.includes('_PLANKS') || mat.baseId.includes('_STONEBLOCK') || mat.baseId.includes('_ORE') || mat.baseId.includes('_FIBER') || mat.baseId.includes('_HIDE') || mat.baseId.includes('_WOOD') || mat.baseId.includes('_ROCK');
 
             if (enchant > 0 && !mat.isArtefact) {
                 finalId = formatAlbionItemID(mat.baseId, matTier, enchant, isMatResource);
+                directBuyId = formatAlbionItemID(mat.baseId, matTier, enchant, true);
             }
             
             let rawReqQty = mat.ratio * totalQty;
@@ -646,6 +646,7 @@
             return {
                 name: `${mat.name}${enchant > 0 && !mat.isArtefact ? ' .' + enchant : ''}`,
                 id: finalId,
+                directBuyId: directBuyId,
                 baseId: mat.baseId,
                 ratio: mat.ratio,
                 rawQty: rawReqQty,
@@ -664,14 +665,25 @@
         const profitSummary = document.getElementById('profitSummary');
         const profitUnitSummary = document.getElementById('profitUnitSummary');
         const strategyBox = document.getElementById('strategyBox');
+        const strategyCostText = document.getElementById('strategyCostText');
+        const strategyMarginText = document.getElementById('strategyMarginText');
+        const strategyAdviceText = document.getElementById('strategyAdviceText');
 
         loading.style.display = 'block';
         tbody.innerHTML = '';
         strategyBox.style.display = 'none';
 
-        let allIdsToFetch = [craftedItemId, ...currentRecipe.map(r => r.id)].join(',');
+        let allIdsToFetch = [craftedItemId, ...currentRecipe.map(r => r.id)];
+        // Ajouter aussi les IDs pour l'achat direct si c'est du craft d'arme/potion/outil
+        currentRecipe.forEach(r => {
+            if (!r.isArtefact && !recipeObj.isRefining) {
+                allIdsToFetch.push(r.directBuyId);
+            }
+        });
+
+        let uniqueIdsToFetch = [...new Set(allIdsToFetch)].join(',');
         let citiesToFetch = cities.join(',');
-        let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${allIdsToFetch}?locations=${citiesToFetch}`;
+        let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${uniqueIdsToFetch}?locations=${citiesToFetch}`;
 
         let priceData = [];
         try {
@@ -683,7 +695,9 @@
 
         loading.style.display = 'none';
         let grandTotalCost = 0;
+        let directBuyTotalCost = 0;
         let hasAnyValidPrice = true;
+        let hasValidDirectBuy = true;
 
         currentRecipe.forEach((mat) => {
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
@@ -719,8 +733,26 @@
                 marketHtml = `<div style="color: var(--warning); font-style: italic;">📡 En attente de scan marché</div>`;
             }
 
+            // Calcul du coût si on achète les composants déjà raffinés directement au marché (sans taux de retour sur le coût d'achat)
+            if (!recipeObj.isRefining && !mat.isArtefact) {
+                let directOffers = priceData.filter(p => p.item_id === mat.directBuyId);
+                let bestDirectPrice = 0;
+                directOffers.forEach(o => {
+                    let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
+                    if (p > 0 && (bestDirectPrice === 0 || p < bestDirectPrice)) bestDirectPrice = p;
+                });
+                if (bestDirectPrice > 0) {
+                    // Quantité brute nécessaire avec le taux de retour appliqué au craft (on achète rawQty mais le RR nous en redonne)
+                    directBuyTotalCost += (mat.rawQty * bestDirectPrice);
+                } else {
+                    hasValidDirectBuy = false;
+                }
+            } else {
+                directBuyTotalCost += lineCost;
+            }
+
             let effectiveQtyDisplay = mat.isArtefact 
-                ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var------text-muted);">(no RR)</span>`
+                ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(no RR)</span>`
                 : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(rr ${(activeReturnRate*100).toFixed(0)}%)</span>`;
 
             let row = `<tr>
@@ -756,17 +788,13 @@
 
         let unitCost = (hasAnyValidPrice && totalQty > 0) ? grandTotalCost / totalQty : 0;
         let bestUnitSellPrice = 0;
-
-        if (topSellMarkets.length > 0) {
-            bestUnitSellPrice = topSellMarkets[0].price;
-        }
+        if (topSellMarkets.length > 0) bestUnitSellPrice = topSellMarkets[0].price;
 
         let marketTaxRate = 0.06;
         let unitNetRevenue = bestUnitSellPrice > 0 ? bestUnitSellPrice * (1 - marketTaxRate) : 0;
         let unitNetProfit = (bestUnitSellPrice > 0 && unitCost > 0) ? unitNetRevenue - unitCost : 0;
         let profitMargin = (unitCost > 0 && bestUnitSellPrice > 0) ? (unitNetProfit / unitCost) * 100 : 0;
 
-        let totalNetRevenue = unitNetRevenue * totalQty;
         let totalNetProfit = unitNetProfit * totalQty;
 
         costSummary.innerText = hasAnyValidPrice ? `${Math.round(grandTotalCost).toLocaleString()} Silver` : 'N/A';
@@ -793,6 +821,23 @@
             profitSummary.innerHTML = `<span style="font-size:13px; color:var(--warning);">En attente de scan marché</span>`;
             profitUnitSummary.className = 'summary-sub';
             profitUnitSummary.innerText = 'Unit: N/A';
+        }
+
+        // --- AFFICHAGE DE LA STRATÉGIE D'ACHAT DIRECT ---
+        if (!recipeObj.isRefining && hasAnyValidPrice && hasValidDirectBuy && directBuyTotalCost > 0 && bestUnitSellPrice > 0) {
+            strategyBox.style.display = 'grid';
+            let directUnitCost = directBuyTotalCost / totalQty;
+            let directNetProfit = unitNetRevenue - directUnitCost;
+            let directMargin = (directUnitCost > 0) ? (directNetProfit / directUnitCost) * 100 : 0;
+
+            strategyCostText.innerHTML = `Coût total avec composants achetés cash : <b>${Math.round(directBuyTotalCost).toLocaleString()} S</b> (Unit: ${Math.round(directUnitCost).toLocaleString()} S)`;
+            strategyMarginText.innerHTML = `Marge nette si achat direct : <b class="${directNetProfit >= 0 ? 'profit-positive' : 'profit-negative'}">${Math.round(directNetProfit * totalQty).toLocaleString()} S (${directMargin.toFixed(1)}%)</b>`;
+            
+            if (directNetProfit > 0) {
+                strategyAdviceText.innerHTML = `⚡ <b>Rentable :</b> Acheter les barres/cuirs raffinés directement au marché et les crafter à Lymhurst te dégage un profit positif !`;
+            } else {
+                strategyAdviceText.innerHTML = `⚠️ <b>Attention :</b> Même en achetant les composants directement, le prix de vente actuel sur le marché rend ce craft déficitaire. Attends une baisse des prix des composants ou une hausse de l'arme.`;
+            }
         }
     }
 </script>
