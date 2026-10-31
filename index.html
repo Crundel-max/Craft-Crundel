@@ -85,10 +85,37 @@
             padding: 25px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
+        }
+        .optimization-panel {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 18px 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
         }
         .form-group {
             display: flex;
@@ -256,7 +283,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.27</div>
+            <div class="badge-version">🚀 Update v3.28</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -290,10 +317,25 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="qtyInput">Quantity:</label>
+            <label for="qtyInput">Quantity (Output):</label>
             <input type="number" id="qtyInput" value="100" min="1">
         </div>
         <button onclick="fetchPrices()">⚡ Calculate Optimal Crafting, Costs & Profit</button>
+    </div>
+
+    <!-- Panneau d'optimisation des bonus de ville & retours de ressources -->
+    <div class="optimization-panel">
+        <label class="checkbox-label">
+            <input type="checkbox" id="bonusCityCheck" checked onchange="fetchPrices()">
+            <span>📍 Refining in Bonus City (+40% Return Rate)</span>
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" id="dailyBonusCheck" onchange="fetchPrices()">
+            <span>⭐ Daily Bonus Active (+10% Extra Return Rate)</span>
+        </label>
+        <div id="returnRateDisplay" style="font-size: 14px; color: var(--accent); font-weight: bold;">
+            Return Rate (RR): 40.0%
+        </div>
     </div>
 
     <div id="recommendationBox" class="recommendation-box">
@@ -309,9 +351,9 @@
             <tr>
                 <th>Required Material</th>
                 <th>API ID</th>
-                <th>Unit Qty</th>
-                <th>Total Qty</th>
-                <th>Top 3 Cheapest Cities to Buy (Direct Sell) 🛒</th>
+                <th>Base Qty</th>
+                <th>Effective Qty (with RR)</th>
+                <th>Top 3 Cheapest Cities to Buy 🛒</th>
                 <th>Min Price (1st Choice)</th>
                 <th>Total Cost (1st Choice)</th>
             </tr>
@@ -325,7 +367,7 @@
 
     <div class="summary-grid">
         <div class="summary-card">
-            <h3>Material Cost</h3>
+            <h3>Material Cost (Optimized)</h3>
             <div class="summary-value" id="costSummary" style="text-align:center;">0 Silver</div>
             <div class="summary-sub" id="costUnitSummary" style="text-align:center;">Unit: 0 S</div>
         </div>
@@ -343,10 +385,6 @@
 </div>
 
 <script>
-    /**
-     * Convertit un identifiant d'item de la base vers l'ID exact 
-     * attendu par l'API Albion Free Market avec support des enchantements de .1 à .4 (@X).
-     */
     function formatAlbionItemID(baseId, tier, enchantment) {
         let cleanBase = baseId ? baseId.trim().toUpperCase() : "";
         
@@ -357,7 +395,6 @@
         }
 
         if (enchantment && enchantment > 0 && enchantment <= 4) {
-            // S'il s'agit d'un matériau (ressource brute ou ressource raffinée comme CLOTH, METALBAR, LEATHER, PLANKS, STONEBLOCK, etc.)
             const isMaterial = cleanBase.includes("_CLOTH") || cleanBase.includes("_FIBER") || 
                                cleanBase.includes("_METALBAR") || cleanBase.includes("_ORE") || 
                                cleanBase.includes("_LEATHER") || cleanBase.includes("_HIDE") || 
@@ -367,12 +404,12 @@
             if (isMaterial) {
                 return `${cleanBase}_LEVEL${enchantment}@${enchantment}`;
             }
-            // Pour les équipements, armes et artéfacts
             return `${cleanBase}@${enchantment}`;
         }
 
         return cleanBase;
     }
+
     const baseRecipes = {
         // --- RAFFINAGE ---
         "T3_CLOTH": { name: "Neat Cloth T3", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T2 Cloth", baseId: "T2_CLOTH", ratio: 1 }, { name: "T3 Fiber", baseId: "T3_FIBER", ratio: 2 } ] },
@@ -538,6 +575,20 @@
         if (!recipeObj) return;
         updateRecommendation();
 
+        // Calcul dynamique du taux de retour de ressources (Return Rate)
+        const isBonusCity = document.getElementById('bonusCityCheck').checked;
+        const isDailyBonus = document.getElementById('dailyBonusCheck').checked;
+        
+        // Base return rate standard sans bonus ville = 15% (0.15)
+        // Bonus de ville spécialisée = +25% (passe à 40% ou 0.40)
+        // Bonus journalier = +10% additionnel
+        let returnRate = 0.15;
+        if (isBonusCity) returnRate = 0.40;
+        if (isDailyBonus) {
+            returnRate += 0.10; // ex: 50% total si ville + journalier
+        }
+        document.getElementById('returnRateDisplay').innerText = `Return Rate (RR): ${(returnRate * 100).toFixed(1)}%`;
+
         const tierMatch = itemKey.match(/^T(\d+)/);
         const currentTier = tierMatch ? parseInt(tierMatch[1]) : 4;
 
@@ -555,11 +606,19 @@
             if (enchant > 0 && !mat.isArtefact) {
                 finalId = formatAlbionItemID(mat.baseId, matTier, enchant);
             }
+            
+            // Application du taux de retour de ressources (RR) sur la quantité effective à acheter
+            // Formule : Quantité de base * Quantité voulue * (1 - Return Rate)
+            let rawReqQty = mat.ratio * totalQty;
+            let effectiveQty = rawReqQty * (1 - returnRate);
+
             return {
                 name: `${mat.name}${enchant > 0 && !mat.isArtefact ? ' .' + enchant : ''}`,
                 id: finalId,
                 baseId: mat.baseId,
                 ratio: mat.ratio,
+                rawQty: rawReqQty,
+                effectiveQty: effectiveQty,
                 index: index
             };
         });
@@ -593,7 +652,6 @@
         let hasAnyValidPrice = true;
 
         currentRecipe.forEach((mat) => {
-            let reqQty = mat.ratio * totalQty;
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
             
             let cityMap = {};
@@ -619,7 +677,7 @@
 
             if (topMarkets.length > 0) {
                 bestPrice = topMarkets[0].price;
-                lineCost = reqQty * bestPrice;
+                lineCost = mat.effectiveQty * bestPrice;
                 grandTotalCost += lineCost;
                 marketHtml = topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             } else {
@@ -630,11 +688,11 @@
             let row = `<tr>
                 <td><b>${mat.name}</b></td>
                 <td><code>${mat.id}</code></td>
-                <td>${mat.ratio}</td>
-                <td><b>${reqQty.toLocaleString()}</b></td>
+                <td>${mat.rawQty.toLocaleString()}</td>
+                <td><b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(rr ${(returnRate*100).toFixed(0)}%)</span></td>
                 <td class="market-rank">${marketHtml}</td>
                 <td><b>${bestPrice > 0 ? bestPrice.toLocaleString() : 'N/A'}</b></td>
-                <td><b>${bestPrice > 0 ? lineCost.toLocaleString() : 'N/A'}</b></td>
+                <td><b>${bestPrice > 0 ? Math.round(lineCost).toLocaleString() : 'N/A'}</b></td>
             </tr>`;
             tbody.innerHTML += row;
         });
@@ -672,7 +730,7 @@
         let totalNetRevenue = unitNetRevenue * totalQty;
         let totalNetProfit = unitNetProfit * totalQty;
 
-        costSummary.innerText = hasAnyValidPrice ? `${grandTotalCost.toLocaleString()} Silver` : 'N/A';
+        costSummary.innerText = hasAnyValidPrice ? `${Math.round(grandTotalCost).toLocaleString()} Silver` : 'N/A';
         costUnitSummary.innerText = hasAnyValidPrice ? `Unit: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
 
         if (topSellMarkets.length > 0) {
