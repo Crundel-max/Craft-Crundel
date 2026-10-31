@@ -333,7 +333,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.46</div>
+            <div class="badge-version">🚀 Update v3.47</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -376,14 +376,14 @@
     <div class="optimization-panel">
         <label class="checkbox-label">
             <input type="checkbox" id="bonusCityCheck" checked onchange="fetchPrices()">
-            <span>📍 Bonus City Active (Refining +40% / Craft +15%)</span>
+            <span>📍 Bonus City Active (Refining +40% / Tool & Gear +40% or +15%)</span>
         </label>
         <label class="checkbox-label">
             <input type="checkbox" id="dailyBonusCheck" onchange="fetchPrices()">
             <span>⭐ Daily Bonus Active (+10% Extra Return Rate)</span>
         </label>
         <div id="returnRateDisplay" style="font-size: 14px; color: var(--accent); font-weight: bold;">
-            Return Rates: Refine 40% | Craft 15%
+            Return Rates: Refine 40% | Craft 40%
         </div>
     </div>
 
@@ -476,7 +476,7 @@
         <div class="summary-card">
             <h3>Material Cost (Optimized)</h3>
             <div class="summary-value" id="costSummary" style="text-align:center;">0 Silver</div>
-            <div class="summary-sub" id="costUnitSummary" style="text-align:center;">Unit Cost: 0 S</div>
+            <div class="summary-sub" id="costUnitSummary" style="text-align:center;">Avg Unit Cost: 0 S</div>
         </div>
         <div class="summary-card">
             <h3>Total Revenue (Quality-Based Sales)</h3>
@@ -561,13 +561,13 @@
         "T7_POTION_REVIVE": { name: "Reviving Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
         "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
 
-        // --- CANNES À PÊCHE STANDARD ---
-        "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, forceFlat: true }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, forceFlat: true } ] },
-        "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, forceFlat: true }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, forceFlat: true } ] },
-        "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
-        "T6_2H_TOOL_FISHINGROD": { name: "Master's Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 16 }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8 } ] },
-        "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
-        "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
+        // --- CANNES À PÊCHE STANDARD (Bénéficient du bonus outil 40% dans leur ville dédiée ou Caerleon) ---
+        "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, forceFlat: true }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, forceFlat: true } ] },
+        "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, forceFlat: true }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, forceFlat: true } ] },
+        "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
+        "T6_2H_TOOL_FISHINGROD": { name: "Master's Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 16 }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8 } ] },
+        "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
+        "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
         // --- ÉPÉES KINGMAKER ---
         "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20, forceFlat: true, rawMat: "T4_ORE", rawRatio: 40 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12, forceFlat: true, rawMat: "T4_HIDE", rawRatio: 24 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
@@ -621,7 +621,7 @@
     const qualityNames = ["", "Normal", "Good", "Outstanding", "Excellent", "Masterpiece"];
 
     let globalCost = 0;
-    let qualityPricesData = {}; // Stocke les prix par qualité pour calcul dynamique
+    let qualityPricesData = {};
 
     function updateItemList() {
         const cat = document.getElementById('categorySelect').value;
@@ -655,7 +655,6 @@
 
     function syncTotalQuantity() {
         let total = parseInt(document.getElementById('qtyInput').value) || 10;
-        // Par défaut, répartit tout en Normal ou laisse l'utilisateur gérer
         document.getElementById('qtyQ1').value = total;
         document.getElementById('qtyQ2').value = 0;
         document.getElementById('qtyQ3').value = 0;
@@ -685,7 +684,9 @@
         const isBonusCity = document.getElementById('bonusCityCheck').checked;
         const isDailyBonus = document.getElementById('dailyBonusCheck').checked;
         
-        let craftReturnRate = isBonusCity ? 0.15 : 0.0;
+        // CORRECTION : Les outils (comme les cannes à pêche) ont un bonus de RR de 40% dans leur ville dédiée (similaire au raffinage) si le bonus est actif
+        let defaultCraftBonus = recipeObj.isTool ? 0.40 : 0.15;
+        let craftReturnRate = isBonusCity ? defaultCraftBonus : 0.0;
         let refineReturnRate = isBonusCity ? 0.40 : 0.15;
         if (isDailyBonus) {
             craftReturnRate += 0.10;
@@ -695,7 +696,7 @@
         let activeReturnRate = recipeObj.isRefining ? refineReturnRate : craftReturnRate;
         let cascadeMultiplier = 1 / (1 - activeReturnRate);
 
-        document.getElementById('returnRateDisplay').innerText = `Return Rates: Refine ${(refineReturnRate*100).toFixed(0)}% | Craft ${(craftReturnRate*100).toFixed(0)}% (Cascade Coeff: ${cascadeMultiplier.toFixed(2)})`;
+        document.getElementById('returnRateDisplay').innerText = `Return Rates: Refine ${(refineReturnRate*100).toFixed(0)}% | Craft ${(activeReturnRate*100).toFixed(0)}% (Cascade Coeff: ${cascadeMultiplier.toFixed(2)})`;
 
         const tierMatch = itemKey.match(/^T(\d+)/);
         const currentTier = tierMatch ? parseInt(tierMatch[1]) : 4;
@@ -761,7 +762,6 @@
         tbody.innerHTML = '';
         strategiesContainer.style.display = 'none';
 
-        // Requête API pour les matériaux
         let allIdsToFetch = currentRecipe.map(r => r.id);
         currentRecipe.forEach(r => {
             if (!r.isArtefact) {
@@ -774,8 +774,8 @@
         let citiesToFetch = cities.join(',');
         let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${uniqueIdsToFetch}?locations=${citiesToFetch}`;
 
-        // Requête API pour toutes les qualités de l'objet crafté (qualités 1 à 5)
-        let qualityApiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${craftedItemId}?locations=${citiesToFetch}`;
+        // CORRECTION : Ajout explicite de &quality=1,2,3,4,5 pour récupérer toutes les qualités de l'objet crafté
+        let qualityApiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${craftedItemId}?locations=${citiesToFetch}&quality=1,2,3,4,5`;
 
         let priceData = [];
         let qualityPriceData = [];
@@ -900,13 +900,11 @@
             qualityPricesData[q] = qTopMarkets;
         }
 
-        // Affichage de la section de répartition si ce n'est pas du raffinage pur
         const qualitySection = document.getElementById('qualitySection');
         const qualityMarketContainer = document.getElementById('qualityMarketContainer');
         if (!recipeObj.isRefining) {
             qualitySection.style.display = 'block';
             qualityMarketContainer.style.display = 'block';
-            syncTotalQuantity();
         } else {
             qualitySection.style.display = 'none';
             qualityMarketContainer.style.display = 'none';
