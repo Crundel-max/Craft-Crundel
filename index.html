@@ -321,7 +321,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.49</div>
+            <div class="badge-version">🚀 Update v3.50</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -403,6 +403,20 @@
                 <label style="color: var(--accent);">⭐ Masterpiece (Q5)</label>
                 <input type="number" id="qtyQ5" value="0" min="0" oninput="calculateFinancials()">
             </div>
+        </div>
+    </div>
+
+    <!-- Comparaison Stratégie A / B pour l'achat direct de matériaux raffinés -->
+    <div id="strategiesContainer" class="strategies-container" style="display:none;">
+        <div class="strategy-box">
+            <h4 id="stratATitle">🛒 Stratégie A : Achat Direct des Matériaux Raffinés</h4>
+            <p id="stratACost">Coût total : <b>Calcul...</b></p>
+            <p id="stratAMargin">Marge nette : <b>Calcul...</b></p>
+        </div>
+        <div class="strategy-box" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);">
+            <h4 style="color: var(--success);" id="stratBTitle">⚒️ Stratégie B : Craft avec Raffinage Maison</h4>
+            <p id="stratBCost">Coût total : <b>Calcul...</b></p>
+            <p id="stratBMargin">Marge nette : <b>Calcul...</b></p>
         </div>
     </div>
 
@@ -537,19 +551,19 @@
         "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
 
         // --- CANNES À PÊCHE STANDARD ---
-        "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, forceFlat: true }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, forceFlat: true } ] },
-        "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, forceFlat: true }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, forceFlat: true } ] },
-        "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
-        "T6_2H_TOOL_FISHINGROD": { name: "Master's Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 16 }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8 } ] },
-        "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
-        "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
+        "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, forceFlat: true, refinedMatKey: "T3_PLANKS" }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, forceFlat: true, refinedMatKey: "T3_CLOTH" } ] },
+        "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, forceFlat: true, refinedMatKey: "T4_PLANKS" }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, forceFlat: true, refinedMatKey: "T4_CLOTH" } ] },
+        "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16, refinedMatKey: "T5_PLANKS" }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8, refinedMatKey: "T5_CLOTH" } ] },
+        "T6_2H_TOOL_FISHINGROD": { name: "Master's Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 16, refinedMatKey: "T6_PLANKS" }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8, refinedMatKey: "T6_CLOTH" } ] },
+        "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16, refinedMatKey: "T7_PLANKS" }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8, refinedMatKey: "T7_CLOTH" } ] },
+        "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16, refinedMatKey: "T8_PLANKS" }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8, refinedMatKey: "T8_CLOTH" } ] },
 
         // --- ÉPÉES KINGMAKER ---
-        "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20, forceFlat: true, rawMat: "T4_ORE", rawRatio: 40 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12, forceFlat: true, rawMat: "T4_HIDE", rawRatio: 24 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T5_2H_CLAYMORE_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20, rawMat: "T5_ORE", rawRatio: 60 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12, rawMat: "T5_HIDE", rawRatio: 36 }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T6_2H_CLAYMORE_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20, rawMat: "T6_ORE", rawRatio: 80 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12, rawMat: "T6_HIDE", rawRatio: 48 }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T7_2H_CLAYMORE_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20, rawMat: "T7_ORE", rawRatio: 100 }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12, rawMat: "T7_HIDE", rawRatio: 60 }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T8_2H_CLAYMORE_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20, rawMat: "T8_ORE", rawRatio: 120 }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12, rawMat: "T8_HIDE", rawRatio: 72 }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] }
+        "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20, forceFlat: true, refinedMatKey: "T4_METALBAR" }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12, forceFlat: true, refinedMatKey: "T4_LEATHER" }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T5_2H_CLAYMORE_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20, refinedMatKey: "T5_METALBAR" }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12, refinedMatKey: "T5_LEATHER" }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T6_2H_CLAYMORE_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20, refinedMatKey: "T6_METALBAR" }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12, refinedMatKey: "T6_LEATHER" }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T7_2H_CLAYMORE_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20, refinedMatKey: "T7_METALBAR" }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12, refinedMatKey: "T7_LEATHER" }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T8_2H_CLAYMORE_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20, refinedMatKey: "T8_METALBAR" }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12, refinedMatKey: "T8_LEATHER" }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] }
     };
 
     const categories = {
@@ -598,6 +612,7 @@
     let globalCost = 0;
     let qualityPricesData = {};
     let refinedSellPrice = 0;
+    let directBuyMaterialCost = 0; // Coût si on achète directement les ressources raffinées
 
     function updateItemList() {
         const cat = document.getElementById('categorySelect').value;
@@ -728,7 +743,8 @@
                 rawQty: rawReqQty,
                 effectiveQty: effectiveQty,
                 isArtefact: mat.isArtefact,
-                noRR: mat.noRR
+                noRR: mat.noRR,
+                refinedMatKey: mat.refinedMatKey
             };
         });
 
@@ -748,6 +764,22 @@
                 if (r.rawMaterialId) allIdsToFetch.push(r.rawMaterialId);
             }
         });
+
+        // Si c'est un outil ou un item crafté, on prépare aussi la liste pour aller chercher le prix d'achat direct des composants raffinés (ex: planches/tissus)
+        let refinedDirectIds = [];
+        if (!recipeObj.isRefining) {
+            currentRecipe.forEach(r => {
+                if (r.refinedMatKey) {
+                    let refMatObj = baseRecipes[r.refinedMatKey];
+                    if (refMatObj) {
+                        // On construit l'ID de la ressource raffinée avec l'enchantement correspondant si applicable
+                        let refMatId = formatAlbionItemID(r.refinedMatKey, currentTier, enchant, true);
+                        refinedDirectIds.push({ key: r.refinedMatKey, id: refMatId, ratio: r.ratio });
+                        allIdsToFetch.push(refMatId);
+                    }
+                }
+            });
+        }
 
         let uniqueIdsToFetch = [...new Set(allIdsToFetch)].join(',');
         let citiesToFetch = cities.join(',');
@@ -772,6 +804,7 @@
 
         loading.style.display = 'none';
         globalCost = 0;
+        directBuyMaterialCost = 0;
 
         currentRecipe.forEach((mat) => {
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
@@ -804,6 +837,24 @@
                 marketHtml = `<div style="color: var(--warning); font-style: italic;">📡 En attente de scan</div>`;
             }
 
+            // Calcul du coût si on achète directement la ressource raffinée (sans passer par le craft maison des matériaux)
+            if (!recipeObj.isRefining && mat.refinedMatKey) {
+                let refMatId = formatAlbionItemID(mat.refinedMatKey, currentTier, enchant, true);
+                let refOffers = priceData.filter(p => p.item_id === refMatId);
+                let bestRefPrice = 0;
+                refOffers.forEach(o => {
+                    let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
+                    if (p > 0 && (bestRefPrice === 0 || p < bestRefPrice)) bestRefPrice = p;
+                });
+                if (bestRefPrice > 0) {
+                    directBuyMaterialCost += (mat.ratio * totalQty * bestRefPrice);
+                } else {
+                    directBuyMaterialCost += lineCost; // Fallback si pas de prix direct
+                }
+            } else if (mat.isArtefact) {
+                directBuyMaterialCost += lineCost;
+            }
+
             let rrText = mat.noRR ? '(no RR)' : `(rr ${(recipeObj.isRefining ? refineReturnRate : activeDisplayRR)*100|0}%)`;
             let effectiveQtyDisplay = mat.isArtefact ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b>` : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">${rrText}</span>`;
 
@@ -824,6 +875,7 @@
         if (recipeObj.isRefining) {
             qualitySection.style.display = 'none';
             qualityMarketContainer.style.display = 'none';
+            document.getElementById('strategiesContainer').style.display = 'none';
 
             let sellCityMap = {};
             craftedMarketData.forEach(o => {
@@ -876,6 +928,7 @@
         const profitSummary = document.getElementById('profitSummary');
         const profitUnitSummary = document.getElementById('profitUnitSummary');
         const qualityTableBody = document.getElementById('qualityTableBody');
+        const strategiesContainer = document.getElementById('strategiesContainer');
 
         let totalRevenue = 0;
         let totalItemsOutput = 0;
@@ -916,6 +969,18 @@
                     <td><b style="color:var(--success);">${Math.round(lineRevenue).toLocaleString()} S</b></td>
                 </tr>`;
             }
+
+            // Affichage et calcul des stratégies A (Achat direct des ressources raffinées) vs B (Craft avec raffinage maison)
+            strategiesContainer.style.display = 'grid';
+            let profitA = totalRevenue - directBuyMaterialCost;
+            let marginA = directBuyMaterialCost > 0 ? (profitA / directBuyMaterialCost) * 100 : 0;
+            document.getElementById('stratACost').innerHTML = `Coût total (Achat direct) : <b>${Math.round(directBuyMaterialCost).toLocaleString()} S</b>`;
+            document.getElementById('stratAMargin').innerHTML = `Marge nette : <b class="${profitA >= 0 ? 'profit-positive' : 'profit-negative'}">${Math.round(profitA).toLocaleString()} S (${marginA.toFixed(1)}%)</b>`;
+
+            let profitB = totalRevenue - globalCost;
+            let marginB = globalCost > 0 ? (profitB / globalCost) * 100 : 0;
+            document.getElementById('stratBCost').innerHTML = `Coût total (Craft / Raffinage maison) : <b>${Math.round(globalCost).toLocaleString()} S</b>`;
+            document.getElementById('stratBMargin').innerHTML = `Marge nette : <b class="${profitB >= 0 ? 'profit-positive' : 'profit-negative'}">${Math.round(profitB).toLocaleString()} S (${marginB.toFixed(1)}%)</b>`;
         }
 
         let totalNetProfit = totalRevenue - globalCost;
@@ -926,7 +991,7 @@
         costUnitSummary.innerText = `Avg Unit Cost: ${Math.round(avgUnitCost).toLocaleString()} S`;
 
         revenueSummary.innerText = `${Math.round(totalRevenue).toLocaleString()} Silver`;
-        revenueUnitSummary.innerText = recipeObj.isRefining ? `Volume estimé (Cascade): ~${totalItemsOutput} unités` : `Total items: ${totalItemsOutput} unités (Net après taxe)`;
+        revenueUnitSummary.innerText = recipeObj.isRefining ? `Volume estimé (Cascade): ~${totalItemsOutput} unités (Net -6%)` : `Total items: ${totalItemsOutput} unités (Net après taxe)`;
 
         let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
         profitSummary.className = `summary-value ${profitClass}`;
