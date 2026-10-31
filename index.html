@@ -321,7 +321,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.53</div>
+            <div class="badge-version">🚀 Update v3.54</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -450,16 +450,16 @@
         </tbody>
     </table>
 
-    <!-- Tableau Guide d'Achat & Raffinage Cascade RR 40% (Enrichi avec nombre d'items & meilleurs marchés d'achat) -->
+    <!-- Tableau Guide d'Achat & Raffinage Cascade RR 40% (Avec matières brutes ET items T3/inférieurs nécessaires) -->
     <div id="rawRefiningSummaryContainer" style="display:none; margin-top: 30px;">
-        <h3 style="color: var(--info); font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">🏭 Guide d'Achat des Matières Brutes & Villes de Raffinage (Cascade RR 40%)</h3>
+        <h3 style="color: var(--info); font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">🏭 Guide d'Achat des Composants T3, Matières Brutes & Villes (Cascade RR 40%)</h3>
         <table id="rawRefiningTable">
             <thead>
                 <tr>
                     <th>Composant Intermédiaire / Raffiné</th>
                     <th>Quantité Raffinée Requise (avec Cascade)</th>
-                    <th>Matière Première Brute à Acheter (Qté exacte)</th>
-                    <th>Meilleur Marché d'Achat (Brut) 🛒</th>
+                    <th>Élément T3 Intermédiaire / Matière Brute à Acheter</th>
+                    <th>Meilleur Marché d'Achat (Acheter ici) 🛒</th>
                     <th>Ville Idéale de Raffinage 📍</th>
                     <th>Nombre d'Items Finaux Estimés (Craft RR)</th>
                 </tr>
@@ -575,19 +575,19 @@
         "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
 
         // --- CANNES À PÊCHE STANDARD ---
-        "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, forceFlat: true, refinedMatKey: "T3_PLANKS", rawMat: "T3_WOOD", rawRatio: 32, refineCity: "Fort Sterling" }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, forceFlat: true, refinedMatKey: "T3_CLOTH", rawMat: "T3_FIBER", rawRatio: 16, refineCity: "Lymhurst" } ] },
-        "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, forceFlat: true, refinedMatKey: "T4_PLANKS", rawMat: "T4_WOOD", rawRatio: 32, refineCity: "Fort Sterling" }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, forceFlat: true, refinedMatKey: "T4_CLOTH", rawMat: "T4_FIBER", rawRatio: 16, refineCity: "Lymhurst" } ] },
-        "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16, refinedMatKey: "T5_PLANKS", rawMat: "T5_WOOD", rawRatio: 48, refineCity: "Fort Sterling" }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8, refinedMatKey: "T5_CLOTH", rawMat: "T5_FIBER", rawRatio: 24, refineCity: "Lymhurst" } ] },
-        "T6_2H_TOOL_FISHINGROD": { name: "Master's Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 16, refinedMatKey: "T6_PLANKS", rawMat: "T6_WOOD", rawRatio: 64, refineCity: "Fort Sterling" }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8, refinedMatKey: "T6_CLOTH", rawMat: "T6_FIBER", rawRatio: 32, refineCity: "Lymhurst" } ] },
-        "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16, refinedMatKey: "T7_PLANKS", rawMat: "T7_WOOD", rawRatio: 80, refineCity: "Fort Sterling" }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8, refinedMatKey: "T7_CLOTH", rawMat: "T7_FIBER", rawRatio: 40, refineCity: "Lymhurst" } ] },
-        "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16, refinedMatKey: "T8_PLANKS", rawMat: "T8_WOOD", rawRatio: 96, refineCity: "Fort Sterling" }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8, refinedMatKey: "T8_CLOTH", rawMat: "T8_FIBER", rawRatio: 48, refineCity: "Lymhurst" } ] },
+        "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, forceFlat: true, refinedMatKey: "T3_PLANKS", subTierRef: "T2_PLANKS", subTierRatio: 1, rawMat: "T3_WOOD", rawRatio: 32, refineCity: "Fort Sterling" }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, forceFlat: true, refinedMatKey: "T3_CLOTH", subTierRef: "T2_CLOTH", subTierRatio: 1, rawMat: "T3_FIBER", rawRatio: 16, refineCity: "Lymhurst" } ] },
+        "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, forceFlat: true, refinedMatKey: "T4_PLANKS", subTierRef: "T3_PLANKS", subTierRatio: 1, rawMat: "T4_WOOD", rawRatio: 32, refineCity: "Fort Sterling" }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, forceFlat: true, refinedMatKey: "T4_CLOTH", subTierRef: "T3_CLOTH", subTierRatio: 1, rawMat: "T4_FIBER", rawRatio: 16, refineCity: "Lymhurst" } ] },
+        "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16, refinedMatKey: "T5_PLANKS", subTierRef: "T4_PLANKS", subTierRatio: 1, rawMat: "T5_WOOD", rawRatio: 48, refineCity: "Fort Sterling" }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8, refinedMatKey: "T5_CLOTH", subTierRef: "T4_CLOTH", subTierRatio: 1, rawMat: "T5_FIBER", rawRatio: 24, refineCity: "Lymhurst" } ] },
+        "T6_2H_TOOL_FISHINGROD": { name: "Master's Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 16, refinedMatKey: "T6_PLANKS", subTierRef: "T5_PLANKS", subTierRatio: 1, rawMat: "T6_WOOD", rawRatio: 64, refineCity: "Fort Sterling" }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8, refinedMatKey: "T6_CLOTH", subTierRef: "T5_CLOTH", subTierRatio: 1, rawMat: "T6_FIBER", rawRatio: 32, refineCity: "Lymhurst" } ] },
+        "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16, refinedMatKey: "T7_PLANKS", subTierRef: "T6_PLANKS", subTierRatio: 1, rawMat: "T7_WOOD", rawRatio: 80, refineCity: "Fort Sterling" }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8, refinedMatKey: "T7_CLOTH", subTierRef: "T6_CLOTH", subTierRatio: 1, rawMat: "T7_FIBER", rawRatio: 40, refineCity: "Lymhurst" } ] },
+        "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16, refinedMatKey: "T8_PLANKS", subTierRef: "T7_PLANKS", subTierRatio: 1, rawMat: "T8_WOOD", rawRatio: 96, refineCity: "Fort Sterling" }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8, refinedMatKey: "T8_CLOTH", subTierRef: "T7_CLOTH", subTierRatio: 1, rawMat: "T8_FIBER", rawRatio: 48, refineCity: "Lymhurst" } ] },
 
         // --- ÉPÉES KINGMAKER ---
-        "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20, forceFlat: true, refinedMatKey: "T4_METALBAR", rawMat: "T4_ORE", rawRatio: 40, refineCity: "Thetford" }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12, forceFlat: true, refinedMatKey: "T4_LEATHER", rawMat: "T4_HIDE", rawRatio: 24, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T5_2H_CLAYMORE_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20, refinedMatKey: "T5_METALBAR", rawMat: "T5_ORE", rawRatio: 60, refineCity: "Thetford" }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12, refinedMatKey: "T5_LEATHER", rawMat: "T5_HIDE", rawRatio: 36, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T6_2H_CLAYMORE_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20, refinedMatKey: "T6_METALBAR", rawMat: "T6_ORE", rawRatio: 80, refineCity: "Thetford" }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12, refinedMatKey: "T6_LEATHER", rawMat: "T6_HIDE", rawRatio: 48, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T7_2H_CLAYMORE_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20, refinedMatKey: "T7_METALBAR", rawMat: "T7_ORE", rawRatio: 100, refineCity: "Thetford" }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12, refinedMatKey: "T7_LEATHER", rawMat: "T7_HIDE", rawRatio: 60, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
-        "T8_2H_CLAYMORE_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20, refinedMatKey: "T8_METALBAR", rawMat: "T8_ORE", rawRatio: 120, refineCity: "Thetford" }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12, refinedMatKey: "T8_LEATHER", rawMat: "T8_HIDE", rawRatio: 72, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] }
+        "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20, forceFlat: true, refinedMatKey: "T4_METALBAR", subTierRef: "T3_METALBAR", subTierRatio: 1, rawMat: "T4_ORE", rawRatio: 40, refineCity: "Thetford" }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12, forceFlat: true, refinedMatKey: "T4_LEATHER", subTierRef: "T3_LEATHER", subTierRatio: 1, rawMat: "T4_HIDE", rawRatio: 24, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T5_2H_CLAYMORE_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20, refinedMatKey: "T5_METALBAR", subTierRef: "T4_METALBAR", subTierRatio: 1, rawMat: "T5_ORE", rawRatio: 60, refineCity: "Thetford" }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12, refinedMatKey: "T5_LEATHER", subTierRef: "T4_LEATHER", subTierRatio: 1, rawMat: "T5_HIDE", rawRatio: 36, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T6_2H_CLAYMORE_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20, refinedMatKey: "T6_METALBAR", subTierRef: "T5_METALBAR", subTierRatio: 1, rawMat: "T6_ORE", rawRatio: 80, refineCity: "Thetford" }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12, refinedMatKey: "T6_LEATHER", subTierRef: "T5_LEATHER", subTierRatio: 1, rawMat: "T6_HIDE", rawRatio: 48, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T7_2H_CLAYMORE_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20, refinedMatKey: "T7_METALBAR", subTierRef: "T6_METALBAR", subTierRatio: 1, rawMat: "T7_ORE", rawRatio: 100, refineCity: "Thetford" }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12, refinedMatKey: "T7_LEATHER", subTierRef: "T6_LEATHER", subTierRatio: 1, rawMat: "T7_HIDE", rawRatio: 60, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
+        "T8_2H_CLAYMORE_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20, refinedMatKey: "T8_METALBAR", subTierRef: "T7_METALBAR", subTierRatio: 1, rawMat: "T8_ORE", rawRatio: 120, refineCity: "Thetford" }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12, refinedMatKey: "T8_LEATHER", subTierRef: "T7_LEATHER", subTierRatio: 1, rawMat: "T8_HIDE", rawRatio: 72, refineCity: "Martlock" }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] }
     };
 
     const categories = {
@@ -729,6 +729,7 @@
             let finalId = mat.baseId;
             let directBuyId = mat.baseId;
             let rawMaterialId = mat.rawMat ? mat.rawMat : null;
+            let subTierMaterialId = null;
 
             let effectiveEnchant = 0;
             if (enchant > 0 && !mat.forceFlat && matTier >= 4) {
@@ -743,6 +744,14 @@
                 finalId = formatAlbionItemID(mat.baseId, matTier, 0, true);
                 directBuyId = formatAlbionItemID(mat.baseId, matTier, 0, true);
                 if (rawMaterialId) rawMaterialId = formatAlbionItemID(mat.rawMat, matTier, 0, true);
+            }
+
+            // Gestion du composant intermédiaire inférieur (ex: Barres T3 pour les Barres T4)
+            if (mat.subTierRef) {
+                let subTierNum = matTier - 1;
+                // Si l'enchantement est > 0, les composants intermédiaires peuvent être enchantés ou flat selon le tier
+                let subEnchant = (subTierNum >= 4) ? effectiveEnchant : 0;
+                subTierMaterialId = formatAlbionItemID(mat.subTierRef, subTierNum, subEnchant, true);
             }
             
             let rawReqQty = mat.ratio * totalQty;
@@ -762,11 +771,15 @@
 
             if (!recipeObj.isRefining && mat.rawMat) {
                 let effectiveRawQty = (mat.rawRatio * totalQty) * (1 - refineReturnRate);
+                let subTierQtyRequired = (mat.subTierRatio * totalQty) * (1 - refineReturnRate);
+
                 rawRefineGuideData.push({
                     refinedName: mat.name,
                     refinedQty: Math.round(effectiveQty),
                     rawMatId: rawMaterialId,
+                    subTierMatId: subTierMaterialId,
                     rawName: `${mat.rawMat} (Qté: ${Math.round(effectiveRawQty)})`,
+                    subTierName: mat.subTierRef ? `${mat.subTierRef} (Qté: ${Math.round(subTierQtyRequired)})` : null,
                     refineCity: mat.refineCity || "Ville dédiée"
                 });
             }
@@ -806,6 +819,12 @@
                 allIdsToFetch.push(r.directBuyId);
                 if (r.rawMaterialId) allIdsToFetch.push(r.rawMaterialId);
             }
+        });
+
+        // Ajout des IDs de composants sub-tier (T3/T4) à fetch
+        rawRefineGuideData.forEach(g => {
+            if (g.rawMatId) allIdsToFetch.push(g.rawMatId);
+            if (g.subTierMatId) allIdsToFetch.push(g.subTierMatId);
         });
 
         let uniqueIdsToFetch = [...new Set(allIdsToFetch)].join(',');
@@ -949,32 +968,51 @@
             qualityMarketContainer.style.display = 'block';
             rawRefiningSummaryContainer.style.display = 'block';
 
-            // Remplissage du tableau avec les meilleurs marchés d'achat et le nombre d'items finaux estimés
+            // Remplissage complet incluant matières brutes et composants T3/sub-tier
             rawRefiningTableBody.innerHTML = '';
             rawRefineGuideData.forEach(guide => {
-                let rawOffers = priceData.filter(p => p.item_id === guide.rawMatId);
-                let rawCityMap = {};
-                rawOffers.forEach(o => {
-                    let price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
-                    if (price > 0 && o.city) {
-                        if (!rawCityMap[o.city] || price < rawCityMap[o.city].price) {
-                            rawCityMap[o.city] = { city: o.city, price: price };
-                        }
-                    }
-                });
-                let topRawMarkets = Object.values(rawCityMap);
-                topRawMarkets.sort((a, b) => a.price - b.price);
-                topRawMarkets = topRawMarkets.slice(0, 2);
+                let buyListHtml = [];
 
-                let rawMarketHtml = topRawMarkets.length > 0
-                    ? topRawMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>`).join('')
-                    : `<span style="color:var(--warning);">Scan en cours...</span>`;
+                // Récupération des prix pour la matière brute
+                if (guide.rawMatId) {
+                    let rawOffers = priceData.filter(p => p.item_id === guide.rawMatId);
+                    let rawCityMap = {};
+                    rawOffers.forEach(o => {
+                        let price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
+                        if (price > 0 && o.city) {
+                            if (!rawCityMap[o.city] || price < rawCityMap[o.city].price) {
+                                rawCityMap[o.city] = { city: o.city, price: price };
+                            }
+                        }
+                    });
+                    let topRaw = Object.values(rawCityMap).sort((a, b) => a.price - b.price).slice(0, 2);
+                    let rawText = topRaw.length > 0 ? topRaw.map(m => `${m.city}: ${m.price}S`).join(', ') : 'Scan...';
+                    buyListHtml.Item(0); // placeholder
+                    buyListHtml.push(`<div>📦 <b>${guide.rawName}</b> ➔ <span style="color:#f59e0b;">${rawText}</span></div>`);
+                }
+
+                // Récupération des prix pour le composant sub-tier (ex: Barres T3)
+                if (guide.subTierMatId && guide.subTierName) {
+                    let subOffers = priceData.filter(p => p.item_id === guide.subTierMatId);
+                    let subCityMap = {};
+                    subOffers.forEach(o => {
+                        let price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
+                        if (price > 0 && o.city) {
+                            if (!subCityMap[o.city] || price < subCityMap[o.city].price) {
+                                subCityMap[o.city] = { city: o.city, price: price };
+                            }
+                        }
+                    });
+                    let topSub = Object.values(subCityMap).sort((a, b) => a.price - b.price).slice(0, 2);
+                    let subText = topSub.length > 0 ? topSub.map(m => `${m.city}: ${m.price}S`).join(', ') : 'Scan...';
+                    buyListHtml.push(`<div>🧱 <b>${guide.subTierName}</b> ➔ <span style="color:#f59e0b;">${subText}</span></div>`);
+                }
 
                 rawRefiningTableBody.innerHTML += `<tr>
                     <td><b>${guide.refinedName}</b></td>
                     <td><b>${guide.refinedQty} unités</b></td>
-                    <td><b>${guide.rawName}</b></td>
-                    <td class="market-rank">${rawMarketHtml}</td>
+                    <td class="market-rank" style="text-align:left;">${buyListHtml.join('')}</td>
+                    <td style="font-size:12px; color:var(--text-muted);">Voir détails par ligne ci-dessus</td>
                     <td><span style="color:var(--accent); font-weight:bold;">📍 ${guide.refineCity}</span></td>
                     <td><b style="color:var(--success);">~${estimatedChainItemsOutput} unités</b></td>
                 </tr>`;
