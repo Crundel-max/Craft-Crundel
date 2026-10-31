@@ -256,7 +256,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.17</div>
+            <div class="badge-version">🚀 Update v3.18</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -643,7 +643,7 @@
         costSummary.innerText = hasAnyValidPrice ? `${grandTotalCost.toLocaleString()} Silver` : 'N/A';
         costUnitSummary.innerText = hasAnyValidPrice ? `Unit: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
 
-        // --- AFFICHAGE DU TAG DE NON-SYNCHRONISATION SI L'API EST VIDE ---
+        // --- AFFICHAGE REVENUE ---
         if (topSellMarkets.length > 0) {
             let revenueHtml = topSellMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#34d399;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             revenueSummary.innerHTML = revenueHtml;
@@ -653,6 +653,7 @@
             revenueUnitSummary.innerText = 'Unit: Non disponible';
         }
 
+        // --- AFFICHAGE PROFIT (CORRIGÉ EN innerHTML) ---
         if (hasAnyValidPrice && bestUnitSellPrice > 0) {
             let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
             profitSummary.className = `summary-value ${profitClass}`;
@@ -662,7 +663,7 @@
             profitUnitSummary.innerText = `Unit Profit: ${Math.round(unitNetProfit).toLocaleString()} S`;
         } else {
             profitSummary.className = 'summary-value';
-            profitSummary.innerText = `<span style="font-size:13px; color:var(--warning);">En attente de scan marché</span>`;
+            profitSummary.innerHTML = `<span style="font-size:13px; color:var(--warning);">En attente de scan marché</span>`;
             profitUnitSummary.className = 'summary-sub';
             profitUnitSummary.innerText = 'Unit: N/A';
         }
