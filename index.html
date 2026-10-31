@@ -357,12 +357,17 @@
         }
 
         if (enchantment && enchantment > 0 && enchantment <= 4) {
+            // Pour l'API Albion Data Project, les ressources et matériaux enchantés 
+            // utilisent le format _LEVEL{X} ou @{X} selon le type d'item.
+            // Teste avec _LEVEL{enchantment} si le @ ne renvoie rien sur les ressources.
+            if (cleanBase.includes("CLOTH") || cleanBase.includes("FIBER") || cleanBase.includes("METALBAR") || cleanBase.includes("ORE") || cleanBase.includes("LEATHER") || cleanBase.includes("HIDE") || cleanBase.includes("PLANKS") || cleanBase.includes("WOOD") || cleanBase.includes("STONEBLOCK") || cleanBase.includes("ROCK")) {
+                return `${cleanBase}_LEVEL${enchantment}`;
+            }
             return `${cleanBase}@${enchantment}`;
         }
 
         return cleanBase;
     }
-
     const baseRecipes = {
         // --- RAFFINAGE ---
         "T3_CLOTH": { name: "Neat Cloth T3", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T2 Cloth", baseId: "T2_CLOTH", ratio: 1 }, { name: "T3 Fiber", baseId: "T3_FIBER", ratio: 2 } ] },
