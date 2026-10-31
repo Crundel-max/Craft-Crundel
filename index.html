@@ -256,7 +256,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.22</div>
+            <div class="badge-version">🚀 Update v3.23</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -528,7 +528,6 @@
         if (!recipeObj) return;
         updateRecommendation();
 
-        // Extraction du Tier de l'item sélectionné (ex: "T4_..." -> Tier 4)
         const tierMatch = itemKey.match(/^T(\d+)/);
         const currentTier = tierMatch ? parseInt(tierMatch[1]) : 4;
 
@@ -539,7 +538,6 @@
         }
 
         let currentRecipe = recipeObj.mats.map((mat, index) => {
-            // Extraction du tier de base du matériau si présent, sinon utilisation du tier courant
             const matTierMatch = mat.baseId.match(/^T(\d+)/);
             const matTier = matTierMatch ? parseInt(matTierMatch[1]) : currentTier;
 
