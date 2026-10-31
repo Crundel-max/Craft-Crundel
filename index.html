@@ -239,7 +239,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.11</div>
+            <div class="badge-version">🚀 Update v3.13</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -313,7 +313,7 @@
             <div class="summary-sub" id="costUnitSummary">Unit: 0 S</div>
         </div>
         <div class="summary-card">
-            <h3>Estimated Revenue (Sell Top 3)</h3>
+            <h3>Estimated Revenue (Sell Orders Top 3)</h3>
             <div class="summary-value" id="revenueSummary">N/A</div>
             <div class="summary-sub" id="revenueUnitSummary">Unit: N/A</div>
         </div>
@@ -588,52 +588,59 @@
             tbody.innerHTML += row;
         });
 
-        // --- ESTIMATION DE VENTE (Top 3 des meilleures offres Buy Order ou Sell Price) ---
+        // --- Ciblage direct de Sell Orders (sell_price_min) pour le produit fini ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
         let sellCityMap = {};
 
         craftedOffers.forEach(o => {
-            // On privilégie les buy_price_max ou sell_price_min valides
-            let price = o.buy_price_max > 0 ? o.buy_price_max : (o.sell_price_min > 0 ? o.sell_price_min : 0);
-            let date = o.buy_price_max > 0 ? o.buy_price_max_date : o.sell_price_min_date;
+            // On cible spécifiquement sell_price_min (Sell Orders) et on garde le plus bas par ville
+            let price = o.sell_price_min > 0 ? o.sell_price_min : 0;
+            let date = o.sell_price_min_date;
 
             if (price > 0 && date) {
-                if (!sellCityMap[o.city] || price > sellCityMap[o.city].price) {
+                if (!sellCityMap[o.city] || price < sellCityMap[o.city].price) {
                     sellCityMap[o.city] = { city: o.city, price: price, date: date };
                 }
             }
         });
 
         let topSellMarkets = Object.values(sellCityMap);
-        topSellMarkets.sort((a, b) => b.price - a.price); // Tri du plus offrant au moins offrant
+        topSellMarkets.sort((a, b) => a.price - b.price); // Du moins cher au plus cher (meilleurs prix d'achat direct en ville)
         topSellMarkets = topSellMarkets.slice(0, 3);
 
-        let bestUnitSellPrice = topSellMarkets.length > 0 ? topSellMarkets[0].price : 0;
+        let unitCost = hasAnyValidPrice ? grandTotalCost / totalQty : 0;
+        let bestUnitSellPrice = 0;
+
+        if (topSellMarkets.length > 0) {
+            bestUnitSellPrice = topSellMarkets[0].price;
+        } else if (unitCost > 0) {
+            // Fallback si l'API n'a pas de data fraîche : estimation basée sur le coût des composants +25%
+            bestUnitSellPrice = Math.round(unitCost * 1.25);
+            topSellMarkets = [{ city: "Estimation Marché (+25%)", price: bestUnitSellPrice, date: new Date().toISOString() }];
+        }
+
         let marketTaxRate = 0.06;
         let unitNetRevenue = bestUnitSellPrice * (1 - marketTaxRate);
-        
-        let unitCost = hasAnyValidPrice ? grandTotalCost / totalQty : 0;
         let unitNetProfit = unitNetRevenue - unitCost;
         let profitMargin = unitCost > 0 ? (unitNetProfit / unitCost) * 100 : 0;
 
-        // Totaux globaux (pour la quantité totale)
         let totalNetRevenue = unitNetRevenue * totalQty;
         let totalNetProfit = unitNetProfit * totalQty;
 
-        // Mise à jour de l'affichage des cartes de synthèse
+        // Affichage
         costSummary.innerText = hasAnyValidPrice ? `${grandTotalCost.toLocaleString()} Silver` : 'N/A';
         costUnitSummary.innerText = hasAnyValidPrice ? `Unit: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
 
         if (topSellMarkets.length > 0) {
-            let revenueHtml = topSellMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#34d399;">${Math.round(m.price * (1 - marketTaxRate)).toLocaleString()} S</span></div>`).join('');
+            let revenueHtml = topSellMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#34d399;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             revenueSummary.innerHTML = revenueHtml;
-            revenueUnitSummary.innerText = `Unit Best: ${Math.round(unitNetRevenue).toLocaleString()} S (${topSellMarkets[0].city})`;
+            revenueUnitSummary.innerText = `Unit Best: ${bestUnitSellPrice.toLocaleString()} S (${topSellMarkets[0].city})`;
         } else {
             revenueSummary.innerText = 'N/A';
             revenueUnitSummary.innerText = 'Unit: N/A';
         }
 
-        if (hasAnyValidPrice && topSellMarkets.length > 0) {
+        if (hasAnyValidPrice && unitCost > 0) {
             let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
             profitSummary.className = `summary-value ${profitClass}`;
             profitSummary.innerText = `${Math.round(totalNetProfit).toLocaleString()} Silver (${profitMargin.toFixed(1)}%)`;
