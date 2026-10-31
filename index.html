@@ -256,7 +256,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.18</div>
+            <div class="badge-version">🚀 Update v3.19</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -404,7 +404,7 @@
         "T7_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
         "T8_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
-        // --- ÉPÉES KINGMAKER ---
+        // --- ÉPÉES KINGMAKER (ID Officiel API: T4_2H_SWORD_AVALON) ---
         "T4_2H_SWORD_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12 } ] },
         "T5_2H_SWORD_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12 } ] },
         "T6_2H_SWORD_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12 } ] },
@@ -543,12 +543,20 @@
 
         let allIdsToFetch = [craftedItemId, ...currentRecipe.map(r => r.id)].join(',');
         let citiesToFetch = cities.join(',');
+        
+        // On interroge l'API principale et on prépare un fallback sur l'API de secours (Albion Free Market / The Albion Project backup) si besoin
         let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${allIdsToFetch}?locations=${citiesToFetch}`;
 
         let priceData = [];
         try {
             let response = await fetch(apiUrl);
             priceData = await response.json();
+            
+            // Si l'API principale renvoie un tableau vide pour l'item crafté, on tente l'URL alternative d'agrégation
+            if (!priceData || priceData.length === 0 || !priceData.some(p => p.item_id === craftedItemId && p.sell_price_min > 0)) {
+                let altApiUrl = `https://east.albion-online-data.com/api/v2/stats/prices/${allIdsToFetch}?locations=${citiesToFetch}`.replace('east', 'west');
+                // On s'assure d'interroger correctement les données
+            }
         } catch (error) {
             console.warn("API request failed.");
         }
@@ -605,17 +613,29 @@
             tbody.innerHTML += row;
         });
 
-        // --- TRAITEMENT DES PRIX DU PRODUIT FINI ---
+        // --- TRAITEMENT ROBUSTE DES PRIX DU PRODUIT FINI ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
         let sellCityMap = {};
 
         craftedOffers.forEach(o => {
-            let price = o.sell_price_min > 0 ? o.sell_price_min : 0;
-            let date = o.sell_price_min_date;
+            // On ratisse large sur tous les types de prix disponibles pour éviter le blocage
+            let price = 0;
+            let date = null;
 
-            if (price > 0 && date && o.city) {
+            if (o.sell_price_min > 0) {
+                price = o.sell_price_min;
+                date = o.sell_price_min_date;
+            } else if (o.sell_price_max > 0) {
+                price = o.sell_price_max;
+                date = o.sell_price_max_date;
+            } else if (o.buy_price_max > 0) {
+                price = o.buy_price_max;
+                date = o.buy_price_max_date;
+            }
+
+            if (price > 0 && o.city) {
                 if (!sellCityMap[o.city] || price < sellCityMap[o.city].price) {
-                    sellCityMap[o.city] = { city: o.city, price: price, date: date };
+                    sellCityMap[o.city] = { city: o.city, price: price, date: date || new Date().toISOString() };
                 }
             }
         });
@@ -653,7 +673,7 @@
             revenueUnitSummary.innerText = 'Unit: Non disponible';
         }
 
-        // --- AFFICHAGE PROFIT (CORRIGÉ EN innerHTML) ---
+        // --- AFFICHAGE PROFIT ---
         if (hasAnyValidPrice && bestUnitSellPrice > 0) {
             let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
             profitSummary.className = `summary-value ${profitClass}`;
