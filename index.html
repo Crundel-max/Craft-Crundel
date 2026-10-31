@@ -283,7 +283,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.28</div>
+            <div class="badge-version">🚀 Update v3.29</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -307,7 +307,7 @@
             <select id="itemSelect" onchange="updateRecommendation()"></select>
         </div>
         <div class="form-group">
-            <label for="enchantSelect">Enchantment:</label>
+            <label for="enchantSelect">Enchantement:</label>
             <select id="enchantSelect">
                 <option value="0" selected>.0 (Normal)</option>
                 <option value="1">.1 (Uncommon)</option>
@@ -323,7 +323,6 @@
         <button onclick="fetchPrices()">⚡ Calculate Optimal Crafting, Costs & Profit</button>
     </div>
 
-    <!-- Panneau d'optimisation des bonus de ville & retours de ressources -->
     <div class="optimization-panel">
         <label class="checkbox-label">
             <input type="checkbox" id="bonusCityCheck" checked onchange="fetchPrices()">
@@ -352,7 +351,7 @@
                 <th>Required Material</th>
                 <th>API ID</th>
                 <th>Base Qty</th>
-                <th>Effective Qty (with RR)</th>
+                <th>Effective Qty</th>
                 <th>Top 3 Cheapest Cities to Buy 🛒</th>
                 <th>Min Price (1st Choice)</th>
                 <th>Total Cost (1st Choice)</th>
@@ -575,17 +574,13 @@
         if (!recipeObj) return;
         updateRecommendation();
 
-        // Calcul dynamique du taux de retour de ressources (Return Rate)
         const isBonusCity = document.getElementById('bonusCityCheck').checked;
         const isDailyBonus = document.getElementById('dailyBonusCheck').checked;
         
-        // Base return rate standard sans bonus ville = 15% (0.15)
-        // Bonus de ville spécialisée = +25% (passe à 40% ou 0.40)
-        // Bonus journalier = +10% additionnel
         let returnRate = 0.15;
         if (isBonusCity) returnRate = 0.40;
         if (isDailyBonus) {
-            returnRate += 0.10; // ex: 50% total si ville + journalier
+            returnRate += 0.10;
         }
         document.getElementById('returnRateDisplay').innerText = `Return Rate (RR): ${(returnRate * 100).toFixed(1)}%`;
 
@@ -603,22 +598,23 @@
             const matTier = matTierMatch ? parseInt(matTierMatch[1]) : currentTier;
 
             let finalId = mat.baseId;
-            if (enchant > 0 && !mat.isArtefact) {
+            if (enchant > 0) {
+                // Les artéfacts s'enchantent également avec le format standard @X sur l'API
                 finalId = formatAlbionItemID(mat.baseId, matTier, enchant);
             }
             
-            // Application du taux de retour de ressources (RR) sur la quantité effective à acheter
-            // Formule : Quantité de base * Quantité voulue * (1 - Return Rate)
             let rawReqQty = mat.ratio * totalQty;
-            let effectiveQty = rawReqQty * (1 - returnRate);
+            // CORRECTION : Les artéfacts ne bénéficient PAS du Return Rate (RR), leur quantité effective est égale à leur quantité brute
+            let effectiveQty = mat.isArtefact ? rawReqQty : rawReqQty * (1 - returnRate);
 
             return {
-                name: `${mat.name}${enchant > 0 && !mat.isArtefact ? ' .' + enchant : ''}`,
+                name: `${mat.name}${enchant > 0 ? ' .' + enchant : ''}`,
                 id: finalId,
                 baseId: mat.baseId,
                 ratio: mat.ratio,
                 rawQty: rawReqQty,
                 effectiveQty: effectiveQty,
+                isArtefact: mat.isArtefact,
                 index: index
             };
         });
@@ -685,11 +681,15 @@
                 marketHtml = `<div style="color: var(--warning); font-style: italic;">📡 En attente de scan marché</div>`;
             }
 
+            let effectiveQtyDisplay = mat.isArtefact 
+                ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(no RR)</span>`
+                : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(rr ${(returnRate*100).toFixed(0)}%)</span>`;
+
             let row = `<tr>
                 <td><b>${mat.name}</b></td>
                 <td><code>${mat.id}</code></td>
                 <td>${mat.rawQty.toLocaleString()}</td>
-                <td><b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(rr ${(returnRate*100).toFixed(0)}%)</span></td>
+                <td>${effectiveQtyDisplay}</td>
                 <td class="market-rank">${marketHtml}</td>
                 <td><b>${bestPrice > 0 ? bestPrice.toLocaleString() : 'N/A'}</b></td>
                 <td><b>${bestPrice > 0 ? Math.round(lineCost).toLocaleString() : 'N/A'}</b></td>
