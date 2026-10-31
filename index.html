@@ -216,7 +216,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.3</div>
+            <div class="badge-version">🚀 Update v3.4</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -288,56 +288,57 @@
 
 <script>
     const baseRecipes = {
-        "T3_CLOTH": { name: "Neat Cloth T3", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T2 Cloth", baseId: "T2_CLOTH", ratio: 1 }, { name: "T3 Fiber", baseId: "T3_FIBER", ratio: 2 } ] },
-        "T4_CLOTH": { name: "Fine Cloth T4", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 1 }, { name: "T4 Fiber", baseId: "T4_FIBER", ratio: 2 } ] },
-        "T5_CLOTH": { name: "Opulent Cloth T5", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 1 }, { name: "T5 Fiber", baseId: "T5_FIBER", ratio: 3 } ] },
-        "T6_CLOTH": { name: "Dusky Cloth T6", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 1 }, { name: "T6 Fiber", baseId: "T6_FIBER", ratio: 4 } ] },
-        "T7_CLOTH": { name: "Ornate Cloth T7", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 1 }, { name: "T7 Fiber", baseId: "T7_FIBER", ratio: 5 } ] },
-        "T8_CLOTH": { name: "Timeless Cloth T8", bonusCity: "Thetford (Best for Cloth Refining ⚡)", mats: [ { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 1 }, { name: "T8 Fiber", baseId: "T8_FIBER", ratio: 6 } ] },
+        // --- RAFFINAGE (Bonus Villes Corrigés) ---
+        "T3_CLOTH": { name: "Neat Cloth T3", bonusCity: "Thetford (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T2 Cloth", baseId: "T2_CLOTH", ratio: 1 }, { name: "T3 Fiber", baseId: "T3_FIBER", ratio: 2 } ] },
+        "T4_CLOTH": { name: "Fine Cloth T4", bonusCity: "Thetford (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 1 }, { name: "T4 Fiber", baseId: "T4_FIBER", ratio: 2 } ] },
+        "T5_CLOTH": { name: "Opulent Cloth T5", bonusCity: "Thetford (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 1 }, { name: "T5 Fiber", baseId: "T5_FIBER", ratio: 3 } ] },
+        "T6_CLOTH": { name: "Dusky Cloth T6", bonusCity: "Thetford (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 1 }, { name: "T6 Fiber", baseId: "T6_FIBER", ratio: 4 } ] },
+        "T7_CLOTH": { name: "Ornate Cloth T7", bonusCity: "Thetford (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 1 }, { name: "T7 Fiber", baseId: "T7_FIBER", ratio: 5 } ] },
+        "T8_CLOTH": { name: "Timeless Cloth T8", bonusCity: "Thetford (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 1 }, { name: "T8 Fiber", baseId: "T8_FIBER", ratio: 6 } ] },
 
-        "T4_METALBAR": { name: "Steel Bar T4", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "T3 Metal Bar", baseId: "T3_METALBAR", ratio: 1 }, { name: "T4 Ore", baseId: "T4_ORE", ratio: 2 } ] },
-        "T5_METALBAR": { name: "Titanium Bar T5", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 1 }, { name: "T5 Ore", baseId: "T5_ORE", ratio: 3 } ] },
-        "T6_METALBAR": { name: "Runite Bar T6", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 1 }, { name: "T6 Ore", baseId: "T6_ORE", ratio: 4 } ] },
-        "T7_METALBAR": { name: "Meteorite Bar T7", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 1 }, { name: "T7 Ore", baseId: "T7_ORE", ratio: 5 } ] },
-        "T8_METALBAR": { name: "Adamantium Bar T8", bonusCity: "Fort Sterling (Best for Metal Refining ⚡)", mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 1 }, { name: "T8 Ore", baseId: "T8_ORE", ratio: 6 } ] },
+        "T4_METALBAR": { name: "Steel Bar T4", bonusCity: "Fort Sterling (Best for Ore/Metal Refining +40% ⚡)", mats: [ { name: "T3 Metal Bar", baseId: "T3_METALBAR", ratio: 1 }, { name: "T4 Ore", baseId: "T4_ORE", ratio: 2 } ] },
+        "T5_METALBAR": { name: "Titanium Bar T5", bonusCity: "Fort Sterling (Best for Ore/Metal Refining +40% ⚡)", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 1 }, { name: "T5 Ore", baseId: "T5_ORE", ratio: 3 } ] },
+        "T6_METALBAR": { name: "Runite Bar T6", bonusCity: "Fort Sterling (Best for Ore/Metal Refining +40% ⚡)", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 1 }, { name: "T6 Ore", baseId: "T6_ORE", ratio: 4 } ] },
+        "T7_METALBAR": { name: "Meteorite Bar T7", bonusCity: "Fort Sterling (Best for Ore/Metal Refining +40% ⚡)", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 1 }, { name: "T7 Ore", baseId: "T7_ORE", ratio: 5 } ] },
+        "T8_METALBAR": { name: "Adamantium Bar T8", bonusCity: "Fort Sterling (Best for Ore/Metal Refining +40% ⚡)", mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 1 }, { name: "T8 Ore", baseId: "T8_ORE", ratio: 6 } ] },
 
-        "T4_LEATHER": { name: "Stiff Leather T4", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "T3 Leather", baseId: "T3_LEATHER", ratio: 1 }, { name: "T4 Hide", baseId: "T4_HIDE", ratio: 2 } ] },
-        "T5_LEATHER": { name: "Thick Leather T5", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 1 }, { name: "T5 Hide", baseId: "T5_HIDE", ratio: 3 } ] },
-        "T6_LEATHER": { name: "Worked Leather T6", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 1 }, { name: "T6 Hide", baseId: "T6_HIDE", ratio: 4 } ] },
-        "T7_LEATHER": { name: "Cured Leather T7", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 1 }, { name: "T7 Hide", baseId: "T7_HIDE", ratio: 5 } ] },
-        "T8_LEATHER": { name: "Califor Leather T8", bonusCity: "Bridgewatch (Best for Leather Refining ⚡)", mats: [ { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 1 }, { name: "T8 Hide", baseId: "T8_HIDE", ratio: 6 } ] },
+        "T4_LEATHER": { name: "Stiff Leather T4", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", mats: [ { name: "T3 Leather", baseId: "T3_LEATHER", ratio: 1 }, { name: "T4 Hide", baseId: "T4_HIDE", ratio: 2 } ] },
+        "T5_LEATHER": { name: "Thick Leather T5", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", mats: [ { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 1 }, { name: "T5 Hide", baseId: "T5_HIDE", ratio: 3 } ] },
+        "T6_LEATHER": { name: "Worked Leather T6", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", mats: [ { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 1 }, { name: "T6 Hide", baseId: "T6_HIDE", ratio: 4 } ] },
+        "T7_LEATHER": { name: "Cured Leather T7", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", mats: [ { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 1 }, { name: "T7 Hide", baseId: "T7_HIDE", ratio: 5 } ] },
+        "T8_LEATHER": { name: "Califor Leather T8", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", mats: [ { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 1 }, { name: "T8 Hide", baseId: "T8_HIDE", ratio: 6 } ] },
 
-        "T3_PLANKS": { name: "Chestnut Planks T3", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "T2 Birch Planks", baseId: "T2_PLANKS", ratio: 1 }, { name: "T3 Wood", baseId: "T3_WOOD", ratio: 2 } ] },
-        "T4_PLANKS": { name: "Pine Planks T4", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 1 }, { name: "T4 Wood", baseId: "T4_WOOD", ratio: 2 } ] },
-        "T5_PLANKS": { name: "Cedar Planks T5", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 1 }, { name: "T5 Wood", baseId: "T5_WOOD", ratio: 3 } ] },
-        "T6_PLANKS": { name: "Whitewood Planks T6", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 1 }, { name: "T6 Wood", baseId: "T6_WOOD", ratio: 4 } ] },
-        "T7_PLANKS": { name: "Ashenbark Planks T7", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 1 }, { name: "T7 Wood", baseId: "T7_WOOD", ratio: 5 } ] },
-        "T8_PLANKS": { name: "Bloodoak Planks T8", bonusCity: "Lymhurst (Best for Wood Refining ⚡)", mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 1 }, { name: "T8 Wood", baseId: "T8_WOOD", ratio: 6 } ] },
+        "T3_PLANKS": { name: "Chestnut Planks T3", bonusCity: "Lymhurst (Best for Wood/Planks Refining +40% ⚡)", mats: [ { name: "T2 Birch Planks", baseId: "T2_PLANKS", ratio: 1 }, { name: "T3 Wood", baseId: "T3_WOOD", ratio: 2 } ] },
+        "T4_PLANKS": { name: "Pine Planks T4", bonusCity: "Lymhurst (Best for Wood/Planks Refining +40% ⚡)", mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 1 }, { name: "T4 Wood", baseId: "T4_WOOD", ratio: 2 } ] },
+        "T5_PLANKS": { name: "Cedar Planks T5", bonusCity: "Lymhurst (Best for Wood/Planks Refining +40% ⚡)", mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 1 }, { name: "T5 Wood", baseId: "T5_WOOD", ratio: 3 } ] },
+        "T6_PLANKS": { name: "Whitewood Planks T6", bonusCity: "Lymhurst (Best for Wood/Planks Refining +40% ⚡)", mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 1 }, { name: "T6 Wood", baseId: "T6_WOOD", ratio: 4 } ] },
+        "T7_PLANKS": { name: "Ashenbark Planks T7", bonusCity: "Lymhurst (Best for Wood/Planks Refining +40% ⚡)", mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 1 }, { name: "T7 Wood", baseId: "T7_WOOD", ratio: 5 } ] },
+        "T8_PLANKS": { name: "Bloodoak Planks T8", bonusCity: "Lymhurst (Best for Wood/Planks Refining +40% ⚡)", mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 1 }, { name: "T8 Wood", baseId: "T8_WOOD", ratio: 6 } ] },
 
-        "T4_STONEBLOCK": { name: "Cut Stone T4", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "T3 Stone Block", baseId: "T3_STONEBLOCK", ratio: 1 }, { name: "T4 Rock", baseId: "T4_ROCK", ratio: 2 } ] },
-        "T5_STONEBLOCK": { name: "Heavy Block T5", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "T4 Stone Block", baseId: "T4_STONEBLOCK", ratio: 1 }, { name: "T5 Rock", baseId: "T5_ROCK", ratio: 3 } ] },
-        "T6_STONEBLOCK": { name: "Solid Block T6", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "T5 Stone Block", baseId: "T5_STONEBLOCK", ratio: 1 }, { name: "T6 Rock", baseId: "T6_ROCK", ratio: 4 } ] },
-        "T7_STONEBLOCK": { name: "Dense Block T7", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "T6 Stone Block", baseId: "T6_STONEBLOCK", ratio: 1 }, { name: "T7 Rock", baseId: "T7_ROCK", ratio: 5 } ] },
-        "T8_STONEBLOCK": { name: "Glowing Block T8", bonusCity: "Martlock (Best for Stone Refining ⚡)", mats: [ { name: "T7 Stone Block", baseId: "T7_STONEBLOCK", ratio: 1 }, { name: "T8 Rock", baseId: "T8_ROCK", ratio: 6 } ] },
+        "T4_STONEBLOCK": { name: "Cut Stone T4", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", mats: [ { name: "T3 Stone Block", baseId: "T3_STONEBLOCK", ratio: 1 }, { name: "T4 Rock", baseId: "T4_ROCK", ratio: 2 } ] },
+        "T5_STONEBLOCK": { name: "Heavy Block T5", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", mats: [ { name: "T4 Stone Block", baseId: "T4_STONEBLOCK", ratio: 1 }, { name: "T5 Rock", baseId: "T5_ROCK", ratio: 3 } ] },
+        "T6_STONEBLOCK": { name: "Solid Block T6", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", mats: [ { name: "T5 Stone Block", baseId: "T5_STONEBLOCK", ratio: 1 }, { name: "T6 Rock", baseId: "T6_ROCK", ratio: 4 } ] },
+        "T7_STONEBLOCK": { name: "Dense Block T7", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", mats: [ { name: "T6 Stone Block", baseId: "T6_STONEBLOCK", ratio: 1 }, { name: "T7 Rock", baseId: "T7_ROCK", ratio: 5 } ] },
+        "T8_STONEBLOCK": { name: "Glowing Block T8", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", mats: [ { name: "T7 Stone Block", baseId: "T7_STONEBLOCK", ratio: 1 }, { name: "T8 Rock", baseId: "T8_ROCK", ratio: 6 } ] },
 
-        // --- POTIONS / ALCHEMY (Noms techniques in-game exacts validés par tes screenshots) ---
+        // --- POTIONS / ALCHEMY (IDs API corrigés basés sur les vraies ressources d'alchimie) ---
         "T4_POTION_HEAL": { name: "Minor Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Arcane Agaric", baseId: "T3_AGARIC", ratio: 4 }, { name: "Brightleaf Comfrey", baseId: "T4_COMFREY", ratio: 2 } ] },
         "T5_POTION_ENERGY": { name: "Energy Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Brightleaf Comfrey", baseId: "T4_COMFREY", ratio: 8 }, { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 4 } ] },
         "T6_POTION_HEAL": { name: "Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 16 }, { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 8 } ] },
         "T7_POTION_RESISTANCE": { name: "Resistance Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 32 }, { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 16 } ] },
-        "T8_POTION_GIANT": { name: "Giant Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 64 }, { name: "Firetouched Mullein", baseId: "T8_DRAGONTEARS", ratio: 32 } ] },
+        "T8_POTION_GIANT": { name: "Giant Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 64 }, { name: "Firetouched Mullein", baseId: "T8_MULLEIN", ratio: 32 } ] },
         
         "T4_POTION_STICKY": { name: "Sticky Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Arcane Agaric", baseId: "T3_AGARIC", ratio: 4 }, { name: "Brightleaf Comfrey", baseId: "T4_COMFREY", ratio: 2 } ] },
         "T5_POTION_POISON": { name: "Poison Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Brightleaf Comfrey", baseId: "T4_COMFREY", ratio: 8 }, { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 4 } ] },
         "T6_POTION_INVISIBILITY": { name: "Invisibility Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 16 }, { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 8 } ] },
         "T7_POTION_CLEANSING": { name: "Cleansing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 32 }, { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 16 } ] },
-        "T8_POTION_ACID": { name: "Acid Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 64 }, { name: "Firetouched Mullein", baseId: "T8_DRAGONTEARS", ratio: 32 } ] },
+        "T8_POTION_ACID": { name: "Acid Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 64 }, { name: "Firetouched Mullein", baseId: "T8_MULLEIN", ratio: 32 } ] },
 
         "T4_POTION_BERSERK": { name: "Berserk Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Arcane Agaric", baseId: "T3_AGARIC", ratio: 4 }, { name: "Brightleaf Comfrey", baseId: "T4_COMFREY", ratio: 2 } ] },
         "T5_POTION_HEAL_LARG": { name: "Major Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Brightleaf Comfrey", baseId: "T4_COMFREY", ratio: 8 }, { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 4 } ] },
         "T6_POTION_ENERGY_LARG": { name: "Major Energy Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 16 }, { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 8 } ] },
         "T7_POTION_REVIVE": { name: "Reviving Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 32 }, { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 16 } ] },
-        "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 64 }, { name: "Firetouched Mullein", baseId: "T8_DRAGONTEARS", ratio: 32 } ] },
+        "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 64 }, { name: "Firetouched Mullein", baseId: "T8_MULLEIN", ratio: 32 } ] },
         // ------------------------------------------
 
         "T4_FISHINGROD": { name: "Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16 }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8 } ] },
