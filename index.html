@@ -192,14 +192,20 @@
         }
         .summary-card h3 {
             margin: 0 0 10px 0;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-muted);
             text-transform: uppercase;
         }
         .summary-value {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: bold;
             color: #fff;
+            margin-top: 5px;
+        }
+        .summary-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
         }
         .profit-positive { color: var(--success) !important; }
         .profit-negative { color: var(--danger) !important; }
@@ -233,7 +239,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.10</div>
+            <div class="badge-version">🚀 Update v3.11</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -302,16 +308,19 @@
 
     <div class="summary-grid">
         <div class="summary-card">
-            <h3>Total Material Cost</h3>
+            <h3>Material Cost</h3>
             <div class="summary-value" id="costSummary">0 Silver</div>
+            <div class="summary-sub" id="costUnitSummary">Unit: 0 S</div>
         </div>
         <div class="summary-card">
-            <h3>Estimated Revenue (Sell)</h3>
-            <div class="summary-value" id="revenueSummary">0 Silver</div>
+            <h3>Estimated Revenue (Sell Top 3)</h3>
+            <div class="summary-value" id="revenueSummary">N/A</div>
+            <div class="summary-sub" id="revenueUnitSummary">Unit: N/A</div>
         </div>
         <div class="summary-card">
             <h3>Net Profit (Margin)</h3>
             <div class="summary-value" id="profitSummary">0 Silver (0%)</div>
+            <div class="summary-sub" id="profitUnitSummary">Unit: 0 S</div>
         </div>
     </div>
 </div>
@@ -378,7 +387,7 @@
         "T7_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
         "T8_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
-        // --- ÉPÉES KINGMAKER (IDs exacts d'après tes screens) ---
+        // --- ÉPÉES KINGMAKER ---
         "T4_2H_SWORD_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12 } ] },
         "T5_2H_SWORD_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12 } ] },
         "T6_2H_SWORD_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12 } ] },
@@ -482,7 +491,6 @@
         if (!recipeObj) return;
         updateRecommendation();
 
-        // Gestion de l'ID du produit fini avec enchantement si applicable
         let craftedItemId = itemKey;
         const isSpecialBase = itemKey.includes('3') && !itemKey.includes('TOOL');
         if (enchant > 0 && !isSpecialBase) {
@@ -507,8 +515,11 @@
         const loading = document.getElementById('loadingStatus');
         const tbody = document.getElementById('tableBody');
         const costSummary = document.getElementById('costSummary');
+        const costUnitSummary = document.getElementById('costUnitSummary');
         const revenueSummary = document.getElementById('revenueSummary');
+        const revenueUnitSummary = document.getElementById('revenueUnitSummary');
         const profitSummary = document.getElementById('profitSummary');
+        const profitUnitSummary = document.getElementById('profitUnitSummary');
 
         loading.style.display = 'block';
         tbody.innerHTML = '';
@@ -529,7 +540,7 @@
         let grandTotalCost = 0;
         let hasAnyValidPrice = false;
 
-        // Calcul du coût des matériaux
+        // Calcul des matériaux
         currentRecipe.forEach((mat) => {
             let reqQty = mat.ratio * totalQty;
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
@@ -577,36 +588,63 @@
             tbody.innerHTML += row;
         });
 
-        // Calcul du prix de vente optimal du produit fini (prend le prix de vente direct le plus bas / avantageux parmi les marchés)
+        // --- ESTIMATION DE VENTE (Top 3 des meilleures offres Buy Order ou Sell Price) ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
-        let bestSellPrice = 0;
-        let bestSellCity = "N/A";
+        let sellCityMap = {};
 
         craftedOffers.forEach(o => {
-            // On cherche la meilleure offre de vente directe (sell_price_min > 0)
-            let price = o.sell_price_min > 0 ? o.sell_price_min : 0;
-            if (price > 0 && (bestSellPrice === 0 || price < bestSellPrice)) {
-                bestSellPrice = price;
-                bestSellCity = o.city;
+            // On privilégie les buy_price_max ou sell_price_min valides
+            let price = o.buy_price_max > 0 ? o.buy_price_max : (o.sell_price_min > 0 ? o.sell_price_min : 0);
+            let date = o.buy_price_max > 0 ? o.buy_price_max_date : o.sell_price_min_date;
+
+            if (price > 0 && date) {
+                if (!sellCityMap[o.city] || price > sellCityMap[o.city].price) {
+                    sellCityMap[o.city] = { city: o.city, price: price, date: date };
+                }
             }
         });
 
-        let marketTaxRate = 0.06;
-        let grossRevenue = totalQty * bestSellPrice;
-        let netRevenue = grossRevenue * (1 - marketTaxRate);
-        let netProfit = netRevenue - (hasAnyValidPrice ? grandTotalCost : 0);
-        let profitMargin = hasAnyValidPrice && grandTotalCost > 0 ? (netProfit / grandTotalCost) * 100 : 0;
+        let topSellMarkets = Object.values(sellCityMap);
+        topSellMarkets.sort((a, b) => b.price - a.price); // Tri du plus offrant au moins offrant
+        topSellMarkets = topSellMarkets.slice(0, 3);
 
-        costSummary.innerText = hasAnyValidPrice ? `${grandTotalCost.toLocaleString()} Silver` : 'N/A';
-        revenueSummary.innerText = bestSellPrice > 0 ? `${Math.round(netRevenue).toLocaleString()} Silver (${bestSellCity})` : 'N/A';
+        let bestUnitSellPrice = topSellMarkets.length > 0 ? topSellMarkets[0].price : 0;
+        let marketTaxRate = 0.06;
+        let unitNetRevenue = bestUnitSellPrice * (1 - marketTaxRate);
         
-        if (hasAnyValidPrice && bestSellPrice > 0) {
-            let profitClass = netProfit >= 0 ? 'profit-positive' : 'profit-negative';
+        let unitCost = hasAnyValidPrice ? grandTotalCost / totalQty : 0;
+        let unitNetProfit = unitNetRevenue - unitCost;
+        let profitMargin = unitCost > 0 ? (unitNetProfit / unitCost) * 100 : 0;
+
+        // Totaux globaux (pour la quantité totale)
+        let totalNetRevenue = unitNetRevenue * totalQty;
+        let totalNetProfit = unitNetProfit * totalQty;
+
+        // Mise à jour de l'affichage des cartes de synthèse
+        costSummary.innerText = hasAnyValidPrice ? `${grandTotalCost.toLocaleString()} Silver` : 'N/A';
+        costUnitSummary.innerText = hasAnyValidPrice ? `Unit: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
+
+        if (topSellMarkets.length > 0) {
+            let revenueHtml = topSellMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#34d399;">${Math.round(m.price * (1 - marketTaxRate)).toLocaleString()} S</span></div>`).join('');
+            revenueSummary.innerHTML = revenueHtml;
+            revenueUnitSummary.innerText = `Unit Best: ${Math.round(unitNetRevenue).toLocaleString()} S (${topSellMarkets[0].city})`;
+        } else {
+            revenueSummary.innerText = 'N/A';
+            revenueUnitSummary.innerText = 'Unit: N/A';
+        }
+
+        if (hasAnyValidPrice && topSellMarkets.length > 0) {
+            let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
             profitSummary.className = `summary-value ${profitClass}`;
-            profitSummary.innerText = `${Math.round(netProfit).toLocaleString()} Silver (${profitMargin.toFixed(1)}%)`;
+            profitSummary.innerText = `${Math.round(totalNetProfit).toLocaleString()} Silver (${profitMargin.toFixed(1)}%)`;
+            
+            profitUnitSummary.className = `summary-sub ${profitClass}`;
+            profitUnitSummary.innerText = `Unit Profit: ${Math.round(unitNetProfit).toLocaleString()} S`;
         } else {
             profitSummary.className = 'summary-value';
             profitSummary.innerText = 'N/A';
+            profitUnitSummary.className = 'summary-sub';
+            profitUnitSummary.innerText = 'Unit: N/A';
         }
     }
 </script>
