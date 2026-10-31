@@ -321,7 +321,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.52</div>
+            <div class="badge-version">🚀 Update v3.53</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -450,7 +450,7 @@
         </tbody>
     </table>
 
-    <!-- Tableau latéral / récapitulatif des ressources brutes nécessaires au raffinage (pour équipements & outils) -->
+    <!-- Tableau Guide d'Achat & Raffinage Cascade RR 40% (Enrichi avec nombre d'items & meilleurs marchés d'achat) -->
     <div id="rawRefiningSummaryContainer" style="display:none; margin-top: 30px;">
         <h3 style="color: var(--info); font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">🏭 Guide d'Achat des Matières Brutes & Villes de Raffinage (Cascade RR 40%)</h3>
         <table id="rawRefiningTable">
@@ -459,7 +459,9 @@
                     <th>Composant Intermédiaire / Raffiné</th>
                     <th>Quantité Raffinée Requise (avec Cascade)</th>
                     <th>Matière Première Brute à Acheter (Qté exacte)</th>
-                    <th>Ville Idéale de Raffinage / Achat 📍</th>
+                    <th>Meilleur Marché d'Achat (Brut) 🛒</th>
+                    <th>Ville Idéale de Raffinage 📍</th>
+                    <th>Nombre d'Items Finaux Estimés (Craft RR)</th>
                 </tr>
             </thead>
             <tbody id="rawRefiningTableBody"></tbody>
@@ -638,7 +640,7 @@
     let chainRawMaterialCost = 0;
     let estimatedChainItemsOutput = 0;
     let estimatedChainRevenue = 0;
-    let rawRefineGuideData = []; // Données pour le tableau latéral des matières brutes
+    let rawRefineGuideData = [];
 
     function updateItemList() {
         const cat = document.getElementById('categorySelect').value;
@@ -758,12 +760,12 @@
                 effectiveQty = mat.isArtefact ? rawReqQty : rawReqQty * (1 - activeToolRR);
             }
 
-            // Préparation des données pour le tableau latéral des matières brutes de raffinage
             if (!recipeObj.isRefining && mat.rawMat) {
                 let effectiveRawQty = (mat.rawRatio * totalQty) * (1 - refineReturnRate);
                 rawRefineGuideData.push({
                     refinedName: mat.name,
                     refinedQty: Math.round(effectiveQty),
+                    rawMatId: rawMaterialId,
                     rawName: `${mat.rawMat} (Qté: ${Math.round(effectiveRawQty)})`,
                     refineCity: mat.refineCity || "Ville dédiée"
                 });
@@ -805,17 +807,6 @@
                 if (r.rawMaterialId) allIdsToFetch.push(r.rawMaterialId);
             }
         });
-
-        let rawChainIds = [];
-        if (!recipeObj.isRefining) {
-            currentRecipe.forEach(r => {
-                if (r.rawMat) {
-                    let rawMatId = formatAlbionItemID(r.rawMat, currentTier, enchant, true);
-                    rawChainIds.push({ id: rawMatId, ratio: r.rawRatio });
-                    allIdsToFetch.push(rawMatId);
-                }
-            });
-        }
 
         let uniqueIdsToFetch = [...new Set(allIdsToFetch)].join(',');
         let citiesToFetch = cities.join(',');
@@ -958,14 +949,34 @@
             qualityMarketContainer.style.display = 'block';
             rawRefiningSummaryContainer.style.display = 'block';
 
-            // Remplissage du tableau latéral des matières brutes de raffinage
+            // Remplissage du tableau avec les meilleurs marchés d'achat et le nombre d'items finaux estimés
             rawRefiningTableBody.innerHTML = '';
             rawRefineGuideData.forEach(guide => {
+                let rawOffers = priceData.filter(p => p.item_id === guide.rawMatId);
+                let rawCityMap = {};
+                rawOffers.forEach(o => {
+                    let price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
+                    if (price > 0 && o.city) {
+                        if (!rawCityMap[o.city] || price < rawCityMap[o.city].price) {
+                            rawCityMap[o.city] = { city: o.city, price: price };
+                        }
+                    }
+                });
+                let topRawMarkets = Object.values(rawCityMap);
+                topRawMarkets.sort((a, b) => a.price - b.price);
+                topRawMarkets = topRawMarkets.slice(0, 2);
+
+                let rawMarketHtml = topRawMarkets.length > 0
+                    ? topRawMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>`).join('')
+                    : `<span style="color:var(--warning);">Scan en cours...</span>`;
+
                 rawRefiningTableBody.innerHTML += `<tr>
                     <td><b>${guide.refinedName}</b></td>
                     <td><b>${guide.refinedQty} unités</b></td>
                     <td><b>${guide.rawName}</b></td>
+                    <td class="market-rank">${rawMarketHtml}</td>
                     <td><span style="color:var(--accent); font-weight:bold;">📍 ${guide.refineCity}</span></td>
+                    <td><b style="color:var(--success);">~${estimatedChainItemsOutput} unités</b></td>
                 </tr>`;
             });
 
