@@ -291,18 +291,6 @@
             text-align: center;
             font-weight: bold;
         }
-        .tag-unsynced {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(249, 115, 22, 0.15);
-            color: var(--warning);
-            border: 1px solid rgba(249, 115, 22, 0.4);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-        }
         .loading {
             text-align: center;
             font-size: 16px;
@@ -333,7 +321,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.47</div>
+            <div class="badge-version">🚀 Update v3.49</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -383,7 +371,7 @@
             <span>⭐ Daily Bonus Active (+10% Extra Return Rate)</span>
         </label>
         <div id="returnRateDisplay" style="font-size: 14px; color: var(--accent); font-weight: bold;">
-            Return Rates: Refine 40% | Craft 40%
+            Return Rates: Refine 40% | Craft 15%
         </div>
     </div>
 
@@ -391,7 +379,7 @@
         💡 Best Crafting Location: Select an item to see the recommended city.
     </div>
 
-    <!-- Section de répartition par qualité pour les objets craftés -->
+    <!-- Section de répartition par qualité (uniquement pour les équipements/outils) -->
     <div id="qualitySection" style="display:none; margin-bottom: 25px;">
         <h3 style="color: var(--info); font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">🎯 Répartition des Objets Obtenus par Qualité (Session de Craft)</h3>
         <div class="quality-inputs-grid">
@@ -418,21 +406,8 @@
         </div>
     </div>
 
-    <div id="strategiesContainer" class="strategies-container" style="display:none;">
-        <div class="strategy-box">
-            <h4>🛒 Stratégie A : Achat Centralisé (Ville unique)</h4>
-            <p id="stratACost">Coût total : <b>Calcul...</b></p>
-            <p id="stratAMargin">Marge nette : <b>Calcul...</b></p>
-        </div>
-        <div class="strategy-box" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);">
-            <h4 style="color: var(--success);" id="stratBTitle">⚒️ Stratégie B : Raffinage Maison / Optimisé</h4>
-            <p id="stratBCost">Coût total : <b>Calcul...</b></p>
-            <p id="stratBMargin">Marge nette : <b>Calcul...</b></p>
-        </div>
-    </div>
-
     <div id="loadingStatus" class="loading" style="display:none;">
-        <span class="hourglass">⏳</span> Querying live Albion Online API across all royal cities & qualities...
+        <span class="hourglass">⏳</span> Querying live Albion Online API across all royal cities...
     </div>
 
     <h3 style="color: var(--text-muted); font-size: 13px; text-transform: uppercase; margin-bottom: 5px;" id="materialsTableTitle">Required Materials</h3>
@@ -455,7 +430,7 @@
         </tbody>
     </table>
 
-    <!-- Tableau spécifique des prix par qualité pour les objets craftables -->
+    <!-- Tableau spécifique des prix par qualité (uniquement pour les équipements/outils) -->
     <div id="qualityMarketContainer" style="display:none; margin-top: 30px;">
         <h3 style="color: var(--accent); font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">📊 Top 3 Marchés par Qualité (Revente)</h3>
         <table id="qualityResultTable">
@@ -479,7 +454,7 @@
             <div class="summary-sub" id="costUnitSummary" style="text-align:center;">Avg Unit Cost: 0 S</div>
         </div>
         <div class="summary-card">
-            <h3>Total Revenue (Quality-Based Sales)</h3>
+            <h3>Total Revenue (Sales / Revente)</h3>
             <div class="summary-value" id="revenueSummary" style="text-align:center;">0 Silver</div>
             <div class="summary-sub" id="revenueUnitSummary" style="text-align:center;">Net after 6% tax</div>
         </div>
@@ -511,36 +486,36 @@
     const baseRecipes = {
         // --- RAFFINAGE ---
         "T3_CLOTH": { name: "Neat Cloth T3", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T2 Cloth", baseId: "T2_CLOTH", ratio: 1, forceFlat: true }, { name: "T3 Fiber", baseId: "T3_FIBER", ratio: 2 } ] },
-        "T4_CLOTH": { name: "Fine Cloth T4", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 1, forceFlat: true }, { name: "T4 Fiber", baseId: "T4_FIBER", ratio: 2 } ] },
-        "T5_CLOTH": { name: "Opulent Cloth T5", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 1 }, { name: "T5 Fiber", baseId: "T5_FIBER", ratio: 3 } ] },
-        "T6_CLOTH": { name: "Dusky Cloth T6", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 1 }, { name: "T6 Fiber", baseId: "T6_FIBER", ratio: 4 } ] },
-        "T7_CLOTH": { name: "Ornate Cloth T7", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 1 }, { name: "T7 Fiber", baseId: "T7_FIBER", ratio: 5 } ] },
-        "T8_CLOTH": { name: "Timeless Cloth T8", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 1 }, { name: "T8 Fiber", baseId: "T8_FIBER", ratio: 6 } ] },
+        "T4_CLOTH": { name: "Fine Cloth T4", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 1, forceFlat: true, noRR: true }, { name: "T4 Fiber", baseId: "T4_FIBER", ratio: 2 } ] },
+        "T5_CLOTH": { name: "Opulent Cloth T5", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 1, noRR: true }, { name: "T5 Fiber", baseId: "T5_FIBER", ratio: 3 } ] },
+        "T6_CLOTH": { name: "Dusky Cloth T6", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 1, noRR: true }, { name: "T6 Fiber", baseId: "T6_FIBER", ratio: 4 } ] },
+        "T7_CLOTH": { name: "Ornate Cloth T7", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 1, noRR: true }, { name: "T7 Fiber", baseId: "T7_FIBER", ratio: 5 } ] },
+        "T8_CLOTH": { name: "Timeless Cloth T8", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 1, noRR: true }, { name: "T8 Fiber", baseId: "T8_FIBER", ratio: 6 } ] },
 
-        "T4_METALBAR": { name: "Steel Bar T4", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Metal Bar", baseId: "T3_METALBAR", ratio: 1, forceFlat: true }, { name: "T4 Ore", baseId: "T4_ORE", ratio: 2 } ] },
-        "T5_METALBAR": { name: "Titanium Bar T5", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 1 }, { name: "T5 Ore", baseId: "T5_ORE", ratio: 3 } ] },
-        "T6_METALBAR": { name: "Runite Bar T6", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 1 }, { name: "T6 Ore", baseId: "T6_ORE", ratio: 4 } ] },
-        "T7_METALBAR": { name: "Meteorite Bar T7", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 1 }, { name: "T7 Ore", baseId: "T7_ORE", ratio: 5 } ] },
-        "T8_METALBAR": { name: "Adamantium Bar T8", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 1 }, { name: "T8 Ore", baseId: "T8_ORE", ratio: 6 } ] },
+        "T4_METALBAR": { name: "Steel Bar T4", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Metal Bar", baseId: "T3_METALBAR", ratio: 1, forceFlat: true, noRR: true }, { name: "T4 Ore", baseId: "T4_ORE", ratio: 2 } ] },
+        "T5_METALBAR": { name: "Titanium Bar T5", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 1, noRR: true }, { name: "T5 Ore", baseId: "T5_ORE", ratio: 3 } ] },
+        "T6_METALBAR": { name: "Runite Bar T6", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 1, noRR: true }, { name: "T6 Ore", baseId: "T6_ORE", ratio: 4 } ] },
+        "T7_METALBAR": { name: "Meteorite Bar T7", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 1, noRR: true }, { name: "T7 Ore", baseId: "T7_ORE", ratio: 5 } ] },
+        "T8_METALBAR": { name: "Adamantium Bar T8", bonusCity: "Thetford (Best for Ore/Metal Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 1, noRR: true }, { name: "T8 Ore", baseId: "T8_ORE", ratio: 6 } ] },
 
-        "T4_LEATHER": { name: "Stiff Leather T4", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Leather", baseId: "T3_LEATHER", ratio: 1, forceFlat: true }, { name: "T4 Hide", baseId: "T4_HIDE", ratio: 2 } ] },
-        "T5_LEATHER": { name: "Thick Leather T5", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 1 }, { name: "T5 Hide", baseId: "T5_HIDE", ratio: 3 } ] },
-        "T6_LEATHER": { name: "Worked Leather T6", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 1 }, { name: "T6 Hide", baseId: "T6_HIDE", ratio: 4 } ] },
-        "T7_LEATHER": { name: "Cured Leather T7", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 1 }, { name: "T7 Hide", baseId: "T7_HIDE", ratio: 5 } ] },
-        "T8_LEATHER": { name: "Califor Leather T8", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 1 }, { name: "T8 Hide", baseId: "T8_HIDE", ratio: 6 } ] },
+        "T4_LEATHER": { name: "Stiff Leather T4", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Leather", baseId: "T3_LEATHER", ratio: 1, forceFlat: true, noRR: true }, { name: "T4 Hide", baseId: "T4_HIDE", ratio: 2 } ] },
+        "T5_LEATHER": { name: "Thick Leather T5", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 1, noRR: true }, { name: "T5 Hide", baseId: "T5_HIDE", ratio: 3 } ] },
+        "T6_LEATHER": { name: "Worked Leather T6", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 1, noRR: true }, { name: "T6 Hide", baseId: "T6_HIDE", ratio: 4 } ] },
+        "T7_LEATHER": { name: "Cured Leather T7", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 1, noRR: true }, { name: "T7 Hide", baseId: "T7_HIDE", ratio: 5 } ] },
+        "T8_LEATHER": { name: "Califor Leather T8", bonusCity: "Martlock (Best for Hide/Leather Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 1, noRR: true }, { name: "T8 Hide", baseId: "T8_HIDE", ratio: 6 } ] },
 
-        "T3_PLANKS": { name: "Chestnut Planks T3", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T2 Birch Planks", baseId: "T2_PLANKS", ratio: 1, forceFlat: true }, { name: "T3 Wood", baseId: "T3_WOOD", ratio: 2 } ] },
-        "T4_PLANKS": { name: "Pine Planks T4", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 1, forceFlat: true }, { name: "T4 Wood", baseId: "T4_WOOD", ratio: 2 } ] },
-        "T5_PLANKS": { name: "Cedar Planks T5", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 1 }, { name: "T5 Wood", baseId: "T5_WOOD", ratio: 3 } ] },
-        "T6_PLANKS": { name: "Whitewood Planks T6", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 1 }, { name: "T6 Wood", baseId: "T6_WOOD", ratio: 4 } ] },
-        "T7_PLANKS": { name: "Ashenbark Planks T7", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 1 }, { name: "T7 Wood", baseId: "T7_WOOD", ratio: 5 } ] },
-        "T8_PLANKS": { name: "Bloodoak Planks T8", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 1 }, { name: "T8 Wood", baseId: "T8_WOOD", ratio: 6 } ] },
+        "T3_PLANKS": { name: "Chestnut Planks T3", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T2 Birch Planks", baseId: "T2_PLANKS", ratio: 1, forceFlat: true, noRR: true }, { name: "T3 Wood", baseId: "T3_WOOD", ratio: 2 } ] },
+        "T4_PLANKS": { name: "Pine Planks T4", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 1, forceFlat: true, noRR: true }, { name: "T4 Wood", baseId: "T4_WOOD", ratio: 2 } ] },
+        "T5_PLANKS": { name: "Cedar Planks T5", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 1, noRR: true }, { name: "T5 Wood", baseId: "T5_WOOD", ratio: 3 } ] },
+        "T6_PLANKS": { name: "Whitewood Planks T6", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 1, noRR: true }, { name: "T6 Wood", baseId: "T6_WOOD", ratio: 4 } ] },
+        "T7_PLANKS": { name: "Ashenbark Planks T7", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 1, noRR: true }, { name: "T7 Wood", baseId: "T7_WOOD", ratio: 5 } ] },
+        "T8_PLANKS": { name: "Bloodoak Planks T8", bonusCity: "Fort Sterling (Best for Wood/Planks Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 1, noRR: true }, { name: "T8 Wood", baseId: "T8_WOOD", ratio: 6 } ] },
 
-        "T4_STONEBLOCK": { name: "Cut Stone T4", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Stone Block", baseId: "T3_STONEBLOCK", ratio: 1, forceFlat: true }, { name: "T4 Rock", baseId: "T4_ROCK", ratio: 2 } ] },
-        "T5_STONEBLOCK": { name: "Heavy Block T5", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Stone Block", baseId: "T4_STONEBLOCK", ratio: 1 }, { name: "T5 Rock", baseId: "T5_ROCK", ratio: 3 } ] },
-        "T6_STONEBLOCK": { name: "Solid Block T6", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Stone Block", baseId: "T5_STONEBLOCK", ratio: 1 }, { name: "T6 Rock", baseId: "T6_ROCK", ratio: 4 } ] },
-        "T7_STONEBLOCK": { name: "Dense Block T7", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Stone Block", baseId: "T6_STONEBLOCK", ratio: 1 }, { name: "T7 Rock", baseId: "T7_ROCK", ratio: 5 } ] },
-        "T8_STONEBLOCK": { name: "Glowing Block T8", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Stone Block", baseId: "T7_STONEBLOCK", ratio: 1 }, { name: "T8 Rock", baseId: "T8_ROCK", ratio: 6 } ] },
+        "T4_STONEBLOCK": { name: "Cut Stone T4", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Stone Block", baseId: "T3_STONEBLOCK", ratio: 1, forceFlat: true, noRR: true }, { name: "T4 Rock", baseId: "T4_ROCK", ratio: 2 } ] },
+        "T5_STONEBLOCK": { name: "Heavy Block T5", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Stone Block", baseId: "T4_STONEBLOCK", ratio: 1, noRR: true }, { name: "T5 Rock", baseId: "T5_ROCK", ratio: 3 } ] },
+        "T6_STONEBLOCK": { name: "Solid Block T6", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T5 Stone Block", baseId: "T5_STONEBLOCK", ratio: 1, noRR: true }, { name: "T6 Rock", baseId: "T6_ROCK", ratio: 4 } ] },
+        "T7_STONEBLOCK": { name: "Dense Block T7", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T6 Stone Block", baseId: "T6_STONEBLOCK", ratio: 1, noRR: true }, { name: "T7 Rock", baseId: "T7_ROCK", ratio: 5 } ] },
+        "T8_STONEBLOCK": { name: "Glowing Block T8", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", isRefining: true, mats: [ { name: "T7 Stone Block", baseId: "T7_STONEBLOCK", ratio: 1, noRR: true }, { name: "T8 Rock", baseId: "T8_ROCK", ratio: 6 } ] },
 
         // --- POTIONS / ALCHEMY ---
         "T4_POTION_HEAL": { name: "Minor Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Arcane Agaric", baseId: "T2_AGARIC", ratio: 8 } ] },
@@ -561,7 +536,7 @@
         "T7_POTION_REVIVE": { name: "Reviving Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
         "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
 
-        // --- CANNES À PÊCHE STANDARD (Bénéficient du bonus outil 40% dans leur ville dédiée ou Caerleon) ---
+        // --- CANNES À PÊCHE STANDARD ---
         "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, forceFlat: true }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, forceFlat: true } ] },
         "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, forceFlat: true }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, forceFlat: true } ] },
         "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus +40% ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
@@ -622,6 +597,7 @@
 
     let globalCost = 0;
     let qualityPricesData = {};
+    let refinedSellPrice = 0;
 
     function updateItemList() {
         const cat = document.getElementById('categorySelect').value;
@@ -684,19 +660,12 @@
         const isBonusCity = document.getElementById('bonusCityCheck').checked;
         const isDailyBonus = document.getElementById('dailyBonusCheck').checked;
         
-        // CORRECTION : Les outils (comme les cannes à pêche) ont un bonus de RR de 40% dans leur ville dédiée (similaire au raffinage) si le bonus est actif
-        let defaultCraftBonus = recipeObj.isTool ? 0.40 : 0.15;
-        let craftReturnRate = isBonusCity ? defaultCraftBonus : 0.0;
+        let craftReturnRate = isBonusCity ? 0.15 : 0.0;
         let refineReturnRate = isBonusCity ? 0.40 : 0.15;
         if (isDailyBonus) {
             craftReturnRate += 0.10;
             refineReturnRate += 0.10;
         }
-
-        let activeReturnRate = recipeObj.isRefining ? refineReturnRate : craftReturnRate;
-        let cascadeMultiplier = 1 / (1 - activeReturnRate);
-
-        document.getElementById('returnRateDisplay').innerText = `Return Rates: Refine ${(refineReturnRate*100).toFixed(0)}% | Craft ${(activeReturnRate*100).toFixed(0)}% (Cascade Coeff: ${cascadeMultiplier.toFixed(2)})`;
 
         const tierMatch = itemKey.match(/^T(\d+)/);
         const currentTier = tierMatch ? parseInt(tierMatch[1]) : 4;
@@ -732,7 +701,20 @@
             }
             
             let rawReqQty = mat.ratio * totalQty;
-            let effectiveQty = mat.isArtefact ? rawReqQty : rawReqQty * (1 - activeReturnRate);
+            let effectiveQty = rawReqQty;
+
+            if (recipeObj.isRefining) {
+                if (mat.noRR) {
+                    effectiveQty = rawReqQty;
+                } else {
+                    effectiveQty = rawReqQty * (1 - refineReturnRate);
+                }
+            } else {
+                let activeToolRR = recipeObj.isTool ? (isBonusCity ? 0.40 : 0.15) : craftReturnRate;
+                if (isDailyBonus) activeToolRR += 0.10;
+                effectiveQty = mat.isArtefact ? rawReqQty : rawReqQty * (1 - activeToolRR);
+            }
+
             let displayNameSuffix = effectiveEnchant > 0 ? ` .${effectiveEnchant}` : ' .0 (Flat)';
 
             return {
@@ -745,24 +727,21 @@
                 ratio: mat.ratio,
                 rawQty: rawReqQty,
                 effectiveQty: effectiveQty,
-                isArtefact: mat.isArtefact
+                isArtefact: mat.isArtefact,
+                noRR: mat.noRR
             };
         });
 
+        let activeDisplayRR = recipeObj.isRefining ? refineReturnRate : (recipeObj.isTool ? (isBonusCity ? 0.40 : 0.15) + (isDailyBonus?0.10:0) : craftReturnRate);
+        document.getElementById('returnRateDisplay').innerText = `Return Rates: Refine ${(refineReturnRate*100).toFixed(0)}% | Craft ${( (recipeObj.isRefining ? refineReturnRate : activeDisplayRR) * 100).toFixed(0)}%`;
+
         const loading = document.getElementById('loadingStatus');
         const tbody = document.getElementById('tableBody');
-        const strategiesContainer = document.getElementById('strategiesContainer');
-        const stratACost = document.getElementById('stratACost');
-        const stratAMargin = document.getElementById('stratAMargin');
-        const stratBCost = document.getElementById('stratBCost');
-        const stratBMargin = document.getElementById('stratBMargin');
-        const stratBTitle = document.getElementById('stratBTitle');
 
         loading.style.display = 'block';
         tbody.innerHTML = '';
-        strategiesContainer.style.display = 'none';
 
-        let allIdsToFetch = currentRecipe.map(r => r.id);
+        let allIdsToFetch = [craftedItemId, ...currentRecipe.map(r => r.id)];
         currentRecipe.forEach(r => {
             if (!r.isArtefact) {
                 allIdsToFetch.push(r.directBuyId);
@@ -774,29 +753,25 @@
         let citiesToFetch = cities.join(',');
         let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${uniqueIdsToFetch}?locations=${citiesToFetch}`;
 
-        // CORRECTION : Ajout explicite de &quality=1,2,3,4,5 pour récupérer toutes les qualités de l'objet crafté
-        let qualityApiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${craftedItemId}?locations=${citiesToFetch}&quality=1,2,3,4,5`;
+        let qualityApiUrl = recipeObj.isRefining 
+            ? `https://west.albion-online-data.com/api/v2/stats/prices/${craftedItemId}?locations=${citiesToFetch}`
+            : `https://west.albion-online-data.com/api/v2/stats/prices/${craftedItemId}?locations=${citiesToFetch}&quality=1,2,3,4,5`;
 
         let priceData = [];
-        let qualityPriceData = [];
+        let craftedMarketData = [];
         try {
             let [res1, res2] = await Promise.all([
                 fetch(apiUrl),
                 fetch(qualityApiUrl)
             ]);
             priceData = await res1.json();
-            qualityPriceData = await res2.json();
+            craftedMarketData = await res2.json();
         } catch (error) {
             console.warn("API request failed.");
         }
 
         loading.style.display = 'none';
         globalCost = 0;
-        let directBuyTotalCost = 0;
-        let alternativeTotalCost = 0;
-        let hasAnyValidPrice = true;
-        let hasValidDirectBuy = true;
-        let hasValidAlternative = true;
 
         currentRecipe.forEach((mat) => {
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
@@ -826,48 +801,11 @@
                 globalCost += lineCost;
                 marketHtml = topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             } else {
-                hasAnyValidPrice = false;
                 marketHtml = `<div style="color: var(--warning); font-style: italic;">📡 En attente de scan</div>`;
             }
 
-            if (!recipeObj.isRefining && !mat.isArtefact) {
-                let directOffers = priceData.filter(p => p.item_id === mat.id);
-                let bestDirectPrice = 0;
-                directOffers.forEach(o => {
-                    let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
-                    if (p > 0 && (bestDirectPrice === 0 || p < bestDirectPrice)) bestDirectPrice = p;
-                });
-                if (bestDirectPrice > 0) directBuyTotalCost += (mat.effectiveQty * bestDirectPrice);
-                else hasValidDirectBuy = false;
-
-                if (recipeObj.isTool) {
-                    if (topMarkets.length > 0) alternativeTotalCost += mat.effectiveQty * topMarkets[0].price;
-                    else hasValidAlternative = false;
-                } else {
-                    let rawOffers = priceData.filter(p => p.item_id === mat.rawMaterialId);
-                    let bestRawPrice = 0;
-                    rawOffers.forEach(o => {
-                        let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
-                        if (p > 0 && (bestRawPrice === 0 || p < bestRawPrice)) bestRawPrice = p;
-                    });
-                    let refineCascadeMultiplier = 1 / (1 - refineReturnRate);
-                    if (bestRawPrice > 0 && mat.rawMaterialRatio > 0) {
-                        let rawNeededQty = mat.rawMaterialRatio * totalQty / refineCascadeMultiplier;
-                        alternativeTotalCost += (rawNeededQty * bestRawPrice);
-                    } else {
-                        hasValidAlternative = false;
-                    }
-                }
-            } else {
-                directBuyTotalCost += lineCost;
-                alternativeTotalCost += lineCost;
-            }
-
-            if (mat.isArtefact) alternativeTotalCost += lineCost;
-
-            let effectiveQtyDisplay = mat.isArtefact 
-                ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b>`
-                : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(rr ${(activeReturnRate*100).toFixed(0)}%)</span>`;
+            let rrText = mat.noRR ? '(no RR)' : `(rr ${(recipeObj.isRefining ? refineReturnRate : activeDisplayRR)*100|0}%)`;
+            let effectiveQtyDisplay = mat.isArtefact ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b>` : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">${rrText}</span>`;
 
             tbody.innerHTML += `<tr>
                 <td><b>${mat.name}</b></td>
@@ -880,40 +818,57 @@
             </tr>`;
         });
 
-        // Traitement des prix par qualité
-        qualityPricesData = {};
-        for (let q = 1; q <= 5; q++) {
-            let qOffers = qualityPriceData.filter(p => p.item_id === craftedItemId && p.quality === q);
-            let qCityMap = {};
-            qOffers.forEach(o => {
+        const qualitySection = document.getElementById('qualitySection');
+        const qualityMarketContainer = document.getElementById('qualityMarketContainer');
+
+        if (recipeObj.isRefining) {
+            qualitySection.style.display = 'none';
+            qualityMarketContainer.style.display = 'none';
+
+            let sellCityMap = {};
+            craftedMarketData.forEach(o => {
                 let price = o.sell_price_min > 0 ? o.sell_price_min : 0;
                 let date = o.sell_price_min_date;
                 if (price > 0 && date && o.city) {
-                    if (!qCityMap[o.city] || price < qCityMap[o.city].price) {
-                        qCityMap[o.city] = { city: o.city, price: price, date: date };
+                    if (!sellCityMap[o.city] || price < sellCityMap[o.city].price) {
+                        sellCityMap[o.city] = { city: o.city, price: price, date: date };
                     }
                 }
             });
-            let qTopMarkets = Object.values(qCityMap);
-            qTopMarkets.sort((a, b) => a.price - b.price);
-            qTopMarkets = qTopMarkets.slice(0, 3);
-            qualityPricesData[q] = qTopMarkets;
-        }
-
-        const qualitySection = document.getElementById('qualitySection');
-        const qualityMarketContainer = document.getElementById('qualityMarketContainer');
-        if (!recipeObj.isRefining) {
+            let topSellMarkets = Object.values(sellCityMap);
+            topSellMarkets.sort((a, b) => a.price - b.price);
+            refinedSellPrice = topSellMarkets.length > 0 ? topSellMarkets[0].price : 0;
+            calculateFinancials();
+        } else {
             qualitySection.style.display = 'block';
             qualityMarketContainer.style.display = 'block';
-        } else {
-            qualitySection.style.display = 'none';
-            qualityMarketContainer.style.display = 'none';
-        }
 
-        calculateFinancials();
+            qualityPricesData = {};
+            for (let q = 1; q <= 5; q++) {
+                let qOffers = craftedMarketData.filter(p => p.item_id === craftedItemId && p.quality === q);
+                let qCityMap = {};
+                qOffers.forEach(o => {
+                    let price = o.sell_price_min > 0 ? o.sell_price_min : 0;
+                    let date = o.sell_price_min_date;
+                    if (price > 0 && date && o.city) {
+                        if (!qCityMap[o.city] || price < qCityMap[o.city].price) {
+                            qCityMap[o.city] = { city: o.city, price: price, date: date };
+                        }
+                    }
+                });
+                let qTopMarkets = Object.values(qCityMap);
+                qTopMarkets.sort((a, b) => a.price - b.price);
+                qualityPricesData[q] = qTopMarkets.slice(0, 3);
+            }
+            calculateFinancials();
+        }
     }
 
     function calculateFinancials() {
+        const itemKey = document.getElementById('itemSelect').value;
+        const recipeObj = baseRecipes[itemKey];
+        const totalQty = parseInt(document.getElementById('qtyInput').value) || 10;
+
         const costSummary = document.getElementById('costSummary');
         const costUnitSummary = document.getElementById('costUnitSummary');
         const revenueSummary = document.getElementById('revenueSummary');
@@ -922,44 +877,56 @@
         const profitUnitSummary = document.getElementById('profitUnitSummary');
         const qualityTableBody = document.getElementById('qualityTableBody');
 
-        qualityTableBody.innerHTML = '';
         let totalRevenue = 0;
-        let totalItemsCrafted = 0;
+        let totalItemsOutput = 0;
 
-        for (let q = 1; q <= 5; q++) {
-            let qtyInput = document.getElementById(`qtyQ${q}`);
-            let qty = qtyInput ? parseInt(qtyInput.value) || 0 : 0;
-            totalItemsCrafted += qty;
+        const isBonusCity = document.getElementById('bonusCityCheck').checked;
+        const isDailyBonus = document.getElementById('dailyBonusCheck').checked;
+        let refineReturnRate = isBonusCity ? 0.40 : 0.15;
+        if (isDailyBonus) refineReturnRate += 0.10;
 
-            let topMarkets = qualityPricesData[q] || [];
-            let bestPrice = topMarkets.length > 0 ? topMarkets[0].price : 0;
-            let marketHtml = topMarkets.length > 0 
-                ? topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>`).join('')
-                : `<span style="color:var(--warning);">Pas d'offre</span>`;
+        if (recipeObj.isRefining) {
+            let cascadeMultiplier = 1 / (1 - refineReturnRate);
+            let effectiveOutput = totalQty * cascadeMultiplier;
+            totalItemsOutput = Math.round(effectiveOutput);
+            let netUnitRev = refinedSellPrice > 0 ? refinedSellPrice * (1 - 0.06) : 0;
+            totalRevenue = netUnitRev * totalItemsOutput;
+        } else {
+            qualityTableBody.innerHTML = '';
+            for (let q = 1; q <= 5; q++) {
+                let qtyInput = document.getElementById(`qtyQ${q}`);
+                let qty = qtyInput ? parseInt(qtyInput.value) || 0 : 0;
+                totalItemsOutput += qty;
 
-            let taxRate = 0.06;
-            let netUnitRevenue = bestPrice > 0 ? bestPrice * (1 - taxRate) : 0;
-            let lineRevenue = netUnitRevenue * qty;
-            totalRevenue += lineRevenue;
+                let topMarkets = qualityPricesData[q] || [];
+                let bestPrice = topMarkets.length > 0 ? topMarkets[0].price : 0;
+                let marketHtml = topMarkets.length > 0 
+                    ? topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>`).join('')
+                    : `<span style="color:var(--warning);">Pas d'offre</span>`;
 
-            qualityTableBody.innerHTML += `<tr>
-                <td><b>${qualityNames[q]}</b></td>
-                <td class="market-rank">${marketHtml}</td>
-                <td><b>${bestPrice > 0 ? bestPrice.toLocaleString() + ' S' : 'N/A'}</b></td>
-                <td><b>${qty}</b></td>
-                <td><b style="color:var(--success);">${Math.round(lineRevenue).toLocaleString()} S</b></td>
-            </tr>`;
+                let netUnitRevenue = bestPrice > 0 ? bestPrice * (1 - 0.06) : 0;
+                let lineRevenue = netUnitRevenue * qty;
+                totalRevenue += lineRevenue;
+
+                qualityTableBody.innerHTML += `<tr>
+                    <td><b>${qualityNames[q]}</b></td>
+                    <td class="market-rank">${marketHtml}</td>
+                    <td><b>${bestPrice > 0 ? bestPrice.toLocaleString() + ' S' : 'N/A'}</b></td>
+                    <td><b>${qty}</b></td>
+                    <td><b style="color:var(--success);">${Math.round(lineRevenue).toLocaleString()} S</b></td>
+                </tr>`;
+            }
         }
 
         let totalNetProfit = totalRevenue - globalCost;
         let profitMargin = globalCost > 0 ? (totalNetProfit / globalCost) * 100 : 0;
-        let avgUnitCost = totalItemsCrafted > 0 ? globalCost / totalItemsCrafted : 0;
+        let avgUnitCost = totalItemsOutput > 0 ? globalCost / totalItemsOutput : 0;
 
         costSummary.innerText = `${Math.round(globalCost).toLocaleString()} Silver`;
         costUnitSummary.innerText = `Avg Unit Cost: ${Math.round(avgUnitCost).toLocaleString()} S`;
 
         revenueSummary.innerText = `${Math.round(totalRevenue).toLocaleString()} Silver`;
-        revenueUnitSummary.innerText = `Total items: ${totalItemsCrafted} unités (Net après taxe)`;
+        revenueUnitSummary.innerText = recipeObj.isRefining ? `Volume estimé (Cascade): ~${totalItemsOutput} unités` : `Total items: ${totalItemsOutput} unités (Net après taxe)`;
 
         let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
         profitSummary.className = `summary-value ${profitClass}`;
