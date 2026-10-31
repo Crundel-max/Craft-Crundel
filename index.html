@@ -306,7 +306,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.40</div>
+            <div class="badge-version">🚀 Update v3.42</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -366,13 +366,13 @@
 
     <div id="strategiesContainer" class="strategies-container" style="display:none;">
         <div class="strategy-box">
-            <h4>🛒 Stratégie A : Achat Direct Composants</h4>
+            <h4>🛒 Stratégie A : Achat Centralisé (Ville unique)</h4>
             <p id="stratACost">Coût total : <b>Calcul...</b></p>
             <p id="stratAMargin">Marge nette : <b>Calcul...</b></p>
         </div>
         <div class="strategy-box" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08);">
-            <h4 style="color: var(--success);">⚒️ Stratégie B : Raffinage Maison (Villes Bonus)</h4>
-            <p id="stratBCost">Coût total (avec cascade RR) : <b>Calcul...</b></p>
+            <h4 style="color: var(--success);" id="stratBTitle">⚒️ Stratégie B : Raffinage Maison / Optimisé</h4>
+            <p id="stratBCost">Coût total : <b>Calcul...</b></p>
             <p id="stratBMargin">Marge nette : <b>Calcul...</b></p>
         </div>
     </div>
@@ -492,13 +492,13 @@
         "T7_POTION_REVIVE": { name: "Reviving Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
         "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
 
-        // --- CANNES À PÊCHE STANDARD (Avec dépendance de raffinage bois/fibres) ---
-        "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, rawMat: "T3_WOOD", rawRatio: 32 }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, rawMat: "T3_FIBER", rawRatio: 16 } ] },
-        "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, rawMat: "T4_WOOD", rawRatio: 32 }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, rawMat: "T4_FIBER", rawRatio: 16 } ] },
-        "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16, rawMat: "T5_WOOD", rawRatio: 48 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8, rawMat: "T5_FIBER", rawRatio: 24 } ] },
-        "T6_2H_TOOL_FISHINGROD": { name: "Master's Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 16, rawMat: "T6_WOOD", rawRatio: 64 }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8, rawMat: "T6_FIBER", rawRatio: 32 } ] },
-        "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16, rawMat: "T7_WOOD", rawRatio: 80 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8, rawMat: "T7_FIBER", rawRatio: 40 } ] },
-        "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16, rawMat: "T8_WOOD", rawRatio: 96 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8, rawMat: "T8_FIBER", rawRatio: 48 } ] },
+        // --- CANNES À PÊCHE STANDARD (Composants : Planches + Tissus) ---
+        "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16 }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8 } ] },
+        "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16 }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8 } ] },
+        "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
+        "T6_2H_TOOL_FISHINGROD": { name: "Master's Fishing Rod T6", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T6 Whitewood Planks", baseId: "T6_PLANKS", ratio: 16 }, { name: "T6 Cloth", baseId: "T6_CLOTH", ratio: 8 } ] },
+        "T7_2H_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
+        "T8_2H_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
         // --- ÉPÉES KINGMAKER ---
         "T4_2H_CLAYMORE_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Lymhurst (Best Sword Crafting Bonus +15% ⚡)", isRefining: false, mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20, rawMat: "T4_ORE", rawRatio: 40 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12, rawMat: "T4_HIDE", rawRatio: 24 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_CLAYMORE_AVALON", ratio: 1, isArtefact: true } ] },
@@ -676,6 +676,7 @@
         const stratAMargin = document.getElementById('stratAMargin');
         const stratBCost = document.getElementById('stratBCost');
         const stratBMargin = document.getElementById('stratBMargin');
+        const stratBTitle = document.getElementById('stratBTitle');
 
         loading.style.display = 'block';
         tbody.innerHTML = '';
@@ -704,10 +705,10 @@
         loading.style.display = 'none';
         let grandTotalCost = 0;
         let directBuyTotalCost = 0;
-        let refinedMaisonTotalCost = 0;
+        let alternativeTotalCost = 0;
         let hasAnyValidPrice = true;
         let hasValidDirectBuy = true;
-        let hasValidRefinedMaison = true;
+        let hasValidAlternative = true;
 
         currentRecipe.forEach((mat) => {
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
@@ -744,38 +745,47 @@
             }
 
             if (!recipeObj.isRefining && !mat.isArtefact) {
-                let directOffers = priceData.filter(p => p.item_id === mat.directBuyId);
+                let directOffers = priceData.filter(p => p.item_id === mat.id);
                 let bestDirectPrice = 0;
                 directOffers.forEach(o => {
                     let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
                     if (p > 0 && (bestDirectPrice === 0 || p < bestDirectPrice)) bestDirectPrice = p;
                 });
                 if (bestDirectPrice > 0) {
-                    directBuyTotalCost += (mat.rawQty * bestDirectPrice);
+                    directBuyTotalCost += (mat.effectiveQty * bestDirectPrice);
                 } else {
                     hasValidDirectBuy = false;
                 }
 
-                let rawOffers = priceData.filter(p => p.item_id === mat.rawMaterialId);
-                let bestRawPrice = 0;
-                rawOffers.forEach(o => {
-                    let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
-                    if (p > 0 && (bestRawPrice === 0 || p < bestRawPrice)) bestRawPrice = p;
-                });
-                let refineCascadeMultiplier = 1 / (1 - refineReturnRate);
-                if (bestRawPrice > 0 && mat.rawMaterialRatio > 0) {
-                    let rawNeededQty = mat.rawMaterialRatio * totalQty / refineCascadeMultiplier;
-                    refinedMaisonTotalCost += (rawNeededQty * bestRawPrice);
+                if (recipeObj.isTool) {
+                    // Pour les outils (cannes à pêche), la stratégie B achète chaque composant dans sa ville la moins chère respective au lieu de la ville unique
+                    if (topMarkets.length > 0) {
+                        alternativeTotalCost += mat.effectiveQty * topMarkets[0].price;
+                    } else {
+                        hasValidAlternative = false;
+                    }
                 } else {
-                    hasValidRefinedMaison = false;
+                    let rawOffers = priceData.filter(p => p.item_id === mat.rawMaterialId);
+                    let bestRawPrice = 0;
+                    rawOffers.forEach(o => {
+                        let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
+                        if (p > 0 && (bestRawPrice === 0 || p < bestRawPrice)) bestRawPrice = p;
+                    });
+                    let refineCascadeMultiplier = 1 / (1 - refineReturnRate);
+                    if (bestRawPrice > 0 && mat.rawMaterialRatio > 0) {
+                        let rawNeededQty = mat.rawMaterialRatio * totalQty / refineCascadeMultiplier;
+                        alternativeTotalCost += (rawNeededQty * bestRawPrice);
+                    } else {
+                        hasValidAlternative = false;
+                    }
                 }
             } else {
                 directBuyTotalCost += lineCost;
-                refinedMaisonTotalCost += lineCost;
+                alternativeTotalCost += lineCost;
             }
 
             if (mat.isArtefact) {
-                refinedMaisonTotalCost += lineCost;
+                alternativeTotalCost += lineCost;
             }
 
             let effectiveQtyDisplay = mat.isArtefact 
@@ -857,6 +867,8 @@
         if (!recipeObj.isRefining && hasAnyValidPrice && bestUnitSellPrice > 0) {
             strategiesContainer.style.display = 'grid';
 
+            stratBTitle.innerText = recipeObj.isTool ? "⚒️ Stratégie B : Achat Multi-Villes (Optimisé)" : "⚒️ Stratégie B : Raffinage Maison (Villes Bonus)";
+
             if (hasValidDirectBuy && directBuyTotalCost > 0) {
                 let profitA = (unitNetRevenue * totalQty) - directBuyTotalCost;
                 let marginA = (directBuyTotalCost > 0) ? (profitA / directBuyTotalCost) * 100 : 0;
@@ -867,13 +879,13 @@
                 stratAMargin.innerHTML = `Marge nette : N/A`;
             }
 
-            if (hasValidRefinedMaison && refinedMaisonTotalCost > 0) {
-                let profitB = (unitNetRevenue * totalQty) - refinedMaisonTotalCost;
-                let marginB = (refinedMaisonTotalCost > 0) ? (profitB / refinedMaisonTotalCost) * 100 : 0;
-                stratBCost.innerHTML = `Coût total (avec cascade RR) : <b>${Math.round(refinedMaisonTotalCost).toLocaleString()} S</b>`;
+            if (hasValidAlternative && alternativeTotalCost > 0) {
+                let profitB = (unitNetRevenue * totalQty) - alternativeTotalCost;
+                let marginB = (alternativeTotalCost > 0) ? (profitB / alternativeTotalCost) * 100 : 0;
+                stratBCost.innerHTML = `Coût total : <b>${Math.round(alternativeTotalCost).toLocaleString()} S</b>`;
                 stratBMargin.innerHTML = `Marge nette : <b class="${profitB >= 0 ? 'profit-positive' : 'profit-negative'}">${Math.round(profitB).toLocaleString()} S (${marginB.toFixed(1)}%)</b>`;
             } else {
-                stratBCost.innerHTML = `Coût total (avec cascade RR) : Non applicable / Données brutes de bois/fibres requises`;
+                stratBCost.innerHTML = `Coût total : Données insuffisantes`;
                 stratBMargin.innerHTML = `N/A`;
             }
         }
