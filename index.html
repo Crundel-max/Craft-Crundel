@@ -17,6 +17,7 @@
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f97316;
+            --info: #38bdf8;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -171,6 +172,26 @@
             text-align: center;
             font-weight: bold;
         }
+        .strategy-box {
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        .strategy-card h4 {
+            margin: 0 0 8px 0;
+            color: var(--info);
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        .strategy-card p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -283,7 +304,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.34</div>
+            <div class="badge-version">🚀 Update v3.35</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -339,6 +360,19 @@
 
     <div id="recommendationBox" class="recommendation-box">
         💡 Best Crafting Location: Select an item to see the recommended city.
+    </div>
+
+    <!-- Nouveau cadre d'analyse comparative d'achat direct de matériaux raffinés -->
+    <div id="strategyBox" class="strategy-box" style="display:none;">
+        <div class="strategy-card">
+            <h4>📊 Stratégie Alternative : Achat Direct Matériaux</h4>
+            <p id="directBuyCostText">Coût total achat direct matériaux raffinés : <b>Calcul...</b></p>
+            <p id="directBuyDiffText">Écart vs Raffinage maison : <b>Calcul...</b></p>
+        </div>
+        <div class="strategy-card">
+            <h4>💡 Recommandation Intelligente</h4>
+            <p id="smartRecommendationText">Analyse en cours...</p>
+        </div>
     </div>
 
     <div id="loadingStatus" class="loading" style="display:none;">
@@ -456,7 +490,7 @@
         "T7_POTION_REVIVE": { name: "Reviving Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
         "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
 
-        // --- CANNES À PÊCHE STANDARD (Mis à jour avec _2H_) ---
+        // --- CANNES À PÊCHE STANDARD ---
         "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16 }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8 } ] },
         "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16 }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8 } ] },
         "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
@@ -602,9 +636,18 @@
             let rawReqQty = mat.ratio * totalQty;
             let effectiveQty = mat.isArtefact ? rawReqQty : rawReqQty * (1 - returnRate);
 
+            // Déterminer l'ID du matériau raffiné équivalent pour l'achat direct (si c'est une ressource brute ou un composant de craft)
+            let refinedDirectId = null;
+            if (mat.isArtefact) {
+                refinedDirectId = finalId; // L'artefact reste l'artefact
+            } else if (isMatResource) {
+                refinedDirectId = finalId; // C'est déjà le matériau raffiné recherché
+            }
+
             return {
                 name: `${mat.name}${enchant > 0 && !mat.isArtefact ? ' .' + enchant : ''}`,
                 id: finalId,
+                refinedDirectId: refinedDirectId,
                 baseId: mat.baseId,
                 ratio: mat.ratio,
                 rawQty: rawReqQty,
@@ -622,11 +665,37 @@
         const revenueUnitSummary = document.getElementById('revenueUnitSummary');
         const profitSummary = document.getElementById('profitSummary');
         const profitUnitSummary = document.getElementById('profitUnitSummary');
+        const strategyBox = document.getElementById('strategyBox');
+        const directBuyCostText = document.getElementById('directBuyCostText');
+        const directBuyDiffText = document.getElementById('directBuyDiffText');
+        const smartRecommendationText = document.getElementById('smartRecommendationText');
 
         loading.style.display = 'block';
         tbody.innerHTML = '';
+        strategyBox.style.display = 'none';
 
         let allIdsToFetch = [craftedItemId, ...currentRecipe.map(r => r.id)].join(',');
+        
+        // Ajouter aussi les IDs en mode "achat direct de composants raffinés" si applicable pour la comparaison
+        let directBuyMapping = {};
+        currentRecipe.forEach(mat => {
+            // Si la recette utilise des matériaux bruts (ex: T6 Metal Bar utilise T5 Metal Bar + T6 Ore), 
+            // on peut chercher le coût d'achat direct du T6 Metal Bar raffiné tout fait.
+            if (!mat.isArtefact) {
+                // Déduire l'ID raffiné pur correspondant à la quantité brute (rawQty)
+                let pureRefinedId = mat.baseId;
+                if (enchant > 0) {
+                    const mMatch = mat.baseId.match(/^T(\d+)/);
+                    let mTier = mMatch ? parseInt(mMatch[1]) : currentTier;
+                    pureRefinedId = formatAlbionItemID(mat.baseId, mTier, enchant, true);
+                }
+                mat.pureRefinedId = pureRefinedId;
+                if (!allIdsToFetch.includes(pureRefinedId)) {
+                    allIdsToFetch += ',' + pureRefinedId;
+                }
+            }
+        });
+
         let citiesToFetch = cities.join(',');
         let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${allIdsToFetch}?locations=${citiesToFetch}`;
 
@@ -640,7 +709,9 @@
 
         loading.style.display = 'none';
         let grandTotalCost = 0;
+        let grandDirectBuyCost = 0;
         let hasAnyValidPrice = true;
+        let hasValidDirectBuy = true;
 
         currentRecipe.forEach((mat) => {
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
@@ -676,6 +747,25 @@
                 marketHtml = `<div style="color: var(--warning); font-style: italic;">📡 En attente de scan marché</div>`;
             }
 
+            // Calcul du coût d'achat direct du matériau raffiné tout fait (basé sur la quantité brute nécessaire rawQty)
+            if (!mat.isArtefact && mat.pureRefinedId) {
+                let refinedOffers = priceData.filter(p => p.item_id === mat.pureRefinedId);
+                let bestRefinedPrice = 0;
+                refinedOffers.forEach(o => {
+                    let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
+                    if (p > 0 && (bestRefinedPrice === 0 || p < bestRefinedPrice)) {
+                        bestRefinedPrice = p;
+                    }
+                });
+                if (bestRefinedPrice > 0) {
+                    grandDirectBuyCost += (mat.rawQty * bestRefinedPrice);
+                } else {
+                    hasValidDirectBuy = false;
+                }
+            } else if (mat.isArtefact) {
+                grandDirectBuyCost += lineCost; // L'artefact s'achète de la même manière
+            }
+
             let effectiveQtyDisplay = mat.isArtefact 
                 ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(no RR)</span>`
                 : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(rr ${(returnRate*100).toFixed(0)}%)</span>`;
@@ -692,6 +782,7 @@
             tbody.innerHTML += row;
         });
 
+        // --- SECTION REVENUS / VENTE DE L'ARME CRAFTÉE ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
         let sellCityMap = {};
 
@@ -750,25 +841,22 @@
             profitUnitSummary.className = 'summary-sub';
             profitUnitSummary.innerText = 'Unit: N/A';
         }
-    }
 
-    function formatAlbionItemID(baseId, tier, enchantment, isMaterialOrResource) {
-        let cleanBase = baseId ? baseId.trim().toUpperCase() : "";
-        
-        if (!cleanBase.startsWith("T")) {
-            cleanBase = `T${tier}_${cleanBase}`;
-        } else {
-            cleanBase = cleanBase.replace(/^T\d+/, `T${tier}`);
-        }
-
-        if (enchantment && enchantment > 0 && enchantment <= 4) {
-            if (isMaterialOrResource) {
-                return `${cleanBase}_LEVEL${enchantment}@${enchantment}`;
+        // --- GESTION DU CADRE COMPARATIF D'ACHAT DIRECT ---
+        if (hasAnyValidPrice && hasValidDirectBuy && grandDirectBuyCost > 0) {
+            strategyBox.style.display = 'grid';
+            directBuyCostText.innerHTML = `Coût total achat direct matériaux raffinés : <b>${Math.round(grandDirectBuyCost).toLocaleString()} Silver</b>`;
+            
+            let diff = grandTotalCost - grandDirectBuyCost;
+            let diffPercent = (diff / grandTotalCost) * 100;
+            if (diff > 0) {
+                directBuyDiffText.innerHTML = `Écart : L'achat direct coûte <span style="color:var(--success);">moins cher de ${Math.abs(Math.round(diff)).toLocaleString()} S (${Math.abs(diffPercent).toFixed(1)}%)</span> que de fabriquer/raffiner soi-même avec les ressources brutes.`;
+                smartRecommendationText.innerHTML = `⚡ <b>Conseil :</b> Ne raffinez pas vous-même ! Il est plus rentable d'acheter directement les matériaux raffinés sur les marchés pour faire ce craft.`;
+            } else {
+                directBuyDiffText.innerHTML = `Écart : Le raffinage maison coûte <span style="color:var(--success);">moins cher de ${Math.abs(Math.round(diff)).toLocaleString()} S (${Math.abs(diffPercent).toFixed(1)}%)</span> que l'achat direct.`;
+                smartRecommendationText.innerHTML = `⚡ <b>Conseil :</b> Votre bonus de raffineur + taux de retour (Return Rate) rend le raffinage maison plus rentable que l'achat direct des composants !`;
             }
-            return `${cleanBase}@${enchantment}`;
         }
-
-        return cleanBase;
     }
 </script>
 
