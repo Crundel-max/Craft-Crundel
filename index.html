@@ -27,7 +27,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
             background: var(--card-bg);
             padding: 30px;
@@ -264,6 +264,33 @@
         }
         .profit-positive { color: var(--success) !important; }
         .profit-negative { color: var(--danger) !important; }
+        .quality-inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+            background: rgba(15, 23, 42, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .quality-input-card {
+            background: var(--input-bg);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .quality-input-card label {
+            font-size: 12px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .quality-input-card input {
+            width: 80%;
+            text-align: center;
+            font-weight: bold;
+        }
         .tag-unsynced {
             display: inline-flex;
             align-items: center;
@@ -306,7 +333,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.45</div>
+            <div class="badge-version">🚀 Update v3.46</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -340,8 +367,8 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="qtyInput">Quantity (Output):</label>
-            <input type="number" id="qtyInput" value="10" min="1">
+            <label for="qtyInput">Quantity (Output Target):</label>
+            <input type="number" id="qtyInput" value="10" min="1" onchange="syncTotalQuantity()">
         </div>
         <button onclick="fetchPrices()">⚡ Calculate Optimal Crafting, Costs & Profit</button>
     </div>
@@ -364,6 +391,33 @@
         💡 Best Crafting Location: Select an item to see the recommended city.
     </div>
 
+    <!-- Section de répartition par qualité pour les objets craftés -->
+    <div id="qualitySection" style="display:none; margin-bottom: 25px;">
+        <h3 style="color: var(--info); font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">🎯 Répartition des Objets Obtenus par Qualité (Session de Craft)</h3>
+        <div class="quality-inputs-grid">
+            <div class="quality-input-card">
+                <label>⚪ Normal (Q1)</label>
+                <input type="number" id="qtyQ1" value="0" min="0" oninput="calculateFinancials()">
+            </div>
+            <div class="quality-input-card">
+                <label>🟢 Good (Q2)</label>
+                <input type="number" id="qtyQ2" value="0" min="0" oninput="calculateFinancials()">
+            </div>
+            <div class="quality-input-card">
+                <label>🔵 Outstanding (Q3)</label>
+                <input type="number" id="qtyQ3" value="0" min="0" oninput="calculateFinancials()">
+            </div>
+            <div class="quality-input-card">
+                <label>🟣 Excellent (Q4)</label>
+                <input type="number" id="qtyQ4" value="0" min="0" oninput="calculateFinancials()">
+            </div>
+            <div class="quality-input-card" style="border-color: var(--accent);">
+                <label style="color: var(--accent);">⭐ Masterpiece (Q5)</label>
+                <input type="number" id="qtyQ5" value="0" min="0" oninput="calculateFinancials()">
+            </div>
+        </div>
+    </div>
+
     <div id="strategiesContainer" class="strategies-container" style="display:none;">
         <div class="strategy-box">
             <h4>🛒 Stratégie A : Achat Centralisé (Ville unique)</h4>
@@ -378,9 +432,10 @@
     </div>
 
     <div id="loadingStatus" class="loading" style="display:none;">
-        <span class="hourglass">⏳</span> Querying live Albion Online API across all royal cities...
+        <span class="hourglass">⏳</span> Querying live Albion Online API across all royal cities & qualities...
     </div>
 
+    <h3 style="color: var(--text-muted); font-size: 13px; text-transform: uppercase; margin-bottom: 5px;" id="materialsTableTitle">Required Materials</h3>
     <table id="resultTable">
         <thead>
             <tr>
@@ -400,21 +455,38 @@
         </tbody>
     </table>
 
+    <!-- Tableau spécifique des prix par qualité pour les objets craftables -->
+    <div id="qualityMarketContainer" style="display:none; margin-top: 30px;">
+        <h3 style="color: var(--accent); font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">📊 Top 3 Marchés par Qualité (Revente)</h3>
+        <table id="qualityResultTable">
+            <thead>
+                <tr>
+                    <th>Qualité</th>
+                    <th>Top 3 Marchés / Villes 🛒</th>
+                    <th>Meilleur Prix Unitaire</th>
+                    <th>Unités Obtenues</th>
+                    <th>Chiffre d'Affaires Net (-6% Taxe)</th>
+                </tr>
+            </thead>
+            <tbody id="qualityTableBody"></tbody>
+        </table>
+    </div>
+
     <div class="summary-grid">
         <div class="summary-card">
             <h3>Material Cost (Optimized)</h3>
             <div class="summary-value" id="costSummary" style="text-align:center;">0 Silver</div>
-            <div class="summary-sub" id="costUnitSummary" style="text-align:center;">Unit: 0 S</div>
+            <div class="summary-sub" id="costUnitSummary" style="text-align:center;">Unit Cost: 0 S</div>
         </div>
         <div class="summary-card">
-            <h3>Top 3 Cities Sell Orders (Revenue)</h3>
-            <div class="summary-value" id="revenueSummary">N/A</div>
-            <div class="summary-sub" id="revenueUnitSummary">Unit: N/A</div>
+            <h3>Total Revenue (Quality-Based Sales)</h3>
+            <div class="summary-value" id="revenueSummary" style="text-align:center;">0 Silver</div>
+            <div class="summary-sub" id="revenueUnitSummary" style="text-align:center;">Net after 6% tax</div>
         </div>
         <div class="summary-card">
             <h3>Net Profit (Margin)</h3>
             <div class="summary-value" id="profitSummary" style="text-align:center;">0 Silver (0%)</div>
-            <div class="summary-sub" id="profitUnitSummary" style="text-align:center;">Unit: 0 S</div>
+            <div class="summary-sub" id="profitUnitSummary" style="text-align:center;">Global Session Profit</div>
         </div>
     </div>
 </div>
@@ -422,25 +494,22 @@
 <script>
     function formatAlbionItemID(baseId, tier, enchantment, isMaterialOrResource = true) {
         let cleanBase = baseId ? baseId.trim().toUpperCase() : "";
-        
         if (!cleanBase.startsWith("T")) {
             cleanBase = `T${tier}_${cleanBase}`;
         } else {
             cleanBase = cleanBase.replace(/^T\d+/, `T${tier}`);
         }
-
         if (enchantment && enchantment > 0 && enchantment <= 4) {
             if (isMaterialOrResource) {
                 return `${cleanBase}_LEVEL${enchantment}@${enchantment}`;
             }
             return `${cleanBase}@${enchantment}`;
         }
-
         return cleanBase;
     }
 
     const baseRecipes = {
-        // --- RAFFINAGE (Le composant T3 inférieur est toujours Flat .0 car pas de T3 enchanté) ---
+        // --- RAFFINAGE ---
         "T3_CLOTH": { name: "Neat Cloth T3", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T2 Cloth", baseId: "T2_CLOTH", ratio: 1, forceFlat: true }, { name: "T3 Fiber", baseId: "T3_FIBER", ratio: 2 } ] },
         "T4_CLOTH": { name: "Fine Cloth T4", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 1, forceFlat: true }, { name: "T4 Fiber", baseId: "T4_FIBER", ratio: 2 } ] },
         "T5_CLOTH": { name: "Opulent Cloth T5", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", isRefining: true, mats: [ { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 1 }, { name: "T5 Fiber", baseId: "T5_FIBER", ratio: 3 } ] },
@@ -492,7 +561,7 @@
         "T7_POTION_REVIVE": { name: "Reviving Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
         "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", isRefining: false, mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
 
-        // --- CANNES À PÊCHE STANDARD (Composants : Planches + Tissus) ---
+        // --- CANNES À PÊCHE STANDARD ---
         "T3_2H_TOOL_FISHINGROD": { name: "Journeyman's Fishing Rod T3", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T3 Chestnut Planks", baseId: "T3_PLANKS", ratio: 16, forceFlat: true }, { name: "T3 Cloth", baseId: "T3_CLOTH", ratio: 8, forceFlat: true } ] },
         "T4_2H_TOOL_FISHINGROD": { name: "Adept's Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16, forceFlat: true }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8, forceFlat: true } ] },
         "T5_2H_TOOL_FISHINGROD": { name: "Expert's Fishing Rod T5", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", isRefining: false, isTool: true, mats: [ { name: "T5 Cedar Planks", baseId: "T5_PLANKS", ratio: 16 }, { name: "T5 Cloth", baseId: "T5_CLOTH", ratio: 8 } ] },
@@ -549,6 +618,10 @@
     };
 
     const cities = ["Thetford", "Fort Sterling", "Martlock", "Lymhurst", "Bridgewatch", "Caerleon", "Brecilien"];
+    const qualityNames = ["", "Normal", "Good", "Outstanding", "Excellent", "Masterpiece"];
+
+    let globalCost = 0;
+    let qualityPricesData = {}; // Stocke les prix par qualité pour calcul dynamique
 
     function updateItemList() {
         const cat = document.getElementById('categorySelect').value;
@@ -580,19 +653,24 @@
         }
     }
 
+    function syncTotalQuantity() {
+        let total = parseInt(document.getElementById('qtyInput').value) || 10;
+        // Par défaut, répartit tout en Normal ou laisse l'utilisateur gérer
+        document.getElementById('qtyQ1').value = total;
+        document.getElementById('qtyQ2').value = 0;
+        document.getElementById('qtyQ3').value = 0;
+        document.getElementById('qtyQ4').value = 0;
+        document.getElementById('qtyQ5').value = 0;
+    }
+
     function formatAge(dateString) {
-        if (!dateString) return "Mise à jour récente";
+        if (!dateString) return "Récemment";
         let diffMs = new Date() - new Date(dateString);
         let diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
         let diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        if (diffHrs < 1) {
-            return `Il y a ${diffMins}m`;
-        } else if (diffHrs < 24) {
-            return `Il y a ${diffHrs}h ${diffMins}m`;
-        } else {
-            let diffDays = Math.floor(diffHrs / 24);
-            return `Il y a ${diffDays}j`;
-        }
+        if (diffHrs < 1) return `Il y a ${diffMins}m`;
+        if (diffHrs < 24) return `Il y a ${diffHrs}h`;
+        return `Il y a ${Math.floor(diffHrs / 24)}j`;
     }
 
     async function fetchPrices() {
@@ -637,10 +715,6 @@
             let directBuyId = mat.baseId;
             let rawMaterialId = mat.rawMat ? mat.rawMat : null;
 
-            // Règle corrigée : 
-            // - Si forceFlat est activé (ex: T3 de base car pas de T3 enchanté), l'enchantement reste à 0.
-            // - Si le tier inférieur est du T3 (matTier === 3), il reste toujours Flat (.0).
-            // - Pour le T4 et supérieur (T4, T5, etc.), si l'item principal est enchanté, le composant utilise le même enchantement (ex: T5.2 demande du T4.2).
             let effectiveEnchant = 0;
             if (enchant > 0 && !mat.forceFlat && matTier >= 4) {
                 effectiveEnchant = enchant;
@@ -649,20 +723,15 @@
             if (effectiveEnchant > 0 && !mat.isArtefact) {
                 finalId = formatAlbionItemID(mat.baseId, matTier, effectiveEnchant, true);
                 directBuyId = formatAlbionItemID(mat.baseId, matTier, effectiveEnchant, true);
-                if (rawMaterialId) {
-                    rawMaterialId = formatAlbionItemID(mat.rawMat, matTier, effectiveEnchant, true);
-                }
+                if (rawMaterialId) rawMaterialId = formatAlbionItemID(mat.rawMat, matTier, effectiveEnchant, true);
             } else {
                 finalId = formatAlbionItemID(mat.baseId, matTier, 0, true);
                 directBuyId = formatAlbionItemID(mat.baseId, matTier, 0, true);
-                if (rawMaterialId) {
-                    rawMaterialId = formatAlbionItemID(mat.rawMat, matTier, 0, true);
-                }
+                if (rawMaterialId) rawMaterialId = formatAlbionItemID(mat.rawMat, matTier, 0, true);
             }
             
             let rawReqQty = mat.ratio * totalQty;
             let effectiveQty = mat.isArtefact ? rawReqQty : rawReqQty * (1 - activeReturnRate);
-
             let displayNameSuffix = effectiveEnchant > 0 ? ` .${effectiveEnchant}` : ' .0 (Flat)';
 
             return {
@@ -675,19 +744,12 @@
                 ratio: mat.ratio,
                 rawQty: rawReqQty,
                 effectiveQty: effectiveQty,
-                isArtefact: mat.isArtefact,
-                index: index
+                isArtefact: mat.isArtefact
             };
         });
 
         const loading = document.getElementById('loadingStatus');
         const tbody = document.getElementById('tableBody');
-        const costSummary = document.getElementById('costSummary');
-        const costUnitSummary = document.getElementById('costUnitSummary');
-        const revenueSummary = document.getElementById('revenueSummary');
-        const revenueUnitSummary = document.getElementById('revenueUnitSummary');
-        const profitSummary = document.getElementById('profitSummary');
-        const profitUnitSummary = document.getElementById('profitUnitSummary');
         const strategiesContainer = document.getElementById('strategiesContainer');
         const stratACost = document.getElementById('stratACost');
         const stratAMargin = document.getElementById('stratAMargin');
@@ -699,7 +761,8 @@
         tbody.innerHTML = '';
         strategiesContainer.style.display = 'none';
 
-        let allIdsToFetch = [craftedItemId, ...currentRecipe.map(r => r.id)];
+        // Requête API pour les matériaux
+        let allIdsToFetch = currentRecipe.map(r => r.id);
         currentRecipe.forEach(r => {
             if (!r.isArtefact) {
                 allIdsToFetch.push(r.directBuyId);
@@ -711,16 +774,24 @@
         let citiesToFetch = cities.join(',');
         let apiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${uniqueIdsToFetch}?locations=${citiesToFetch}`;
 
+        // Requête API pour toutes les qualités de l'objet crafté (qualités 1 à 5)
+        let qualityApiUrl = `https://west.albion-online-data.com/api/v2/stats/prices/${craftedItemId}?locations=${citiesToFetch}`;
+
         let priceData = [];
+        let qualityPriceData = [];
         try {
-            let response = await fetch(apiUrl);
-            priceData = await response.json();
+            let [res1, res2] = await Promise.all([
+                fetch(apiUrl),
+                fetch(qualityApiUrl)
+            ]);
+            priceData = await res1.json();
+            qualityPriceData = await res2.json();
         } catch (error) {
             console.warn("API request failed.");
         }
 
         loading.style.display = 'none';
-        let grandTotalCost = 0;
+        globalCost = 0;
         let directBuyTotalCost = 0;
         let alternativeTotalCost = 0;
         let hasAnyValidPrice = true;
@@ -729,12 +800,10 @@
 
         currentRecipe.forEach((mat) => {
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
-            
             let cityMap = {};
             itemOffers.forEach(o => {
                 let price = o.sell_price_min > 0 ? o.sell_price_min : (o.buy_price_max > 0 ? o.buy_price_max : 0);
                 let date = o.sell_price_min > 0 ? o.sell_price_min_date : o.buy_price_max_date;
-                
                 if (price > 0 && date) {
                     if (!cityMap[o.city] || new Date(date) > new Date(cityMap[o.city].date)) {
                         cityMap[o.city] = { city: o.city, price: price, date: date };
@@ -754,11 +823,11 @@
             if (topMarkets.length > 0) {
                 bestPrice = topMarkets[0].price;
                 lineCost = mat.effectiveQty * bestPrice;
-                grandTotalCost += lineCost;
+                globalCost += lineCost;
                 marketHtml = topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             } else {
                 hasAnyValidPrice = false;
-                marketHtml = `<div style="color: var(--warning); font-style: italic;">📡 En attente de scan marché</div>`;
+                marketHtml = `<div style="color: var(--warning); font-style: italic;">📡 En attente de scan</div>`;
             }
 
             if (!recipeObj.isRefining && !mat.isArtefact) {
@@ -768,18 +837,12 @@
                     let p = o.sell_price_min > 0 ? o.sell_price_min : 0;
                     if (p > 0 && (bestDirectPrice === 0 || p < bestDirectPrice)) bestDirectPrice = p;
                 });
-                if (bestDirectPrice > 0) {
-                    directBuyTotalCost += (mat.effectiveQty * bestDirectPrice);
-                } else {
-                    hasValidDirectBuy = false;
-                }
+                if (bestDirectPrice > 0) directBuyTotalCost += (mat.effectiveQty * bestDirectPrice);
+                else hasValidDirectBuy = false;
 
                 if (recipeObj.isTool) {
-                    if (topMarkets.length > 0) {
-                        alternativeTotalCost += mat.effectiveQty * topMarkets[0].price;
-                    } else {
-                        hasValidAlternative = false;
-                    }
+                    if (topMarkets.length > 0) alternativeTotalCost += mat.effectiveQty * topMarkets[0].price;
+                    else hasValidAlternative = false;
                 } else {
                     let rawOffers = priceData.filter(p => p.item_id === mat.rawMaterialId);
                     let bestRawPrice = 0;
@@ -800,15 +863,13 @@
                 alternativeTotalCost += lineCost;
             }
 
-            if (mat.isArtefact) {
-                alternativeTotalCost += lineCost;
-            }
+            if (mat.isArtefact) alternativeTotalCost += lineCost;
 
             let effectiveQtyDisplay = mat.isArtefact 
-                ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(no RR)</span>`
-                : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(cascade rr ${(activeReturnRate*100).toFixed(0)}%)</span>`;
+                ? `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b>`
+                : `<b>${Math.round(mat.effectiveQty).toLocaleString()}</b> <span style="font-size:11px; color:var(--text-muted);">(rr ${(activeReturnRate*100).toFixed(0)}%)</span>`;
 
-            let row = `<tr>
+            tbody.innerHTML += `<tr>
                 <td><b>${mat.name}</b></td>
                 <td><code>${mat.id}</code></td>
                 <td>${mat.rawQty.toLocaleString()}</td>
@@ -817,94 +878,97 @@
                 <td><b>${bestPrice > 0 ? bestPrice.toLocaleString() : 'N/A'}</b></td>
                 <td><b>${bestPrice > 0 ? Math.round(lineCost).toLocaleString() : 'N/A'}</b></td>
             </tr>`;
-            tbody.innerHTML += row;
         });
 
-        // --- REVENUS DE VENTE ---
-        let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
-        let sellCityMap = {};
-
-        craftedOffers.forEach(o => {
-            let price = o.sell_price_min > 0 ? o.sell_price_min : 0;
-            let date = o.sell_price_min_date;
-
-            if (price > 0 && date && o.city) {
-                if (!sellCityMap[o.city] || price < sellCityMap[o.city].price) {
-                    sellCityMap[o.city] = { city: o.city, price: price, date: date };
+        // Traitement des prix par qualité
+        qualityPricesData = {};
+        for (let q = 1; q <= 5; q++) {
+            let qOffers = qualityPriceData.filter(p => p.item_id === craftedItemId && p.quality === q);
+            let qCityMap = {};
+            qOffers.forEach(o => {
+                let price = o.sell_price_min > 0 ? o.sell_price_min : 0;
+                let date = o.sell_price_min_date;
+                if (price > 0 && date && o.city) {
+                    if (!qCityMap[o.city] || price < qCityMap[o.city].price) {
+                        qCityMap[o.city] = { city: o.city, price: price, date: date };
+                    }
                 }
-            }
-        });
+            });
+            let qTopMarkets = Object.values(qCityMap);
+            qTopMarkets.sort((a, b) => a.price - b.price);
+            qTopMarkets = qTopMarkets.slice(0, 3);
+            qualityPricesData[q] = qTopMarkets;
+        }
 
-        let topSellMarkets = Object.values(sellCityMap);
-        topSellMarkets.sort((a, b) => a.price - b.price);
-        topSellMarkets = topSellMarkets.slice(0, 3);
-
-        let bestUnitSellPrice = 0;
-        if (topSellMarkets.length > 0) bestUnitSellPrice = topSellMarkets[0].price;
-
-        let effectiveOutputQty = totalQty * cascadeMultiplier;
-
-        let marketTaxRate = 0.06;
-        let unitNetRevenue = bestUnitSellPrice > 0 ? bestUnitSellPrice * (1 - marketTaxRate) : 0;
-        
-        let totalNetRevenue = unitNetRevenue * effectiveOutputQty;
-        let grandTotalCostOptimized = grandTotalCost;
-        let totalNetProfit = totalNetRevenue - grandTotalCostOptimized;
-        
-        let unitCost = (hasAnyValidPrice && effectiveOutputQty > 0) ? grandTotalCostOptimized / effectiveOutputQty : 0;
-        let profitMargin = (grandTotalCostOptimized > 0) ? (totalNetProfit / grandTotalCostOptimized) * 100 : 0;
-
-        costSummary.innerText = hasAnyValidPrice ? `${Math.round(grandTotalCostOptimized).toLocaleString()} Silver` : 'N/A';
-        costUnitSummary.innerText = hasAnyValidPrice ? `Unit Cost: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
-
-        if (topSellMarkets.length > 0) {
-            let revenueHtml = topSellMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#34d399;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
-            revenueSummary.innerHTML = revenueHtml;
-            revenueUnitSummary.innerText = `Unit Best: ${bestUnitSellPrice.toLocaleString()} S (${topSellMarkets[0].city}) • Vol: ~${Math.round(effectiveOutputQty)}`;
+        // Affichage de la section de répartition si ce n'est pas du raffinage pur
+        const qualitySection = document.getElementById('qualitySection');
+        const qualityMarketContainer = document.getElementById('qualityMarketContainer');
+        if (!recipeObj.isRefining) {
+            qualitySection.style.display = 'block';
+            qualityMarketContainer.style.display = 'block';
+            syncTotalQuantity();
         } else {
-            revenueSummary.innerHTML = `<div class="tag-unsynced">📡 Données non synchronisées (Scanner requis en jeu)</div>`;
-            revenueUnitSummary.innerText = 'Unit: Non disponible';
+            qualitySection.style.display = 'none';
+            qualityMarketContainer.style.display = 'none';
         }
 
-        if (hasAnyValidPrice && bestUnitSellPrice > 0) {
-            let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
-            profitSummary.className = `summary-value ${profitClass}`;
-            profitSummary.innerText = `${Math.round(totalNetProfit).toLocaleString()} Silver (${profitMargin.toFixed(1)}%)`;
-            
-            profitUnitSummary.className = `summary-sub ${profitClass}`;
-            profitUnitSummary.innerText = `Total Volume Vendu : ~${Math.round(effectiveOutputQty)} unités`;
-        } else {
-            profitSummary.className = 'summary-value';
-            profitSummary.innerHTML = `<span style="font-size:13px; color:var(--warning);">En attente de scan marché</span>`;
-            profitUnitSummary.className = 'summary-sub';
-            profitUnitSummary.innerText = 'Unit: N/A';
+        calculateFinancials();
+    }
+
+    function calculateFinancials() {
+        const costSummary = document.getElementById('costSummary');
+        const costUnitSummary = document.getElementById('costUnitSummary');
+        const revenueSummary = document.getElementById('revenueSummary');
+        const revenueUnitSummary = document.getElementById('revenueUnitSummary');
+        const profitSummary = document.getElementById('profitSummary');
+        const profitUnitSummary = document.getElementById('profitUnitSummary');
+        const qualityTableBody = document.getElementById('qualityTableBody');
+
+        qualityTableBody.innerHTML = '';
+        let totalRevenue = 0;
+        let totalItemsCrafted = 0;
+
+        for (let q = 1; q <= 5; q++) {
+            let qtyInput = document.getElementById(`qtyQ${q}`);
+            let qty = qtyInput ? parseInt(qtyInput.value) || 0 : 0;
+            totalItemsCrafted += qty;
+
+            let topMarkets = qualityPricesData[q] || [];
+            let bestPrice = topMarkets.length > 0 ? topMarkets[0].price : 0;
+            let marketHtml = topMarkets.length > 0 
+                ? topMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#f59e0b;">${m.price.toLocaleString()} S</span></div>`).join('')
+                : `<span style="color:var(--warning);">Pas d'offre</span>`;
+
+            let taxRate = 0.06;
+            let netUnitRevenue = bestPrice > 0 ? bestPrice * (1 - taxRate) : 0;
+            let lineRevenue = netUnitRevenue * qty;
+            totalRevenue += lineRevenue;
+
+            qualityTableBody.innerHTML += `<tr>
+                <td><b>${qualityNames[q]}</b></td>
+                <td class="market-rank">${marketHtml}</td>
+                <td><b>${bestPrice > 0 ? bestPrice.toLocaleString() + ' S' : 'N/A'}</b></td>
+                <td><b>${qty}</b></td>
+                <td><b style="color:var(--success);">${Math.round(lineRevenue).toLocaleString()} S</b></td>
+            </tr>`;
         }
 
-        if (!recipeObj.isRefining && hasAnyValidPrice && bestUnitSellPrice > 0) {
-            strategiesContainer.style.display = 'grid';
+        let totalNetProfit = totalRevenue - globalCost;
+        let profitMargin = globalCost > 0 ? (totalNetProfit / globalCost) * 100 : 0;
+        let avgUnitCost = totalItemsCrafted > 0 ? globalCost / totalItemsCrafted : 0;
 
-            stratBTitle.innerText = recipeObj.isTool ? "⚒️ Stratégie B : Achat Multi-Villes (Optimisé)" : "⚒️ Stratégie B : Raffinage Maison (Villes Bonus)";
+        costSummary.innerText = `${Math.round(globalCost).toLocaleString()} Silver`;
+        costUnitSummary.innerText = `Avg Unit Cost: ${Math.round(avgUnitCost).toLocaleString()} S`;
 
-            if (hasValidDirectBuy && directBuyTotalCost > 0) {
-                let profitA = (unitNetRevenue * totalQty) - directBuyTotalCost;
-                let marginA = (directBuyTotalCost > 0) ? (profitA / directBuyTotalCost) * 100 : 0;
-                stratACost.innerHTML = `Coût total : <b>${Math.round(directBuyTotalCost).toLocaleString()} S</b>`;
-                stratAMargin.innerHTML = `Marge nette : <b class="${profitA >= 0 ? 'profit-positive' : 'profit-negative'}">${Math.round(profitA).toLocaleString()} S (${marginA.toFixed(1)}%)</b>`;
-            } else {
-                stratACost.innerHTML = `Coût total : Données indisponibles`;
-                stratAMargin.innerHTML = `Marge nette : N/A`;
-            }
+        revenueSummary.innerText = `${Math.round(totalRevenue).toLocaleString()} Silver`;
+        revenueUnitSummary.innerText = `Total items: ${totalItemsCrafted} unités (Net après taxe)`;
 
-            if (hasValidAlternative && alternativeTotalCost > 0) {
-                let profitB = (unitNetRevenue * totalQty) - alternativeTotalCost;
-                let marginB = (alternativeTotalCost > 0) ? (profitB / alternativeTotalCost) * 100 : 0;
-                stratBCost.innerHTML = `Coût total : <b>${Math.round(alternativeTotalCost).toLocaleString()} S</b>`;
-                stratBMargin.innerHTML = `Marge nette : <b class="${profitB >= 0 ? 'profit-positive' : 'profit-negative'}">${Math.round(profitB).toLocaleString()} S (${marginB.toFixed(1)}%)</b>`;
-            } else {
-                stratBCost.innerHTML = `Coût total : Données insuffisantes`;
-                stratBMargin.innerHTML = `N/A`;
-            }
-        }
+        let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
+        profitSummary.className = `summary-value ${profitClass}`;
+        profitSummary.innerText = `${Math.round(totalNetProfit).toLocaleString()} Silver (${profitMargin.toFixed(1)}%)`;
+        
+        profitUnitSummary.className = `summary-sub ${profitClass}`;
+        profitUnitSummary.innerText = `Bénéfice net global de la session`;
     }
 </script>
 
