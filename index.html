@@ -16,6 +16,7 @@
             --input-bg: #0f172a;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f97316;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -213,6 +214,18 @@
         }
         .profit-positive { color: var(--success) !important; }
         .profit-negative { color: var(--danger) !important; }
+        .tag-unsynced {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(249, 115, 22, 0.4);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
         .loading {
             text-align: center;
             font-size: 16px;
@@ -243,7 +256,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.14</div>
+            <div class="badge-version">🚀 Update v3.17</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -317,7 +330,7 @@
             <div class="summary-sub" id="costUnitSummary" style="text-align:center;">Unit: 0 S</div>
         </div>
         <div class="summary-card">
-            <h3>Top 3 Cities to Sell (Revenue)</h3>
+            <h3>Top 3 Cities Sell Orders (Revenue)</h3>
             <div class="summary-value" id="revenueSummary">N/A</div>
             <div class="summary-sub" id="revenueUnitSummary">Unit: N/A</div>
         </div>
@@ -592,35 +605,23 @@
             tbody.innerHTML += row;
         });
 
-        // --- Récupération robuste des Ventes (Sell Orders / Buy Orders par ville) pour le produit fini ---
+        // --- TRAITEMENT DES PRIX DU PRODUIT FINI ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
         let sellCityMap = {};
 
         craftedOffers.forEach(o => {
-            // On cherche le meilleur prix disponible par ville (priorité sell_price_min puis buy_price_max puis sell_price_max)
-            let price = 0;
-            let date = null;
+            let price = o.sell_price_min > 0 ? o.sell_price_min : 0;
+            let date = o.sell_price_min_date;
 
-            if (o.sell_price_min > 0) {
-                price = o.sell_price_min;
-                date = o.sell_price_min_date;
-            } else if (o.buy_price_max > 0) {
-                price = o.buy_price_max;
-                date = o.buy_price_max_date;
-            } else if (o.sell_price_max > 0) {
-                price = o.sell_price_max;
-                date = o.sell_price_max_date;
-            }
-
-            if (price > 0 && o.city) {
+            if (price > 0 && date && o.city) {
                 if (!sellCityMap[o.city] || price < sellCityMap[o.city].price) {
-                    sellCityMap[o.city] = { city: o.city, price: price, date: date || new Date().toISOString() };
+                    sellCityMap[o.city] = { city: o.city, price: price, date: date };
                 }
             }
         });
 
         let topSellMarkets = Object.values(sellCityMap);
-        topSellMarkets.sort((a, b) => a.price - b.price); // Du moins cher au plus cher
+        topSellMarkets.sort((a, b) => a.price - b.price);
         topSellMarkets = topSellMarkets.slice(0, 3);
 
         let unitCost = hasAnyValidPrice ? grandTotalCost / totalQty : 0;
@@ -628,34 +629,31 @@
 
         if (topSellMarkets.length > 0) {
             bestUnitSellPrice = topSellMarkets[0].price;
-        } else if (unitCost > 0) {
-            // Fallback ultime si l'API est vide pour cet item précis
-            bestUnitSellPrice = Math.round(unitCost * 1.25);
-            topSellMarkets = [{ city: "Estimation Marché (+25%)", price: bestUnitSellPrice, date: new Date().toISOString() }];
         }
 
         let marketTaxRate = 0.06;
-        let unitNetRevenue = bestUnitSellPrice * (1 - marketTaxRate);
-        let unitNetProfit = unitNetRevenue - unitCost;
-        let profitMargin = unitCost > 0 ? (unitNetProfit / unitCost) * 100 : 0;
+        let unitNetRevenue = bestUnitSellPrice > 0 ? bestUnitSellPrice * (1 - marketTaxRate) : 0;
+        let unitNetProfit = bestUnitSellPrice > 0 ? unitNetRevenue - unitCost : 0;
+        let profitMargin = (unitCost > 0 && bestUnitSellPrice > 0) ? (unitNetProfit / unitCost) * 100 : 0;
 
         let totalNetRevenue = unitNetRevenue * totalQty;
         let totalNetProfit = unitNetProfit * totalQty;
 
-        // Affichage des blocs de synthèse
+        // Affichage des coûts
         costSummary.innerText = hasAnyValidPrice ? `${grandTotalCost.toLocaleString()} Silver` : 'N/A';
         costUnitSummary.innerText = hasAnyValidPrice ? `Unit: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
 
+        // --- AFFICHAGE DU TAG DE NON-SYNCHRONISATION SI L'API EST VIDE ---
         if (topSellMarkets.length > 0) {
             let revenueHtml = topSellMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#34d399;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             revenueSummary.innerHTML = revenueHtml;
             revenueUnitSummary.innerText = `Unit Best: ${bestUnitSellPrice.toLocaleString()} S (${topSellMarkets[0].city})`;
         } else {
-            revenueSummary.innerText = 'N/A';
-            revenueUnitSummary.innerText = 'Unit: N/A';
+            revenueSummary.innerHTML = `<div class="tag-unsynced">📡 Données non synchronisées (Scanner requis en jeu)</div>`;
+            revenueUnitSummary.innerText = 'Unit: Non disponible';
         }
 
-        if (hasAnyValidPrice && unitCost > 0) {
+        if (hasAnyValidPrice && bestUnitSellPrice > 0) {
             let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
             profitSummary.className = `summary-value ${profitClass}`;
             profitSummary.innerText = `${Math.round(totalNetProfit).toLocaleString()} Silver (${profitMargin.toFixed(1)}%)`;
@@ -664,7 +662,7 @@
             profitUnitSummary.innerText = `Unit Profit: ${Math.round(unitNetProfit).toLocaleString()} S`;
         } else {
             profitSummary.className = 'summary-value';
-            profitSummary.innerText = 'N/A';
+            profitSummary.innerText = `<span style="font-size:13px; color:var(--warning);">En attente de scan marché</span>`;
             profitUnitSummary.className = 'summary-sub';
             profitUnitSummary.innerText = 'Unit: N/A';
         }
