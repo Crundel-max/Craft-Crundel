@@ -216,7 +216,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.5</div>
+            <div class="badge-version">🚀 Update v3.6</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -321,24 +321,24 @@
         "T7_STONEBLOCK": { name: "Dense Block T7", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", mats: [ { name: "T6 Stone Block", baseId: "T6_STONEBLOCK", ratio: 1 }, { name: "T7 Rock", baseId: "T7_ROCK", ratio: 5 } ] },
         "T8_STONEBLOCK": { name: "Glowing Block T8", bonusCity: "Bridgewatch (Best for Rock/Stone Refining +40% ⚡)", mats: [ { name: "T7 Stone Block", baseId: "T7_STONEBLOCK", ratio: 1 }, { name: "T8 Rock", baseId: "T8_ROCK", ratio: 6 } ] },
 
-        // --- POTIONS / ALCHEMY (Recettes complètes avec herbes, alcools et œufs selon les specs in-game) ---
-        "T4_POTION_HEAL": { name: "Minor Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Arcane Agaric", baseId: "T3_AGARIC", ratio: 8 } ] },
-        "T5_POTION_ENERGY": { name: "Energy Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 24 }, { name: "Goat's Milk", baseId: "T5_MILK", ratio: 6 } ] },
-        "T6_POTION_HEAL": { name: "Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 24 }, { name: "Goose Eggs", baseId: "T2_EGG", ratio: 6 } ] },
-        "T7_POTION_RESISTANCE": { name: "Resistance Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 12 }, { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 24 }, { name: "Goat's Milk", baseId: "T5_MILK", ratio: 6 } ] },
-        "T8_POTION_GIANT": { name: "Giant Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T5_BURDOCK", ratio: 12 }, { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 24 }, { name: "Goose Eggs", baseId: "T2_EGG", ratio: 6 } ] },
+        // --- POTIONS / ALCHEMY (IDs exacts issus de tes screenshots : Agaric T2, Comfrey T3, Burdock T4, Teasel T5, Foxglove T6, Mullein T7, Yarrow T8, Hen Eggs T3, Goose Eggs T5, Alcools T6/T7) ---
+        "T4_POTION_HEAL": { name: "Minor Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Arcane Agaric", baseId: "T2_AGARIC", ratio: 8 } ] },
+        "T5_POTION_ENERGY": { name: "Energy Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T4_BURDOCK", ratio: 24 }, { name: "Goat's Milk", baseId: "T5_MILK", ratio: 6 } ] },
+        "T6_POTION_HEAL": { name: "Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T4_BURDOCK", ratio: 24 }, { name: "Hen Eggs", baseId: "T3_EGG", ratio: 6 } ] },
+        "T7_POTION_RESISTANCE": { name: "Resistance Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T4_BURDOCK", ratio: 12 }, { name: "Dragon Teasel", baseId: "T5_TEASEL", ratio: 24 }, { name: "Goat's Milk", baseId: "T5_MILK", ratio: 6 } ] },
+        "T8_POTION_GIANT": { name: "Giant Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Crenellated Burdock", baseId: "T4_BURDOCK", ratio: 12 }, { name: "Dragon Teasel", baseId: "T5_TEASEL", ratio: 24 }, { name: "Hen Eggs", baseId: "T3_EGG", ratio: 6 } ] },
         
-        "T4_POTION_STICKY": { name: "Sticky Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Brightleaf Comfrey", baseId: "T4_COMFREY", ratio: 8 } ] },
-        "T5_POTION_POISON": { name: "Poison Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 24 }, { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 12 }, { name: "Cow's Milk", baseId: "T5_MILK", ratio: 6 } ] },
-        "T6_POTION_INVISIBILITY": { name: "Invisibility Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Dragon Teasel", baseId: "T6_TEASEL", ratio: 24 }, { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 12 }, { name: "Goose Eggs", baseId: "T2_EGG", ratio: 6 } ] },
-        "T7_POTION_CLEANSING": { name: "Cleansing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 48 } ] },
-        "T8_POTION_ACID": { name: "Acid Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 48 } ] },
+        "T4_POTION_STICKY": { name: "Sticky Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Brightleaf Comfrey", baseId: "T3_COMFREY", ratio: 8 } ] },
+        "T5_POTION_POISON": { name: "Poison Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Dragon Teasel", baseId: "T5_TEASEL", ratio: 24 }, { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 12 }, { name: "Cow's Milk", baseId: "T5_MILK", ratio: 6 } ] },
+        "T6_POTION_INVISIBILITY": { name: "Invisibility Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Dragon Teasel", baseId: "T5_TEASEL", ratio: 24 }, { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 12 }, { name: "Hen Eggs", baseId: "T3_EGG", ratio: 6 } ] },
+        "T7_POTION_CLEANSING": { name: "Cleansing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 48 } ] },
+        "T8_POTION_ACID": { name: "Acid Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 48 } ] },
 
-        "T4_POTION_BERSERK": { name: "Berserk Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Brightleaf Comfrey", baseId: "T4_COMFREY", ratio: 16 } ] },
-        "T5_POTION_HEAL_LARG": { name: "Major Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 72 }, { name: "Potato Schnapps", baseId: "T6_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T2_EGG", ratio: 18 } ] },
-        "T6_POTION_ENERGY_LARG": { name: "Major Energy Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 72 }, { name: "Potato Schnapps", baseId: "T6_ALCOHOL", ratio: 18 }, { name: "Sheep's Milk", baseId: "T6_MILK", ratio: 18 } ] },
-        "T7_POTION_REVIVE": { name: "Reviving Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T8_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T2_EGG", ratio: 18 } ] },
-        "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T7_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T8_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T2_EGG", ratio: 18 } ] },
+        "T4_POTION_BERSERK": { name: "Berserk Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Brightleaf Comfrey", baseId: "T3_COMFREY", ratio: 16 } ] },
+        "T5_POTION_HEAL_LARG": { name: "Major Healing Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 72 }, { name: "Potato Schnapps", baseId: "T6_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
+        "T6_POTION_ENERGY_LARG": { name: "Major Energy Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 72 }, { name: "Potato Schnapps", baseId: "T6_ALCOHOL", ratio: 18 }, { name: "Sheep's Milk", baseId: "T6_MILK", ratio: 18 } ] },
+        "T7_POTION_REVIVE": { name: "Reviving Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
+        "T8_POTION_HEAL_GIANT": { name: "Major Gigantify Potion", bonusCity: "Brecilien (Best Potion Crafting Bonus ⚡) or Caerleon", mats: [ { name: "Elusive Foxglove", baseId: "T6_FOXGLOVE", ratio: 36 }, { name: "Firetouched Mullein", baseId: "T7_MULLEIN", ratio: 72 }, { name: "Corn Hooch", baseId: "T7_ALCOHOL", ratio: 18 }, { name: "Goose Eggs", baseId: "T5_EGG", ratio: 18 } ] },
         // ------------------------------------------
 
         "T4_FISHINGROD": { name: "Fishing Rod T4", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Pine Planks", baseId: "T4_PLANKS", ratio: 16 }, { name: "T4 Cloth", baseId: "T4_CLOTH", ratio: 8 } ] },
@@ -439,8 +439,8 @@
 
         let currentRecipe = recipeObj.mats.map((mat, index) => {
             let finalId = mat.baseId;
-            // Ne pas ajouter d'enchantement sur les planches de base, les herbes de base, les alcools et les œufs
-            const isSpecialBase = mat.baseId.includes('3') || mat.baseId.includes('PLANKS') || mat.baseId.includes('ALCOHOL') || mat.baseId.includes('MILK') || mat.baseId.includes('EGG');
+            // Exclusion des suffixes d'enchantement pour les composants de base, planches, herbes, œufs, alcools et laits
+            const isSpecialBase = mat.baseId.includes('PLANKS') || mat.baseId.includes('AGARIC') || mat.baseId.includes('COMFREY') || mat.baseId.includes('BURDOCK') || mat.baseId.includes('TEASEL') || mat.baseId.includes('FOXGLOVE') || mat.baseId.includes('MULLEIN') || mat.baseId.includes('ALCOHOL') || mat.baseId.includes('MILK') || mat.baseId.includes('EGG');
             if (enchant > 0 && !isSpecialBase) {
                 finalId = `${mat.baseId}@${enchant}`;
             }
