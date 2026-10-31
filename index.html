@@ -256,7 +256,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.20</div>
+            <div class="badge-version">🚀 Update v3.21</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -404,12 +404,12 @@
         "T7_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
         "T8_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
-        // --- ÉPÉES KINGMAKER (Avec Artefact inclus) ---
-        "T4_2H_SWORD_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12 }, { name: "Kingmaker Artefact", baseId: "T4_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] },
-        "T5_2H_SWORD_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12 }, { name: "Kingmaker Artefact", baseId: "T5_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] },
-        "T6_2H_SWORD_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12 }, { name: "Kingmaker Artefact", baseId: "T6_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] },
-        "T7_2H_SWORD_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20 }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12 }, { name: "Kingmaker Artefact", baseId: "T7_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] },
-        "T8_2H_SWORD_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20 }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12 }, { name: "Kingmaker Artefact", baseId: "T8_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] }
+        // --- ÉPÉES KINGMAKER (Avec Artefacts T4 à T8) ---
+        "T4_2H_SWORD_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] },
+        "T5_2H_SWORD_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] },
+        "T6_2H_SWORD_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] },
+        "T7_2H_SWORD_AVALON": { name: "Grandmaster's Kingmaker T7", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Metal Bar", baseId: "T7_METALBAR", ratio: 20 }, { name: "T7 Leather", baseId: "T7_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T7_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] },
+        "T8_2H_SWORD_AVALON": { name: "Elder's Kingmaker T8", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Metal Bar", baseId: "T8_METALBAR", ratio: 20 }, { name: "T8 Leather", baseId: "T8_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T8_ARTEFACT_2H_SWORD_AVALON", ratio: 1 } ] }
     };
 
     const categories = {
@@ -516,16 +516,12 @@
 
         let currentRecipe = recipeObj.mats.map((mat, index) => {
             let finalId = mat.baseId;
-            const isMatSpecial = mat.baseId.includes('PLANKS') || mat.baseId.includes('AGARIC') || mat.baseId.includes('COMFREY') || mat.baseId.includes('BURDOCK') || mat.baseId.includes('TEASEL') || mat.baseId.includes('FOXGLOVE') || mat.baseId.includes('MULLEIN') || mat.baseId.includes('ALCOHOL') || mat.baseId.includes('MILK') || mat.baseId.includes('EGG') || mat.baseId.includes('ARTEFACT');
-            if (enchant > 0 && !isMatSpecial) {
-                finalId = `${mat.baseId}@${enchant}`;
-            }
-            // Pour l'artefact, si l'arme est enchantée (ex: .2), l'artefact doit aussi porter l'enchantement correspondant si applicable
-            if (enchant > 0 && mat.baseId.includes('ARTEFACT')) {
+            // Correction majeure : Application correcte de l'enchantement sur tous les items raffinés et composants
+            if (enchant > 0) {
                 finalId = `${mat.baseId}@${enchant}`;
             }
             return {
-                name: `${mat.name}${enchant > 0 && !isMatSpecial ? ' .' + enchant : ''}`,
+                name: `${mat.name}${enchant > 0 ? ' .' + enchant : ''}`,
                 id: finalId,
                 baseId: mat.baseId,
                 ratio: mat.ratio,
@@ -559,9 +555,9 @@
 
         loading.style.display = 'none';
         let grandTotalCost = 0;
-        let hasAnyValidPrice = true; // On part du principe que si les matériaux ont des prix, c'est bon
+        let hasAnyValidPrice = true;
 
-        // Calcul des matériaux et de l'artefact
+        // Calcul des matériaux et composants enchantés
         currentRecipe.forEach((mat) => {
             let reqQty = mat.ratio * totalQty;
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
@@ -609,7 +605,7 @@
             tbody.innerHTML += row;
         });
 
-        // --- TRAITEMENT DES PRIX DU PRODUIT FINI (SANS AUCUN FALLBACK INVENTÉ) ---
+        // --- TRAITEMENT DES PRIX DU PRODUIT FINI ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
         let sellCityMap = {};
 
