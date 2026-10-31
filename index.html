@@ -343,6 +343,26 @@
 </div>
 
 <script>
+    /**
+     * Convertit un identifiant d'item de la base vers l'ID exact 
+     * attendu par l'API Albion Free Market avec support des enchantements de .1 à .4 (@X).
+     */
+    function formatAlbionItemID(baseId, tier, enchantment) {
+        let cleanBase = baseId ? baseId.trim().toUpperCase() : "";
+        
+        if (!cleanBase.startsWith("T")) {
+            cleanBase = `T${tier}_${cleanBase}`;
+        } else {
+            cleanBase = cleanBase.replace(/^T\d+/, `T${tier}`);
+        }
+
+        if (enchantment && enchantment > 0 && enchantment <= 4) {
+            return `${cleanBase}@${enchantment}`;
+        }
+
+        return cleanBase;
+    }
+
     const baseRecipes = {
         // --- RAFFINAGE ---
         "T3_CLOTH": { name: "Neat Cloth T3", bonusCity: "Lymhurst (Best for Fiber/Cloth Refining +40% ⚡)", mats: [ { name: "T2 Cloth", baseId: "T2_CLOTH", ratio: 1 }, { name: "T3 Fiber", baseId: "T3_FIBER", ratio: 2 } ] },
@@ -404,7 +424,7 @@
         "T7_TOOL_FISHINGROD": { name: "Grandmaster's Fishing Rod T7", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T7 Ashenbark Planks", baseId: "T7_PLANKS", ratio: 16 }, { name: "T7 Cloth", baseId: "T7_CLOTH", ratio: 8 } ] },
         "T8_TOOL_FISHINGROD": { name: "Elder's Fishing Rod T8", bonusCity: "Lymhurst (Best Tool Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T8 Bloodoak Planks", baseId: "T8_PLANKS", ratio: 16 }, { name: "T8 Cloth", baseId: "T8_CLOTH", ratio: 8 } ] },
 
-        // --- ÉPÉES KINGMAKER (Avec Artefacts T4 à T8 corrigés sans enchantement d'artefact forcé) ---
+        // --- ÉPÉES KINGMAKER ---
         "T4_2H_SWORD_AVALON": { name: "Adept's Kingmaker T4", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T4 Metal Bar", baseId: "T4_METALBAR", ratio: 20 }, { name: "T4 Leather", baseId: "T4_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T4_ARTEFACT_2H_SWORD_AVALON", ratio: 1, isArtefact: true } ] },
         "T5_2H_SWORD_AVALON": { name: "Expert's Kingmaker T5", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T5 Metal Bar", baseId: "T5_METALBAR", ratio: 20 }, { name: "T5 Leather", baseId: "T5_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T5_ARTEFACT_2H_SWORD_AVALON", ratio: 1, isArtefact: true } ] },
         "T6_2H_SWORD_AVALON": { name: "Master's Kingmaker T6", bonusCity: "Fort Sterling (Best Sword Crafting Bonus ⚡) or Caerleon", mats: [ { name: "T6 Metal Bar", baseId: "T6_METALBAR", ratio: 20 }, { name: "T6 Leather", baseId: "T6_LEATHER", ratio: 12 }, { name: "Remnants of the Old King", baseId: "T6_ARTEFACT_2H_SWORD_AVALON", ratio: 1, isArtefact: true } ] },
@@ -508,17 +528,24 @@
         if (!recipeObj) return;
         updateRecommendation();
 
+        // Extraction du Tier de l'item sélectionné (ex: "T4_..." -> Tier 4)
+        const tierMatch = itemKey.match(/^T(\d+)/);
+        const currentTier = tierMatch ? parseInt(tierMatch[1]) : 4;
+
         let craftedItemId = itemKey;
         const isSpecialBase = itemKey.includes('3') && !itemKey.includes('TOOL');
         if (enchant > 0 && !isSpecialBase) {
-            craftedItemId = `${itemKey}@${enchant}`;
+            craftedItemId = formatAlbionItemID(itemKey, currentTier, enchant);
         }
 
         let currentRecipe = recipeObj.mats.map((mat, index) => {
+            // Extraction du tier de base du matériau si présent, sinon utilisation du tier courant
+            const matTierMatch = mat.baseId.match(/^T(\d+)/);
+            const matTier = matTierMatch ? parseInt(matTierMatch[1]) : currentTier;
+
             let finalId = mat.baseId;
-            // Correction : On n'applique pas l'enchantement sur les artefacts pour éviter les requêtes API invalides
             if (enchant > 0 && !mat.isArtefact) {
-                finalId = `${mat.baseId}@${enchant}`;
+                finalId = formatAlbionItemID(mat.baseId, matTier, enchant);
             }
             return {
                 name: `${mat.name}${enchant > 0 && !mat.isArtefact ? ' .' + enchant : ''}`,
@@ -557,7 +584,6 @@
         let grandTotalCost = 0;
         let hasAnyValidPrice = true;
 
-        // Calcul des matériaux et composants
         currentRecipe.forEach((mat) => {
             let reqQty = mat.ratio * totalQty;
             let itemOffers = priceData.filter(p => p.item_id === mat.id);
@@ -605,7 +631,6 @@
             tbody.innerHTML += row;
         });
 
-        // --- TRAITEMENT DES PRIX DU PRODUIT FINI ---
         let craftedOffers = priceData.filter(p => p.item_id === craftedItemId);
         let sellCityMap = {};
 
@@ -639,11 +664,9 @@
         let totalNetRevenue = unitNetRevenue * totalQty;
         let totalNetProfit = unitNetProfit * totalQty;
 
-        // Affichage des coûts
         costSummary.innerText = hasAnyValidPrice ? `${grandTotalCost.toLocaleString()} Silver` : 'N/A';
         costUnitSummary.innerText = hasAnyValidPrice ? `Unit: ${Math.round(unitCost).toLocaleString()} S` : 'Unit: N/A';
 
-        // --- AFFICHAGE REVENUE ---
         if (topSellMarkets.length > 0) {
             let revenueHtml = topSellMarkets.map((m, i) => `<div><b>#${i+1}</b> ${m.city}: <span style="color:#34d399;">${m.price.toLocaleString()} S</span> <span class="age-info">(${formatAge(m.date)})</span></div>`).join('');
             revenueSummary.innerHTML = revenueHtml;
@@ -653,7 +676,6 @@
             revenueUnitSummary.innerText = 'Unit: Non disponible';
         }
 
-        // --- AFFICHAGE PROFIT ---
         if (hasAnyValidPrice && bestUnitSellPrice > 0) {
             let profitClass = totalNetProfit >= 0 ? 'profit-positive' : 'profit-negative';
             profitSummary.className = `summary-value ${profitClass}`;
