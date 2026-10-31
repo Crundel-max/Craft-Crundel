@@ -321,7 +321,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.54</div>
+            <div class="badge-version">🚀 Update v3.55</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -450,7 +450,7 @@
         </tbody>
     </table>
 
-    <!-- Tableau Guide d'Achat & Raffinage Cascade RR 40% (Avec matières brutes ET items T3/inférieurs nécessaires) -->
+    <!-- Tableau Guide d'Achat & Raffinage Cascade RR 40% (Corrigé) -->
     <div id="rawRefiningSummaryContainer" style="display:none; margin-top: 30px;">
         <h3 style="color: var(--info); font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">🏭 Guide d'Achat des Composants T3, Matières Brutes & Villes (Cascade RR 40%)</h3>
         <table id="rawRefiningTable">
@@ -746,10 +746,8 @@
                 if (rawMaterialId) rawMaterialId = formatAlbionItemID(mat.rawMat, matTier, 0, true);
             }
 
-            // Gestion du composant intermédiaire inférieur (ex: Barres T3 pour les Barres T4)
             if (mat.subTierRef) {
                 let subTierNum = matTier - 1;
-                // Si l'enchantement est > 0, les composants intermédiaires peuvent être enchantés ou flat selon le tier
                 let subEnchant = (subTierNum >= 4) ? effectiveEnchant : 0;
                 subTierMaterialId = formatAlbionItemID(mat.subTierRef, subTierNum, subEnchant, true);
             }
@@ -821,7 +819,6 @@
             }
         });
 
-        // Ajout des IDs de composants sub-tier (T3/T4) à fetch
         rawRefineGuideData.forEach(g => {
             if (g.rawMatId) allIdsToFetch.push(g.rawMatId);
             if (g.subTierMatId) allIdsToFetch.push(g.subTierMatId);
@@ -968,12 +965,10 @@
             qualityMarketContainer.style.display = 'block';
             rawRefiningSummaryContainer.style.display = 'block';
 
-            // Remplissage complet incluant matières brutes et composants T3/sub-tier
             rawRefiningTableBody.innerHTML = '';
             rawRefineGuideData.forEach(guide => {
                 let buyListHtml = [];
 
-                // Récupération des prix pour la matière brute
                 if (guide.rawMatId) {
                     let rawOffers = priceData.filter(p => p.item_id === guide.rawMatId);
                     let rawCityMap = {};
@@ -987,11 +982,9 @@
                     });
                     let topRaw = Object.values(rawCityMap).sort((a, b) => a.price - b.price).slice(0, 2);
                     let rawText = topRaw.length > 0 ? topRaw.map(m => `${m.city}: ${m.price}S`).join(', ') : 'Scan...';
-                    buyListHtml.Item(0); // placeholder
                     buyListHtml.push(`<div>📦 <b>${guide.rawName}</b> ➔ <span style="color:#f59e0b;">${rawText}</span></div>`);
                 }
 
-                // Récupération des prix pour le composant sub-tier (ex: Barres T3)
                 if (guide.subTierMatId && guide.subTierName) {
                     let subOffers = priceData.filter(p => p.item_id === guide.subTierMatId);
                     let subCityMap = {};
