@@ -283,7 +283,7 @@
             <p>Americas Server • Live API & Crafting Calculator</p>
         </div>
         <div class="header-badges">
-            <div class="badge-version">🚀 Update v3.29</div>
+            <div class="badge-version">🚀 Update v3.30</div>
             <div class="badge">🟢 Server : Americas</div>
         </div>
     </div>
@@ -598,17 +598,16 @@
             const matTier = matTierMatch ? parseInt(matTierMatch[1]) : currentTier;
 
             let finalId = mat.baseId;
-            if (enchant > 0) {
-                // Les artéfacts s'enchantent également avec le format standard @X sur l'API
+            // CORRECTION : Les artéfacts restent toujours flat (enchantement 0 / non enchanté) quel que soit l'enchantement de l'arme
+            if (enchant > 0 && !mat.isArtefact) {
                 finalId = formatAlbionItemID(mat.baseId, matTier, enchant);
             }
             
             let rawReqQty = mat.ratio * totalQty;
-            // CORRECTION : Les artéfacts ne bénéficient PAS du Return Rate (RR), leur quantité effective est égale à leur quantité brute
             let effectiveQty = mat.isArtefact ? rawReqQty : rawReqQty * (1 - returnRate);
 
             return {
-                name: `${mat.name}${enchant > 0 ? ' .' + enchant : ''}`,
+                name: `${mat.name}${enchant > 0 && !mat.isArtefact ? ' .' + enchant : ''}`,
                 id: finalId,
                 baseId: mat.baseId,
                 ratio: mat.ratio,
